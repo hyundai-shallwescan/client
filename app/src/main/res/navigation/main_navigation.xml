@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_navigation"
+    app:startDestination="@id/navigation_scan">
+
+    <fragment
+        android:id="@+id/navigation_checklist"
+        android:name="com.ite.sws.domain.member.view.ui.ChecklistFragment"
+        android:label="fragment_checklist"
+        tools:layout="@layout/fragment_checklist">
+        <action
+            android:id="@+id/action_checklistFragment_to_reviewFragment"
+            app:destination="@id/navigation_review" />
+        <action
+            android:id="@+id/action_checklistFragment_to_mypageFragment"
+            app:destination="@id/navigation_mypage" />
+        <action
+            android:id="@+id/action_checklistFragment_to_parkingFragment"
+            app:destination="@id/navigation_parking" />
+        <action
+            android:id="@+id/action_checklistFragment_to_cartFragment"
+            app:destination="@id/navigation_scan" />
+        <action
+            android:id="@+id/action_checklistFragment_self"
+            app:destination="@id/navigation_checklist" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_mypage"
+        android:name="com.ite.sws.domain.member.view.ui.MypageFragment"
+        android:label="fragment_mypage"
+        tools:layout="@layout/fragment_mypage">
+        <action
+            android:id="@+id/action_mypageFragment_to_parkingFragment"
+            app:destination="@id/navigation_parking" />
+        <action
+            android:id="@+id/action_mypageFragment_to_reviewFragment"
+            app:destination="@id/navigation_review" />
+        <action
+            android:id="@+id/action_mypageFragment_to_checklistFragment"
+            app:destination="@id/navigation_checklist" />
+        <action
+            android:id="@+id/action_mypageFragment_to_cartFragment"
+            app:destination="@id/navigation_scan" />
+        <action
+            android:id="@+id/action_mypageFragment_self"
+            app:destination="@id/navigation_mypage" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_parking"
+        android:name="com.ite.sws.domain.parking.view.ui.ParkingFragment"
+        android:label="fragment_parking"
+        tools:layout="@layout/fragment_parking">
+        <action
+            android:id="@+id/action_parkingFragment_to_mypageFragment"
+            app:destination="@id/navigation_mypage" />
+        <action
+            android:id="@+id/action_parkingFragment_to_reviewFragment"
+            app:destination="@id/navigation_review" />
+        <action
+            android:id="@+id/action_parkingFragment_to_cartFragment"
+            app:destination="@id/navigation_scan" />
+        <action
+            android:id="@+id/action_parkingFragment_to_checklistFragment"
+            app:destination="@id/navigation_checklist" />
+        <action
+            android:id="@+id/action_parkingFragment_self"
+            app:destination="@id/navigation_parking" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_review"
+        android:name="com.ite.sws.domain.review.view.ui.ReviewFragment"
+        android:label="fragment_review"
+        tools:layout="@layout/fragment_review">
+        <action
+            android:id="@+id/action_reviewFragment_to_checklistFragment"
+            app:destination="@id/navigation_checklist" />
+        <action
+            android:id="@+id/action_reviewFragment_to_mypageFragment"
+            app:destination="@id/navigation_mypage" />
+        <action
+            android:id="@+id/action_reviewFragment_to_parkingFragment"
+            app:destination="@id/navigation_parking" />
+        <action
+            android:id="@+id/action_reviewFragment_to_cartFragment"
+            app:destination="@id/navigation_scan" />
+        <action
+            android:id="@+id/action_reviewFragment_self"
+            app:destination="@id/navigation_review" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_scan"
+        android:name="com.ite.sws.domain.cart.view.ui.ScanFragment"
+        android:label="fragment_cart"
+        tools:layout="@layout/fragment_scan">
+        <action
+            android:id="@+id/action_cartFragment_to_checklistFragment"
+            app:destination="@id/navigation_checklist" />
+        <action
+            android:id="@+id/action_cartFragment_to_parkingFragment"
+            app:destination="@id/navigation_parking" />
+        <action
+            android:id="@+id/action_cartFragment_to_mypageFragment"
+            app:destination="@id/navigation_mypage" />
+        <action
+            android:id="@+id/action_cartFragment_to_reviewFragment"
+            app:destination="@id/navigation_review" />
+        <action
+            android:id="@+id/action_cartFragment_self"
+            app:destination="@id/navigation_scan" />
+    </fragment>
+</navigation>

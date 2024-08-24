@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/navigation_review"
+        android:title="@string/title_review"
+        android:icon="@drawable/selector_review" />
+    <item
+        android:id="@+id/navigation_checklist"
+        android:title="@string/title_checklist"
+        android:icon="@drawable/selector_checklist" />
+    <item
+        android:id="@+id/navigation_scan"
+        android:title="@string/title_scan"
+        android:icon="@drawable/selector_scan" />
+    <item
+        android:id="@+id/navigation_parking"
+        android:title="@string/title_parking"
+        android:icon="@drawable/selector_parking" />
+    <item
+        android:id="@+id/navigation_mypage"
+        android:title="@string/title_mypage"
+        android:icon="@drawable/selector_mypage" />
+</menu>
