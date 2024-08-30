@@ -69,4 +69,11 @@ dependencies {
     // okhttp3
     implementation 'com.squareup.okhttp3:okhttp:4.10.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.10.0'
+
+    // stomp
+    implementation 'com.github.NaikSoftware:StompProtocolAndroid:1.6.6'
+
+    // rxjava
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.5'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
 }
