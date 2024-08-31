@@ -12,6 +12,7 @@
         android:layout_height="match_parent"
         android:text="체크리스트"
         android:textSize="36sp"
+        android:textFontWeight="900"
         android:gravity="center"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
