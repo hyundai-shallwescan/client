@@ -10,8 +10,9 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="리뷰"
+        android:text="@string/title_review"
         android:textSize="36sp"
+        android:textFontWeight="900"
         android:gravity="center"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

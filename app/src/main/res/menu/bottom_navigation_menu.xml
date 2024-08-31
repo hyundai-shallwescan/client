@@ -11,8 +11,8 @@
         android:icon="@drawable/selector_checklist" />
     <item
         android:id="@+id/navigation_scan"
-        android:title="@string/title_scan"
-        android:icon="@drawable/selector_scan" />
+        android:title=""
+        app:showAsAction="never"/>
     <item
         android:id="@+id/navigation_parking"
         android:title="@string/title_parking"
