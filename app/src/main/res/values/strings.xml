@@ -2,7 +2,7 @@
     <string name="app_name">쉘위스캔</string>
     <string name="title_review">리뷰</string>
     <string name="title_checklist">체크리스트</string>
-    <string name="title_parking">주차 정산</string>
+    <string name="title_parking">주차정산</string>
     <string name="title_mypage">마이</string>
     <string name="title_scan">스캔앤고</string>
 </resources>

@@ -4,8 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import com.ite.sws.R
 import com.ite.sws.databinding.FragmentMypageBinding
+import com.ite.sws.domain.member.api.repository.MemberRepository
+import com.ite.sws.domain.member.data.PostLoginReq
 
 /**
  * 마이페이지 프래그먼트
@@ -23,12 +28,50 @@ class MypageFragment : Fragment() {
 
     private var _binding: FragmentMypageBinding? = null
     private val binding get() = _binding!!
+    private val memberRepository = MemberRepository()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentMypageBinding.inflate(inflater, container, false)
-        return binding.root
+        val rootView = binding.root
+
+        // 툴바 타이틀 설정
+        val toolbar = binding.toolbar.toolbar
+        (activity as? AppCompatActivity)?.setSupportActionBar(toolbar)
+        (activity as? AppCompatActivity)?.supportActionBar?.setDisplayShowTitleEnabled(false)
+        binding.toolbar.toolbarTitle.text = "마이페이지"
+
+        binding.btnLogin.setOnClickListener {
+            performLogin()
+        }
+        return rootView
+    }
+
+    private fun performLogin() {
+        val loginId = binding.edtLoginId.text.toString().trim()
+        val password = binding.edtPassword.text.toString().trim()
+
+        if (loginId.isEmpty() || password.isEmpty()) {
+            binding.tvLoginResult.text = "로그인 ID와 비밀번호를 입력하세요."
+            return
+        }
+
+        val postLoginReq = PostLoginReq(loginId, password)
+
+        memberRepository.login(postLoginReq,
+            onSuccess = { jwtToken ->
+                binding.tvLoginResult.text = "로그인 성공 AccessToken: ${jwtToken.accessToken}"
+            },
+            onFailure = { errorRes ->
+                binding.tvLoginResult.text = "로그인 실패: ${errorRes.message}"
+            }
+        )
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

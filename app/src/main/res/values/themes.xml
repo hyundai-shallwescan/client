@@ -3,16 +3,22 @@
 
     <style name="Theme.Client" parent="android:Theme.Material.Light.NoActionBar" />
 
-    <style name="BottomNavigationActive" parent="Widget.Design.BottomNavigationView">
+    <style name="bottom_navigation_active" parent="Widget.Design.BottomNavigationView">
         <item name="android:fontFamily">@font/happiness_sans_title</item>
-        <item name="android:textSize">13sp</item>
+        <item name="android:textSize">10sp</item>
         <item name="android:textColor">@color/main</item>
     </style>
 
-    <style name="BottomNavigationInactive" parent="Widget.Design.BottomNavigationView">
+    <style name="bottom_navigation_inactive" parent="Widget.Design.BottomNavigationView">
         <item name="android:fontFamily">@font/happiness_sans_regular</item>
-        <item name="android:textSize">13sp</item>
+        <item name="android:textSize">10sp</item>
         <item name="android:textColor">@color/nav_gray</item>
+    </style>
+
+    <style name="toolbar">
+        <item name="android:fontFamily">@font/happiness_sans_title</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/black</item>
     </style>
 
 </resources>
