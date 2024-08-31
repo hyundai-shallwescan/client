@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/navigation_checklist"
-        android:name="com.ite.sws.domain.member.view.ui.ChecklistFragment"
+        android:name="com.ite.sws.domain.checklist.view.ui.ChecklistFragment"
         android:label="fragment_checklist"
         tools:layout="@layout/fragment_checklist">
         <action
