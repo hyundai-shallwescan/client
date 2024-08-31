@@ -1,4 +1,4 @@
-package com.ite.sws.domain.member.view.ui
+package com.ite.sws.domain.checklist.view.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
