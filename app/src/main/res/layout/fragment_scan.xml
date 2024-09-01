@@ -7,11 +7,14 @@
     android:layout_height="match_parent"
     tools:context=".domain.cart.view.ui.ScanFragment">
 
-    <TextView
+    <com.journeyapps.barcodescanner.DecoratedBarcodeView
+        android:id="@+id/barcode_scanner"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="스캔앤고"
-        android:textSize="36sp"
-        android:gravity="center"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:zxing_scanner_layout="@layout/layout_barcode_scanner" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
