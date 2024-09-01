@@ -5,4 +5,10 @@
     <string name="title_parking">주차정산</string>
     <string name="title_mypage">마이</string>
     <string name="title_scan">스캔앤고</string>
+    <string name="title_cart_entrance">Profile</string>
+    <string name="title_cart_login">장바구니 접속</string>
+    <string name="title_nickname">닉네임</string>
+    <string name="title_hint_nickname">닉네임을 입력하세요.</string>
+    <string name="title_password">비밀번호</string>
+    <string name="title_hint_password">비밀번호를 입력하세요.</string>
 </resources>

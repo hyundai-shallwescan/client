@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import com.ite.sws.R
 import com.ite.sws.databinding.FragmentScanBinding
 
 /**
@@ -30,6 +32,17 @@ class ScanFragment : Fragment() {
     ): View? {
         _binding = FragmentScanBinding.inflate(inflater, container, false)
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setupClickListeners()
+    }
+
+    private fun setupClickListeners() {
+        binding.button3.setOnClickListener {
+            findNavController().navigate(R.id.action_scanFragment_to_chatFragment)
+        }
     }
 
 }
