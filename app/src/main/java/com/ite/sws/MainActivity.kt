@@ -2,9 +2,9 @@ package com.ite.sws
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.ite.sws.databinding.ActivityMainBinding
 
 /**
@@ -17,6 +17,7 @@ import com.ite.sws.databinding.ActivityMainBinding
  * 수정일        	수정자        수정내용
  * ----------  --------    ---------------------------
  * 2024.08.24  	정은지       최초 생성 및 네비게이션바 추가
+ * 2024.08.31   정은지       화면 전환에 따른 FAB 아이콘 및 배경 변경
  * </pre>
  */
 class MainActivity : AppCompatActivity() {
@@ -29,12 +30,28 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.navigation_main)
         binding.navigationMain.itemIconTintList = null
 
-        val navController = supportFragmentManager.findFragmentById(R.id.container_main)?.findNavController()
+        val navController = supportFragmentManager.findFragmentById(binding.containerMain.id)?.findNavController()
         navController?.let {
             binding.navigationMain.setupWithNavController(it)
         }
+
+        // 화면 전환 시 FAB 아이콘 및 배경 변경
+        navController?.addOnDestinationChangedListener() { _, destination, _ ->
+            when (destination.id) {
+                R.id.navigation_scan -> {
+                    // 스캔앤고 메뉴가 선택되었을 때
+                    binding.btnScan.setImageResource(R.drawable.ic_nav_scan_on)
+                    binding.btnScan.backgroundTintList = ContextCompat.getColorStateList(this, R.color.main)
+                }
+                else -> {
+                    // 다른 메뉴가 선택되었을 때
+                    binding.btnScan.setImageResource(R.drawable.ic_nav_scan_off)
+                    binding.btnScan.backgroundTintList = ContextCompat.getColorStateList(this, R.color.white)
+                }
+            }
+        }
+
     }
 }

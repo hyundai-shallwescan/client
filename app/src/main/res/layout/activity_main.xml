@@ -41,10 +41,10 @@
         android:src="@drawable/ic_nav_scan_on"
         android:layout_gravity="center"
         android:layout_marginBottom="15dp"
-        app:tint="@android:color/white"
         app:backgroundTint="@color/main"
         app:elevation="8dp"
         app:maxImageSize="40dp"
+        android:stateListAnimator="@null"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>

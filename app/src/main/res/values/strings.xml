@@ -8,6 +8,12 @@
     <string name="title_mypage">마이</string>
     <string name="title_scan">스캔앤고</string>
 
+    <!-- 마이페이지 -->
+    <string name="fragment_mypage_review">리뷰 관리</string>
+    <string name="fragment_mypage_purchase">구매 내역</string>
+    <string name="fragment_mypage_logout">로그아웃</string>
+    <string name="fragment_mypage_withdraw">회원탈퇴</string>
+
     <!-- 모달 -->
     <string name="modal_go_setting">설정으로 이동</string>
     <string name="modal_camera_title">카메라 권한이 필요합니다.</string>

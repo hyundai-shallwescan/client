@@ -11,7 +11,7 @@
     </style>
 
     <style name="bottom_navigation_inactive" parent="Widget.Design.BottomNavigationView">
-        <item name="android:fontFamily">@font/happiness_sans_regular</item>
+        <item name="android:fontFamily">@font/happiness_sans_title</item>
         <item name="android:textSize">10sp</item>
         <item name="android:textColor">@color/nav_gray</item>
     </style>
@@ -22,6 +22,17 @@
         <item name="android:textColor">@color/black</item>
     </style>
 
+    <style name="mypage_button_top">
+        <item name="android:textSize">25sp</item>
+        <item name="android:textColor">@color/dark_green</item>
+        <item name="android:textFontWeight">1000</item>
+        <item name="android:layout_height">90dp</item>
+    </style>
 
+    <style name="mypage_button_bottom">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/dark_green</item>
+        <item name="android:textFontWeight">1000</item>
+    </style>
 
 </resources>

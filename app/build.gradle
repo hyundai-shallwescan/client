@@ -84,6 +84,10 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxjava:2.2.5'
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
 
+    // activity & fragment
+    implementation "androidx.activity:activity-ktx:1.4.0"
+    implementation "androidx.fragment:fragment-ktx:1.4.1"
+
     // ZXing
     implementation 'com.journeyapps:zxing-android-embedded:4.3.0'
 }
