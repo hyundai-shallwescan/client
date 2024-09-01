@@ -1,8 +1,17 @@
 <resources>
     <string name="app_name">쉘위스캔</string>
+
+    <!-- 타이틀 -->
     <string name="title_review">리뷰</string>
     <string name="title_checklist">체크리스트</string>
     <string name="title_parking">주차정산</string>
     <string name="title_mypage">마이</string>
     <string name="title_scan">스캔앤고</string>
+
+    <!-- 모달 -->
+    <string name="modal_go_setting">설정으로 이동</string>
+    <string name="modal_camera_title">카메라 권한이 필요합니다.</string>
+    <string name="modal_camera_message">바코드 스캔을 위해 카메라 권한이 필요합니다. 설정에서 권한을 허용해 주세요.</string>
+    <string name="modal_cancel">취소</string>
+    <string name="modal_check">확인</string>
 </resources>
