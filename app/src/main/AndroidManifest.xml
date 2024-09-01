@@ -17,6 +17,15 @@
         android:theme="@style/Theme.Client"
         tools:targetApi="31">
         <activity
+            android:name=".domain.member.view.ui.MyPurchaseHistoryActivity"
+            android:exported="true" />
+        <activity
+            android:name=".domain.member.view.ui.MyReviewActivity"
+            android:exported="true" />
+        <activity
+            android:name=".domain.member.view.ui.UpdateProfileActivity"
+            android:exported="true" />
+        <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name">
