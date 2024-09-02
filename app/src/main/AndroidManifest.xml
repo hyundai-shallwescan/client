@@ -6,6 +6,11 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
     <application
         android:networkSecurityConfig="@xml/network_security_config"
         android:allowBackup="true"
@@ -16,7 +21,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Client"
-        tools:targetApi="31">
+        tools:targetApi="31"
+        android:usesCleartextTraffic="true">
+        <activity
+            android:name=".domain.member.view.ui.MyPurchaseHistoryActivity"
+            android:exported="true" />
+        <activity
+            android:name=".domain.member.view.ui.MyReviewActivity"
+            android:exported="true" />
+        <activity
+            android:name=".domain.member.view.ui.UpdateProfileActivity"
+            android:exported="true" />
         <activity
             android:name="com.ite.sws.MainActivity"
             android:exported="true"
