@@ -109,5 +109,24 @@
         <action
             android:id="@+id/action_cartFragment_self"
             app:destination="@id/navigation_scan" />
+        <action
+            android:id="@+id/action_scanFragment_to_chatFragment"
+            app:destination="@id/navigation_chat" />
+        <action
+            android:id="@+id/action_scanFragment_to_cartLoginFragment"
+            app:destination="@id/navigation_cartLogin" />
     </fragment>
+    <fragment
+        android:id="@+id/navigation_chat"
+        android:name="com.ite.sws.domain.chat.view.ui.ChatFragment"
+        android:label="Chat Fragment"
+        tools:layout="@layout/fragment_chat" >
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_cartLogin"
+        android:name="com.ite.sws.domain.cart.view.ui.CartLoginFragment"
+        android:label="fragment_cart_login"
+        tools:layout="@layout/fragment_cart_login">
+    </fragment>
+
 </navigation>

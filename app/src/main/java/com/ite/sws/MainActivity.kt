@@ -1,11 +1,15 @@
 package com.ite.sws
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.ite.sws.databinding.ActivityMainBinding
+import com.ite.sws.util.SharedPreferencesUtil
 
 /**
  * 메인 액티비티
@@ -18,6 +22,7 @@ import com.ite.sws.databinding.ActivityMainBinding
  * ----------  --------    ---------------------------
  * 2024.08.24  	정은지       최초 생성 및 네비게이션바 추가
  * 2024.08.31   정은지       화면 전환에 따른 FAB 아이콘 및 배경 변경
+ * 2024.09.02   남진수       딥링크 연결 처리
  * </pre>
  */
 class MainActivity : AppCompatActivity() {
@@ -37,6 +42,8 @@ class MainActivity : AppCompatActivity() {
             binding.navigationMain.setupWithNavController(it)
         }
 
+        intent?.let { handleDeeplink(it) }
+
         // 화면 전환 시 FAB 아이콘 및 배경 변경
         navController?.addOnDestinationChangedListener() { _, destination, _ ->
             when (destination.id) {
@@ -52,6 +59,41 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-
     }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        intent?.let { handleDeeplink(it) }
+    }
+
+    private fun handleDeeplink(intent: Intent) {
+        val action: String? = intent.action
+        val data: Uri? = intent.data
+
+        if (action == Intent.ACTION_VIEW) {
+            val cartIdString = data?.getQueryParameter("cartId")
+            val cartId: Long? = cartIdString?.toLongOrNull()
+
+            if (cartId != null) {
+                Log.d("DeepLink", "Received cartId as Long: $cartId")
+                SharedPreferencesUtil.saveLong(this, "cart_id", cartId)
+                navigateToCart(cartId)
+            } else {
+                Log.d("DeepLink", "cartId is null or not a valid Long")
+            }
+        }
+    }
+
+    private fun navigateToCart(cartId: Long) {
+        val navController = supportFragmentManager.findFragmentById(R.id.container_main)?.findNavController()
+        if (navController != null) {
+            val bundle = Bundle().apply {
+                putLong("cartId", cartId)
+            }
+            navController.navigate(R.id.navigation_scan, bundle)
+        } else {
+            Log.e("MainActivity", "NavController is not set on container_main")
+        }
+    }
+
 }
