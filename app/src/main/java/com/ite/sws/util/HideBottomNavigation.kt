@@ -16,7 +16,7 @@ import com.ite.sws.databinding.ActivityMainBinding
  * </pre>
  *
  * @param binding ActivityMainBinding 객체
- * @param state ture일 경우 숨감, false일 경우 노출
+ * @param state ture일 경우 숨김, false일 경우 노출
  */
 fun hideBottomNavigation(binding: ActivityMainBinding, state: Boolean) {
     if (state) {
