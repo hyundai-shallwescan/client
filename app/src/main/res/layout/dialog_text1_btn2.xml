@@ -1,51 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_round_white"
+    android:gravity="center"
+    android:minWidth="300dp"
     android:orientation="vertical"
-    android:paddingHorizontal="25dp"
-    android:paddingVertical="25dp"
-    android:background="@drawable/bg_dialog">
+    android:padding="20dp">
 
     <TextView
         android:id="@+id/text_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/happiness_sans_title"
-        android:gravity="center"
-        android:paddingBottom="@dimen/common_horizontal_margin"
-        android:text="@string/modal_camera_title"
-        android:textColor="@color/black"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/text_message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/happiness_sans_title"
-        android:textColor="@color/gray"
         android:gravity="center"
-        android:paddingBottom="@dimen/common_horizontal_margin"
-        android:text="@string/modal_camera_message"
-        android:textSize="16sp"
-        app:layout_constraintTop_toBottomOf="@+id/text_title" />
+        android:minHeight="50dp"
+        android:textSize="18sp"
+        android:fontFamily="@font/happiness_sans_title"
+        android:textColor="@color/black" />
 
     <LinearLayout
-        android:id="@+id/layout_btns"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_message">
-
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:orientation="horizontal">
         <!-- 취소 버튼 -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_btn_cancel"
@@ -62,7 +41,7 @@
                 android:background="@color/white"
                 android:scaleType="fitCenter"
                 android:src="@drawable/btn_small_gray"
-                tools:ignore="MissingConstraints" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/text_cancel"
@@ -72,8 +51,8 @@
                 android:text="@string/modal_cancel"
                 android:textColor="@color/black"
                 android:textSize="15sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="@+id/btn_cancel"
+                app:layout_constraintEnd_toEndOf="@+id/btn_cancel"
                 app:layout_constraintStart_toStartOf="@+id/btn_cancel"
                 app:layout_constraintTop_toTopOf="@+id/btn_cancel" />
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -93,7 +72,7 @@
                 android:background="@color/white"
                 android:scaleType="fitCenter"
                 android:src="@drawable/btn_small_green"
-                tools:ignore="MissingConstraints" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/text_confirm"
@@ -103,12 +82,11 @@
                 android:text="@string/modal_check"
                 android:textColor="@color/white"
                 android:textSize="15sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/btn_confirm"
-                app:layout_constraintStart_toStartOf="@+id/btn_confirm"
+                app:layout_constraintBottom_toBottomOf="@+id/btn_confirm"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/btn_confirm" />
         </androidx.constraintlayout.widget.ConstraintLayout>
-
     </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

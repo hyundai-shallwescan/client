@@ -17,7 +17,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.ite.sws.R
 import com.ite.sws.databinding.FragmentScanBinding
-import com.ite.sws.util.showCustomDialog
+import com.ite.sws.util.CustomDialog
 import com.journeyapps.barcodescanner.BarcodeCallback
 import com.journeyapps.barcodescanner.BarcodeResult
 import com.journeyapps.barcodescanner.DecoratedBarcodeView
@@ -139,23 +139,23 @@ class ScanFragment : Fragment() {
             startBarcodeScanner()
         } else {
             // 사용자가 권한을 거부한 경우
-            showCustomDialog(
-                context = requireContext(),
+            CustomDialog(
+                layoutId = R.layout.dialog_text2_btn2,
                 title = getString(R.string.modal_camera_title),
                 message = getString(R.string.modal_camera_message),
-                layoutId = R.layout.dialog_title_message_twobtn,
                 confirmText = getString(R.string.modal_go_setting),
                 cancelText = getString(R.string.modal_cancel),
                 onConfirm = {
+                    // 확인 버튼 클릭 시 실행할 작업
                     val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
                     val uri = Uri.fromParts("package", requireContext().packageName, null)
                     intent.data = uri
                     startActivity(intent)
                 },
                 onCancel = {
-                    // 사용자가 취소를 눌렀을 때의 동작
+                    // 취소 버튼 클릭 시 실행할 작업
                 }
-            )
+            ).show(activity?.supportFragmentManager!!, "CustomDialog")
         }
     }
 
