@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".domain.member.view.ui.MypageFragment">
 
+    <!-- 툴바 -->
     <include
         android:id="@+id/toolbar"
         layout="@layout/toolbar"
@@ -14,60 +15,156 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <TextView
-        android:id="@+id/tv_mypage_title"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="마이페이지"
-        android:textSize="36sp"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="32dp"
+        android:layout_margin="@dimen/common_vertical_margin"
+        android:layout_marginTop="72dp"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        tools:layout_editor_absoluteX="20dp">
 
-    <EditText
-        android:id="@+id/edt_login_id"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="로그인 ID"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintTop_toBottomOf="@id/tv_mypage_title"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        <!-- 프로필 -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_profile"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/edt_password"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="비밀번호"
-        android:inputType="textPassword"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/edt_login_id"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+            <ImageView
+                android:id="@+id/img_pancake_heendy"
+                android:layout_width="170dp"
+                android:layout_height="170dp"
+                android:src="@drawable/img_pancake_heendy"
+                android:layout_gravity="center"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:contentDescription="@null"/>
 
-    <Button
-        android:id="@+id/btn_login"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="로그인"
-        android:layout_marginTop="32dp"
-        app:layout_constraintTop_toBottomOf="@id/edt_password"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+            <ImageView
+                android:id="@+id/img_circle"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:src="@drawable/btn_circle"
+                app:layout_constraintRight_toRightOf="@id/img_pancake_heendy"
+                app:layout_constraintBottom_toBottomOf="@id/img_pancake_heendy"
+                android:contentDescription="@null"/>
 
-    <TextView
-        android:id="@+id/tv_login_result"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/btn_login"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+            <ImageButton
+                android:id="@+id/btn_update"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@null"
+                android:padding="10dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_pencil"
+                app:layout_constraintBottom_toBottomOf="@+id/img_circle"
+                app:layout_constraintEnd_toEndOf="@+id/img_circle"
+                app:layout_constraintStart_toStartOf="@+id/img_circle"
+                app:layout_constraintTop_toTopOf="@+id/img_circle"
+                tools:ignore="SpeakableTextPresentCheck"
+                android:contentDescription="@null"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <!-- 이름 -->
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="정은지님"
+            android:textColor="@color/black"
+            android:textFontWeight="1000"
+            android:textSize="25sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/layout_profile" />
+
+        <!-- 리뷰관리 버튼 -->
+        <Button
+            android:id="@+id/btn_review"
+            style="@style/mypage_button_top"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="3dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginRight="3dp"
+            android:background="@drawable/btn_light_green"
+            android:elevation="20dp"
+            android:text="@string/fragment_mypage_review"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_name" />
+
+        <!-- 구매내역 버튼 -->
+        <Button
+            android:id="@+id/btn_payment"
+            style="@style/mypage_button_top"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="3dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="3dp"
+            android:background="@drawable/btn_light_green"
+            android:text="@string/fragment_mypage_purchase"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_review" />
+
+        <!-- 로그아웃 버튼 -->
+        <RelativeLayout
+            android:id="@+id/layout_logout"
+            android:layout_width="180dp"
+            android:layout_height="70dp"
+            android:layout_marginTop="20dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_payment">
+
+            <ImageButton
+                android:id="@+id/btn_logout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:scaleType="fitXY"
+                android:src="@drawable/btn_white_shadow"
+                tools:ignore="SpeakableTextPresentCheck"
+                android:contentDescription="@null" />
+
+            <TextView
+                android:id="@+id/tv_logout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:paddingBottom="5dp"
+                android:text="@string/fragment_mypage_logout"
+                style="@style/mypage_button_bottom" />
+        </RelativeLayout>
+
+        <!-- 회원탈퇴 버튼 -->
+        <RelativeLayout
+            android:id="@+id/layout_withdraw"
+            android:layout_width="180dp"
+            android:layout_height="70dp"
+            android:layout_marginTop="20dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_payment">
+
+            <ImageButton
+                android:id="@+id/btn_withdraw"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:scaleType="fitXY"
+                android:src="@drawable/btn_white_shadow"
+                tools:ignore="SpeakableTextPresentCheck"
+                android:contentDescription="@null"/>
+
+            <TextView
+                android:id="@+id/tv_withdraw"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:paddingBottom="5dp"
+                android:text="@string/fragment_mypage_withdraw"
+                style="@style/mypage_button_bottom" />
+        </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
