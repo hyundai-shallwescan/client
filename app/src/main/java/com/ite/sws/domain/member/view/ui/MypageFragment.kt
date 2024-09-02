@@ -8,7 +8,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.ite.sws.MainActivity
 import com.ite.sws.R
-import com.ite.sws.common.data.replaceFragmentWithAnimation
 import com.ite.sws.databinding.FragmentMypageBinding
 import com.ite.sws.domain.member.api.repository.MemberRepository
 import com.ite.sws.util.hideBottomNavigation
@@ -55,7 +54,6 @@ class MypageFragment : Fragment() {
         // 리뷰 관리 버튼 클릭
         binding.btnReview.setOnClickListener {
             // TODO 리뷰 관리 화면 이동
-            replaceFragmentWithAnimation(R.id.container_main, MyReviewFragment(), true)
         }
 
         // 업데이트 버튼 클릭
@@ -89,7 +87,6 @@ class MypageFragment : Fragment() {
             )
         }
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()

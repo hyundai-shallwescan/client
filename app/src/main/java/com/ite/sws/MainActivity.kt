@@ -39,7 +39,8 @@ class MainActivity : AppCompatActivity() {
 
         binding.navigationMain.itemIconTintList = null
 
-        val navController = supportFragmentManager.findFragmentById(binding.containerMain.id)?.findNavController()
+        val navController =
+            supportFragmentManager.findFragmentById(binding.containerMain.id)?.findNavController()
         navController?.let {
             binding.navigationMain.setupWithNavController(it)
         }
@@ -53,32 +54,19 @@ class MainActivity : AppCompatActivity() {
                 R.id.navigation_scan -> {
                     // 스캔앤고 메뉴가 선택되었을 때
                     binding.btnScan.setImageResource(R.drawable.ic_nav_scan_on)
-                    binding.btnScan.backgroundTintList = ContextCompat.getColorStateList(this, R.color.main)
+                    binding.btnScan.backgroundTintList =
+                        ContextCompat.getColorStateList(this, R.color.main)
                 }
+
                 else -> {
                     // 다른 메뉴가 선택되었을 때
                     binding.btnScan.setImageResource(R.drawable.ic_nav_scan_off)
-                    binding.btnScan.backgroundTintList = ContextCompat.getColorStateList(this, R.color.white)
+                    binding.btnScan.backgroundTintList =
+                        ContextCompat.getColorStateList(this, R.color.white)
                 }
             }
         }
     }
-
-    // TODO 함수 삭제
-    fun replaceFragment(containerId: Int, fragment: Fragment, addToBackStack: Boolean = true) {
-        val fragmentManager = supportFragmentManager
-        val fragmentTransaction = fragmentManager.beginTransaction()
-
-        // 프래그먼트 교체
-        fragmentTransaction.replace(containerId, fragment)
-
-        // 백스택에 추가
-        if (addToBackStack) {
-            fragmentTransaction.addToBackStack(null)
-        }
-
-        // 트랜잭션 커밋
-        fragmentTransaction.commit()
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
@@ -104,7 +92,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun navigateToCart(cartId: Long) {
-        val navController = supportFragmentManager.findFragmentById(R.id.container_main)?.findNavController()
+        val navController =
+            supportFragmentManager.findFragmentById(R.id.container_main)?.findNavController()
         if (navController != null) {
             val bundle = Bundle().apply {
                 putLong("cartId", cartId)
@@ -114,5 +103,4 @@ class MainActivity : AppCompatActivity() {
             Log.e("MainActivity", "NavController is not set on container_main")
         }
     }
-
 }
