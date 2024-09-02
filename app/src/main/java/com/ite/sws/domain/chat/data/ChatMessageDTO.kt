@@ -16,5 +16,5 @@ data class ChatMessageDTO (
     val cartMemberId: Long?,
     val cartId: Long?,
     val payload: String?,
-    val status: String?
+    val status: String? // NORMAL, CART, CHECK
 )
