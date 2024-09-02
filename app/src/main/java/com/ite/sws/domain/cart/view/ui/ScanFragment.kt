@@ -4,6 +4,8 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +13,7 @@ import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.ite.sws.R
 import com.ite.sws.databinding.FragmentScanBinding
@@ -36,13 +39,16 @@ import com.journeyapps.barcodescanner.DecoratedBarcodeView
  */
 class ScanFragment : Fragment() {
 
+    // View Binding 객체
     private var _binding: FragmentScanBinding? = null
     private val binding get() = _binding!!
 
+    // ViewModel 객체
     private lateinit var scanViewModel: ScanViewModel
-
     private lateinit var barcodeScannerView: DecoratedBarcodeView
 
+    // 딜레이를 주기 위한 핸들러
+    private val delayHandler = Handler(Looper.getMainLooper())
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,7 +56,6 @@ class ScanFragment : Fragment() {
     ): View? {
         _binding = FragmentScanBinding.inflate(inflater, container, false)
         scanViewModel = ViewModelProvider(this).get(ScanViewModel::class.java)
-
         barcodeScannerView = binding.barcodeScanner
 
         // 카메라 권한 체크 및 요청
@@ -61,29 +66,71 @@ class ScanFragment : Fragment() {
             requestCameraPermissionLauncher.launch(android.Manifest.permission.CAMERA)
         }
 
+        // ViewModel에서 발생한 이벤트를 관찰
+        observeViewModel()
+
         return binding.root
     }
 
     /**
      * 바코드 스캔 시작
+     * - 바코드가 인식되면, 인식된 바코드를 서버로 전송하고 스캐너를 일시 정지
      */
     private fun startBarcodeScanner() {
         barcodeScannerView.decodeContinuous(object : BarcodeCallback {
             override fun barcodeResult(result: BarcodeResult?) {
                 result?.let {
                     val barcode = it.text
-                    scanViewModel.postCartItem(barcode)
                     barcodeScannerView.pause()
+                    scanViewModel.putCartItem(barcode)
                 }
             }
 
-            override fun possibleResultPoints(resultPoints: List<com.google.zxing.ResultPoint>) {
+            override fun possibleResultPoints(resultPoints: List<com.google.zxing.ResultPoint>) { }
+        })
+    }
+
+    /**
+     * ViewModel의 LiveData 관찰
+     */
+    private fun observeViewModel() {
+        scanViewModel.scanResult.observe(viewLifecycleOwner, Observer { result ->
+            result.onSuccess {
+                resumeScannerWithDelay()
+            }.onFailure {
+                resumeScannerWithDelay()    // 요청 실패 시에도 동일하게 재개
             }
         })
     }
 
     /**
+     * 스캐너 재시작 시, 0.3초(300밀리초)딜레이
+     */
+    private fun resumeScannerWithDelay() {
+        delayHandler.postDelayed({
+            barcodeScannerView.resume()
+        }, 300)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        barcodeScannerView.resume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        barcodeScannerView.pause()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        delayHandler.removeCallbacksAndMessages(null) // 핸들러에서 대기 중인 작업 제거
+        _binding = null
+    }
+
+    /**
      * 권한 요청 결과를 처리하는 launcher
+     * - 사용자가 카메라 권한을 허용하면 스캐너를 시작, 거부하면 설정 화면으로 이동
      */
     private val requestCameraPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -110,21 +157,6 @@ class ScanFragment : Fragment() {
                 }
             )
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        barcodeScannerView.resume()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        barcodeScannerView.pause()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
 }

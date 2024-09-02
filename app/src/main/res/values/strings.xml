@@ -20,4 +20,8 @@
     <string name="modal_camera_message">바코드 스캔을 위해 카메라 권한이 필요합니다. 설정에서 권한을 허용해 주세요.</string>
     <string name="modal_cancel">취소</string>
     <string name="modal_check">확인</string>
+
+    <!-- 버튼 -->
+    <string name="btn_scanner_chat">채팅</string>
+    <string name="btn_scanner_additional">일행초대</string>
 </resources>
