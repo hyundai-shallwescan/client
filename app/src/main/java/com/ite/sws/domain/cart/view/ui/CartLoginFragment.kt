@@ -11,7 +11,7 @@ import com.ite.sws.util.SharedPreferencesUtil
 import com.ite.sws.databinding.FragmentCartLoginBinding
 import com.ite.sws.domain.cart.api.repository.CartRepository
 import com.ite.sws.domain.cart.data.PostCartLoginReq
-import com.ite.sws.domain.chat.view.ui.ChatFragment
+import com.ite.sws.util.replaceFragmentWithAnimation
 
 /**
  * 장바구니 로그인 프래그먼트
@@ -73,11 +73,10 @@ class CartLoginFragment : Fragment() {
     }
 
     private fun navigateToNextScreen() {
-        parentFragmentManager.beginTransaction().apply {
-            replace(R.id.container_main, ChatFragment())
-            addToBackStack(null)
-            commit()
-        }
+        replaceFragmentWithAnimation(
+            R.id.container_main,
+            ScanFragment()
+        )
     }
 
     override fun onDestroyView() {
