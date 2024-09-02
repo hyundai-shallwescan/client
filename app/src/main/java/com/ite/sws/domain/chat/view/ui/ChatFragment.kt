@@ -47,70 +47,9 @@ class ChatFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // JWT 토큰을 가져오는 로직 (예: SharedPreferences 등에서 가져오기)
-        val jwtToken = SharedPreferencesUtil.getString(requireContext(), "jwt_token")
-
-        if (jwtToken.isNullOrEmpty() || !isTokenValid(jwtToken)) {
-            findNavController().navigate(R.id.action_chatFragment_to_cartLoginFragment)
-            return
-        }
-
-        // WebSocket 연결
-        WebSocketClient.connect(jwtToken) { event ->
-            when (event.type) {
-                LifecycleEvent.Type.OPENED -> {
-                    Log.d("STOMP", "WebSocket opened")
-                    // 연결이 열리면 특정 장바구니에 구독
-                    subscribeToCart(1)
-                }
-                LifecycleEvent.Type.CLOSED -> {
-                    Log.d("STOMP", "WebSocket closed")
-                }
-                LifecycleEvent.Type.ERROR -> {
-                    Log.e("STOMP", "WebSocket error", event.exception)
-                }
-                else -> {
-                    Log.d("STOMP", "WebSocket event: ${event.message}")
-                }
-            }
-        }
-
-        // 채팅방 입장 메시지 전송
-        enterCart(1)
-
-        // 메시지 전송
         binding.button2.setOnClickListener {
-            val payload = binding.editTextMessage.text.toString().trim()
-            if (payload.isNotEmpty()) {
-                sendMessage(123, payload, "SENT", 1)
-                Log.d("ChatFragment", "Button clicked and message sent: $payload")
-                binding.editTextMessage.text.clear()
-            }
-        }
-    }
-
-    private fun isTokenValid(token: String): Boolean {
-
-        return true
-    }
-
-    private fun navigateToLoginFragment() {
-        val cartLoginFragment = CartLoginFragment()
-
-        // Fragment 전환을 위한 Transaction 시작
-        parentFragmentManager.beginTransaction().apply {
-            replace(R.id.fragment_container, cartLoginFragment)
-            addToBackStack(null) // 뒤로 가기 버튼을 누르면 이전 프래그먼트로 돌아가게 하려면 추가합니다.
-            commit() // 트랜잭션 커밋
-        }
-    }
-
-    private fun subscribeToCart(cartId: Long) {
-        WebSocketClient.subscribe("/sub/chat/room/$cartId") { message ->
-            Log.i("STOMP", "Received: $message")
-            activity?.runOnUiThread {
-                binding.chatHistory.append("Received: $message\n")
-            }
+            val message = binding.chatHistory.text.toString()
+            sendMessage(cartMemberId, message, "NORMAL", cartId)
         }
     }
 
@@ -123,18 +62,6 @@ class ChatFragment : Fragment() {
             Log.d("STOMP", "Message sent successfully: $payload")
         }, { error ->
             Log.e("STOMP", "Failed to send message: $payload", error)
-        })
-    }
-
-    @SuppressLint("CheckResult")
-    private fun enterCart(cartId: Long) {
-        val chatMessageDTO = ChatMessageDTO(cartMemberId = 0, payload = "", status = "ENTER", cartId = cartId)
-        val data = Gson().toJson(chatMessageDTO)
-
-        WebSocketClient.sendMessage("/pub/chat/enter", data, {
-            Log.d("STOMP", "Entered chat room successfully")
-        }, { error ->
-            Log.e("STOMP", "Failed to enter chat room", error)
         })
     }
 

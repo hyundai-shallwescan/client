@@ -43,6 +43,16 @@ object SharedPreferencesUtil {
         return getPreferences(context).getInt(key, defaultValue)
     }
 
+    fun saveLong(context: Context, key: String, value: Long) {
+        val editor = getPreferences(context).edit()
+        editor.putLong(key, value)
+        editor.apply()
+    }
+
+    fun getLong(context: Context, key: String, defaultValue: Long = 0): Long {
+        return getPreferences(context).getLong(key, defaultValue)
+    }
+
     fun saveBoolean(context: Context, key: String, value: Boolean) {
         val editor = getPreferences(context).edit()
         editor.putBoolean(key, value)
