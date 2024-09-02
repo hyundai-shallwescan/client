@@ -1,4 +1,4 @@
-package com.ite.sws.common.data
+package com.ite.sws.util
 
 import androidx.fragment.app.Fragment
 

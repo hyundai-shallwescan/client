@@ -16,7 +16,7 @@ import androidx.navigation.fragment.findNavController
 import com.ite.sws.R
 import com.ite.sws.util.SharedPreferencesUtil
 import com.ite.sws.common.WebSocketClient
-import com.ite.sws.common.data.replaceFragmentWithAnimation
+import com.ite.sws.util.replaceFragmentWithAnimation
 import com.ite.sws.databinding.FragmentScanBinding
 import com.ite.sws.domain.chat.view.ui.ChatFragment
 import ua.naiksoftware.stomp.dto.LifecycleEvent
