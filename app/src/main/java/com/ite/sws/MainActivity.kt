@@ -1,8 +1,10 @@
 package com.ite.sws
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.ite.sws.databinding.ActivityMainBinding
@@ -22,7 +24,7 @@ import com.ite.sws.databinding.ActivityMainBinding
  */
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityMainBinding
+    public lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,8 +39,8 @@ class MainActivity : AppCompatActivity() {
             binding.navigationMain.setupWithNavController(it)
         }
 
-        // 화면 전환 시 FAB 아이콘 및 배경 변경
         navController?.addOnDestinationChangedListener() { _, destination, _ ->
+            // 화면 전환 시 FAB 아이콘 및 배경 변경
             when (destination.id) {
                 R.id.navigation_scan -> {
                     // 스캔앤고 메뉴가 선택되었을 때
@@ -52,6 +54,22 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
 
+    // TODO 함수 삭제
+    fun replaceFragment(containerId: Int, fragment: Fragment, addToBackStack: Boolean = true) {
+        val fragmentManager = supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+
+        // 프래그먼트 교체
+        fragmentTransaction.replace(containerId, fragment)
+
+        // 백스택에 추가
+        if (addToBackStack) {
+            fragmentTransaction.addToBackStack(null)
+        }
+
+        // 트랜잭션 커밋
+        fragmentTransaction.commit()
     }
 }
