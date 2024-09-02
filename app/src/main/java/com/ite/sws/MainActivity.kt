@@ -5,12 +5,10 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.ite.sws.common.SharedPreferencesUtil
+import com.ite.sws.util.SharedPreferencesUtil
 import com.ite.sws.databinding.ActivityMainBinding
 
 /**

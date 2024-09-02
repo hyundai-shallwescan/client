@@ -7,15 +7,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import com.google.gson.Gson
-import com.ite.sws.R
-import com.ite.sws.common.SharedPreferencesUtil
 import com.ite.sws.common.WebSocketClient
 import com.ite.sws.databinding.FragmentChatBinding
-import com.ite.sws.domain.cart.view.ui.CartLoginFragment
 import com.ite.sws.domain.chat.data.ChatMessageDTO
-import ua.naiksoftware.stomp.dto.LifecycleEvent
 
 /**
  * 채팅 프래그먼트

@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.ite.sws.R
-import com.ite.sws.common.SharedPreferencesUtil
+import com.ite.sws.util.SharedPreferencesUtil
 import com.ite.sws.databinding.FragmentCartLoginBinding
 import com.ite.sws.domain.cart.api.repository.CartRepository
 import com.ite.sws.domain.cart.data.PostCartLoginReq

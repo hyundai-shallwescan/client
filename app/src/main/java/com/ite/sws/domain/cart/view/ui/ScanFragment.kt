@@ -8,9 +8,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.ite.sws.R
-import com.ite.sws.common.SharedPreferencesUtil
+import com.ite.sws.util.SharedPreferencesUtil
 import com.ite.sws.common.WebSocketClient
+import com.ite.sws.common.data.replaceFragmentWithAnimation
 import com.ite.sws.databinding.FragmentScanBinding
+import com.ite.sws.domain.chat.view.ui.ChatFragment
 import ua.naiksoftware.stomp.dto.LifecycleEvent
 
 /**
@@ -49,7 +51,9 @@ class ScanFragment : Fragment() {
             return
         }
 
-        // WebSocket 연결
+        /**
+         * WebSocket 연결
+         */
         WebSocketClient.connect(jwtToken) { event ->
             when (event.type) {
                 LifecycleEvent.Type.OPENED -> {
@@ -78,6 +82,9 @@ class ScanFragment : Fragment() {
         return true
     }
 
+    /**
+     * 특정 장바구니에 구독
+     */
     private fun subscribeToCart(cartId: Long) {
         if (cartId == 0L) {
             Log.e("ScanFragment", "Invalid cartId: $cartId")
@@ -95,9 +102,15 @@ class ScanFragment : Fragment() {
         }
     }
 
+    /**
+     * 채팅으로 이동
+     */
     private fun setupClickListeners() {
         binding.button3.setOnClickListener {
-            findNavController().navigate(R.id.action_scanFragment_to_chatFragment)
+            replaceFragmentWithAnimation(
+                containerId = R.id.container_main,
+                fragment = ChatFragment()
+            )
         }
     }
 

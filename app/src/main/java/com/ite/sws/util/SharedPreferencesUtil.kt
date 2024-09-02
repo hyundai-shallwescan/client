@@ -1,4 +1,4 @@
-package com.ite.sws.common
+package com.ite.sws.util
 
 import android.content.Context
 import android.content.SharedPreferences
