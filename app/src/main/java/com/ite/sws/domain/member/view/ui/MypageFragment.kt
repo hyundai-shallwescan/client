@@ -13,7 +13,6 @@ import com.ite.sws.databinding.FragmentMypageBinding
 import com.ite.sws.domain.member.api.repository.MemberRepository
 import com.ite.sws.util.hideBottomNavigation
 import com.ite.sws.util.replaceFragmentWithAnimation
-import com.ite.sws.util.showCustomDialog
 import setupToolbar
 
 /**
