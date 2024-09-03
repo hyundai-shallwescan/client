@@ -16,17 +16,11 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.navigation.fragment.findNavController
 import com.ite.sws.R
-import com.ite.sws.util.SharedPreferencesUtil
 import com.ite.sws.common.WebSocketClient
-import com.ite.sws.util.replaceFragmentWithAnimation
 import com.ite.sws.databinding.FragmentScanBinding
 import com.ite.sws.domain.cart.view.adapter.CartRecyclerAdapter
 import com.ite.sws.util.CustomDialog
-import com.ite.sws.domain.chat.view.ui.ChatFragment
-import ua.naiksoftware.stomp.dto.LifecycleEvent
 import com.journeyapps.barcodescanner.BarcodeCallback
 import com.journeyapps.barcodescanner.BarcodeResult
 import com.journeyapps.barcodescanner.DecoratedBarcodeView
@@ -40,7 +34,6 @@ import com.journeyapps.barcodescanner.DecoratedBarcodeView
  * <pre>
  * 수정일        수정자        수정내용
  * ----------  --------    ---------------------------
- * 2024.08.24  	정은지       최초 생성
  * 2024.08.31   김민정       최초 생성
  * 2024.08.31   김민정       상품 바코드 스캔
  * 2024.08.31   김민정       스캔한 상품을 장바구니 아이템으로 등록

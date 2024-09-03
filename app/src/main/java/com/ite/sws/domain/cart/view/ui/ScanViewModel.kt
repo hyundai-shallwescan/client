@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ite.sws.domain.cart.api.repository.ScanRepository
+import com.ite.sws.domain.cart.api.repository.CartRepository
 import com.ite.sws.domain.cart.data.CartItem
 import com.ite.sws.domain.cart.data.PutCartItemReq
 import kotlinx.coroutines.Dispatchers
@@ -25,7 +25,7 @@ import kotlinx.coroutines.launch
  */
 class ScanViewModel : ViewModel() {
 
-    private val scanRepository = ScanRepository()
+    private val cartRepository = CartRepository()
 
     // 서버 요청 결과를 저장하는 LiveData
     private val _scanResult = MutableLiveData<Result<Unit>>()
@@ -41,7 +41,7 @@ class ScanViewModel : ViewModel() {
     fun saveCartItem(barcode: String) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                scanRepository.saveCartItem(PutCartItemReq(barcode))
+                cartRepository.saveCartItem(PutCartItemReq(barcode))
                 _scanResult.postValue(Result.success(Unit))
             } catch (e: Exception) {
                 _scanResult.postValue(Result.failure(e))
@@ -55,7 +55,7 @@ class ScanViewModel : ViewModel() {
     fun findCartItemList(cartId: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val items = scanRepository.findCartItemList(cartId)
+                val items = cartRepository.findCartItemList(cartId)
                 _cartItems.postValue(Result.success(items))
             } catch (e: Exception) {
                 _cartItems.postValue(Result.failure(e))
