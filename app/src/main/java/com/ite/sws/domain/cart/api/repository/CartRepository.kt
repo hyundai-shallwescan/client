@@ -25,6 +25,7 @@ import retrofit2.Response
  * 2024.08.31  김민정       장바구니 아이템 추가
  * 2024.09.02  김민정       장바구니 아이템 조회
  * 2024.09.03  김민정       장바구니 아이템 수량 변경
+ * 2024.09.03  김민정       장바구니 아이템 삭제
  * </pre>
  */
 class CartRepository {
@@ -87,4 +88,12 @@ class CartRepository {
     suspend fun modifyCartItemQuantity(cartId: Long, productId: Long, delta: Int) {
         cartService.modifyCartItemQuantity(cartId, productId, delta)
     }
+
+    /**
+     * 장바구니 아이템 삭제
+     */
+    suspend fun removeCartItem(cartId: Long, productId: Long) {
+        cartService.deleteCartItem(cartId, productId)
+    }
+
 }

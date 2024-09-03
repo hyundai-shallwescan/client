@@ -15,12 +15,14 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ite.sws.R
 import com.ite.sws.databinding.FragmentScanBinding
 import com.ite.sws.domain.cart.view.adapter.CartRecyclerAdapter
 import com.ite.sws.util.CustomDialog
 import com.ite.sws.util.SharedPreferencesUtil
+import com.ite.sws.util.SwipeHelperCallback
 import com.journeyapps.barcodescanner.BarcodeCallback
 import com.journeyapps.barcodescanner.BarcodeResult
 import com.journeyapps.barcodescanner.DecoratedBarcodeView
@@ -41,6 +43,7 @@ import com.journeyapps.barcodescanner.DecoratedBarcodeView
  * 2024.09.01  	남진수       WebSocket 연결
  * 2024.09.02   김민정       장바구니 아이템 조회
  * 2024.09.03   김민정       장바구니 아이템 수량 변경
+ * 2024.09.03   김민정       장바구니 아이템 삭제
  * </pre>
  */
 class ScanFragment : Fragment() {
@@ -98,6 +101,17 @@ class ScanFragment : Fragment() {
             layoutManager = LinearLayoutManager(requireContext()) // LayoutManager 설정
             adapter = cartRecyclerAdapter
         }
+        itemTouchHelperSetting()
+    }
+
+    /**
+     * ItemTouchHelper 설정
+     * : 스와이프 동작 추가
+     */
+    private fun itemTouchHelperSetting() {
+        val swipeHelperCallback = SwipeHelperCallback(cartRecyclerAdapter, scanViewModel)
+        val itemTouchHelper = ItemTouchHelper(swipeHelperCallback)
+        itemTouchHelper.attachToRecyclerView(binding.recyclerviewCart)
     }
 
     /**

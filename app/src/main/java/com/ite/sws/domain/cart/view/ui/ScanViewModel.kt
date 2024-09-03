@@ -25,6 +25,7 @@ import kotlinx.coroutines.launch
  * 2024.08.31  김민정       장바구니 아이템 추가
  * 2024.09.02  김민정       장바구니 아이템 조회
  * 2024.09.03  김민정       장바구니 아이템 수량 변경
+ * 2024.09.03  김민정       장바구니 아이템 삭제
  * </pre>
  */
 class ScanViewModel(private val context: Context) : ViewModel() {
@@ -81,6 +82,20 @@ class ScanViewModel(private val context: Context) : ViewModel() {
             try {
                 cartRepository.modifyCartItemQuantity(cartId, productId, delta)
                 _scanResult.postValue(Unit)
+            } catch (e: Exception) {
+                _error.postValue(e.message)
+            }
+        }
+    }
+
+    /**
+     * 장바구니 아이템 삭제
+     */
+    fun removeCartItem(productId: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                cartRepository.removeCartItem(cartId, productId)
+                // 삭제 후 목록 업데이트 로직 추가
             } catch (e: Exception) {
                 _error.postValue(e.message)
             }

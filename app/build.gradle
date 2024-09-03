@@ -96,4 +96,7 @@ dependencies {
 
     // Glide
     implementation 'com.github.bumptech.glide:glide:4.16.0'
+
+    // recyclerView 스와이프
+    implementation 'com.github.xabaras:RecyclerViewSwipeDecorator:1.4'
 }

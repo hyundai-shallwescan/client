@@ -6,6 +6,7 @@ import com.ite.sws.domain.cart.data.PutCartItemReq
 import com.ite.sws.domain.member.data.JwtToken
 import retrofit2.Call
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.PATCH
 import retrofit2.http.POST
@@ -26,6 +27,7 @@ import retrofit2.http.Query
  * 2024.08.31  김민정       장바구니 아이템 추가 API 호출
  * 2024.09.02  김민정       장바구니 아이템 조회 API 호출
  * 2024.09.03  김민정       장바구니 아이템 수량 변경 API 호출
+ * 2024.09.03  김민정       장바구니 아이템 삭제 API 호출
  * </pre>
  */
 interface CartService {
@@ -53,5 +55,16 @@ interface CartService {
     suspend fun modifyCartItemQuantity(
         @Path("cartId") cartId: Long,
         @Path("productId") productId: Long,
-        @Query("delta") delta: Int)
+        @Query("delta") delta: Int
+    )
+
+    /**
+     * 장바구니 아이템 삭제 API
+     */
+    @DELETE("carts/{cartId}/products/{productId}")
+    suspend fun deleteCartItem(
+        @Path("cartId") cartId: Long,
+        @Path("productId") productId: Long
+    )
+
 }
