@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import com.ite.sws.MainActivity
 import com.ite.sws.R
 import com.ite.sws.databinding.FragmentLoginBinding
+import com.ite.sws.domain.cart.view.ui.ContainerFragment
 import com.ite.sws.domain.member.api.repository.MemberRepository
 import com.ite.sws.domain.member.data.PostLoginReq
 import com.ite.sws.util.CustomDialog
@@ -79,7 +80,7 @@ class LoginFragment : Fragment() {
         memberRepository.login(postLoginReq,
             // 성공 시 메인 화면으로 이동
             onSuccess = {
-                parentFragmentManager.popBackStack()
+                replaceFragmentWithAnimation(R.id.container_main, ContainerFragment(), false)
             },
 
             // 실패 시 로그인 실패 모달
