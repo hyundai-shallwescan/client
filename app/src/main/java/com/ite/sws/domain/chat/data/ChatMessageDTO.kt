@@ -13,8 +13,8 @@ package com.ite.sws.domain.chat.data
  * </pre>
  */
 data class ChatMessageDTO (
-    val cartMemberId: Long?,
     val cartId: Long?,
+    val name: String?,
     val payload: String?,
     val status: String? // NORMAL, CART, CHECK
 )
