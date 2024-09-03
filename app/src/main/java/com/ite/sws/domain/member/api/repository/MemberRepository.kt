@@ -24,9 +24,11 @@ import com.ite.sws.domain.member.data.GetMemberRes
  * 수정일        수정자        수정내용
  * ----------  --------    ---------------------------
  * 2024.08.31   정은지        최초 생성
+ * 2024.08.31   정은지        로그인 추가
+ * 2024.09.02   정은지        회원 정보 조회 추가
  * </pre>
  */
-class MemberRepository(private val context: Context) {
+class MemberRepository {
 
     private val memberService =
         RetrofitClient.instance.create(MemberService::class.java)
@@ -44,8 +46,8 @@ class MemberRepository(private val context: Context) {
             override fun onResponse(call: Call<JwtToken>, response: Response<JwtToken>) {
                 if (response.isSuccessful) {
                     response.body()?.let { jwtToken ->
-                        // 로그인 성공 시 토큰 SharedPreferences에 저장
-                        SharedPreferencesUtil.saveString(context, "jwt_token", jwtToken.accessToken)
+                        // 로그인 성공 시 액세스 토큰을 SharedPreferences에 저장
+                        SharedPreferencesUtil.setAccessToken(jwtToken.accessToken)
                         onSuccess()
                     }
 
@@ -71,44 +73,43 @@ class MemberRepository(private val context: Context) {
     /**
      * 마이페이지 정보 요청
      */
-//    fun getMyPageInfo(
-//        onSuccess: (GetMemberRes) -> Unit,
-//        onFailure: (ErrorRes) -> Unit
-//    ) {
-//        // SharedPreferences에서 JWT 토큰을 가져오기
-//        val token = SharedPreferencesUtil.getString(context, "jwt_token")
-//
-//        // 토큰이 null이 아닌 경우에만 요청 수행
-//        if (token != null) {
-//            val authHeader = "Bearer $token"
-//            val call = memberService.getMyPageInfo(authHeader)
-//
-//            call.enqueue(object : Callback<GetMemberRes> {
-//                override fun onResponse(call: Call<GetMemberRes>, response: Response<GetMemberRes>) {
-//                    if (response.isSuccessful) {
-//                        response.body()?.let {
-//                            onSuccess(it)
-//                        }
-//                    } else {
-//                        val errorBodyString = response.errorBody()?.string()
-//                        val errorRes = Gson().fromJson(errorBodyString, ErrorRes::class.java)
-//                        onFailure(errorRes)
-//                    }
-//                }
-//
-//                override fun onFailure(call: Call<GetMemberRes>, t: Throwable) {
-//                    t.printStackTrace()
-//                    val networkError = ErrorRes(
-//                        status = 0,
-//                        errorCode = "NETWORK_ERROR",
-//                        message = t.localizedMessage ?: "Unknown network error"
-//                    )
-//                    onFailure(networkError)
-//                }
-//            })
-//        } else {
-//            // 토큰이 없을 경우 실패 처리
-//            onFailure(ErrorRes(0, "NO_TOKEN", "JWT 토큰이 없습니다."))
-//        }
-//    }
+    fun getMyPageInfo(
+        onSuccess: (GetMemberRes) -> Unit,
+        onFailure: (ErrorRes) -> Unit
+    ) {
+        // SharedPreferences에서 JWT 토큰을 가져오기
+        val token = SharedPreferencesUtil.getAccessToken()
+
+        // 토큰이 null이 아닌 경우에만 요청 수행
+        if (token != null) {
+            val call = memberService.getMyPageInfo()
+
+            call.enqueue(object : Callback<GetMemberRes> {
+                override fun onResponse(call: Call<GetMemberRes>, response: Response<GetMemberRes>) {
+                    if (response.isSuccessful) {
+                        response.body()?.let {
+                            onSuccess(it)
+                        }
+                    } else {
+                        val errorBodyString = response.errorBody()?.string()
+                        val errorRes = Gson().fromJson(errorBodyString, ErrorRes::class.java)
+                        onFailure(errorRes)
+                    }
+                }
+
+                override fun onFailure(call: Call<GetMemberRes>, t: Throwable) {
+                    t.printStackTrace()
+                    val networkError = ErrorRes(
+                        status = 0,
+                        errorCode = "NETWORK_ERROR",
+                        message = t.localizedMessage ?: "Unknown network error"
+                    )
+                    onFailure(networkError)
+                }
+            })
+        } else {
+            // 토큰이 없을 경우 실패 처리
+            onFailure(ErrorRes(0, "NO_TOKEN", "JWT 토큰이 없습니다."))
+        }
+    }
 }

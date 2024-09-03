@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.ite.sws.databinding.ActivityMainBinding
 import com.ite.sws.domain.cart.view.ui.ContainerFragment
+import com.ite.sws.domain.member.view.ui.LoginFragment
 import com.ite.sws.util.SharedPreferencesUtil
 
 /**
@@ -25,8 +26,9 @@ import com.ite.sws.util.SharedPreferencesUtil
  * ----------  --------    ---------------------------
  * 2024.08.24  	정은지       최초 생성 및 네비게이션바 추가
  * 2024.08.31   정은지       화면 전환에 따른 FAB 아이콘 및 배경 변경
- * 2024.09.01   김민정       ContainerFragment로 시작 프래그먼트        
+ * 2024.09.01   김민정       ContainerFragment로 시작 프래그먼트
  * 2024.09.02   남진수       딥링크 연결 처리
+ * 2024.09.03   정은지       로그인 여부에 따른 화면 이동 처리
  * </pre>
  */
 class MainActivity : AppCompatActivity() {
@@ -37,6 +39,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
+
         setContentView(binding.root)
 
         binding.navigationMain.itemIconTintList = null
@@ -47,10 +50,11 @@ class MainActivity : AppCompatActivity() {
             binding.navigationMain.setupWithNavController(it)
         }
 
+        // 딥링크 처리
         intent?.let { handleDeeplink(it) }
 
         // 화면 전환 시 FAB 아이콘 및 배경 변경
-        navController?.addOnDestinationChangedListener() { _, destination, _ ->
+        navController?.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
                 R.id.navigation_container -> {
                     // 스캔앤고 메뉴가 선택되었을 때
@@ -58,7 +62,6 @@ class MainActivity : AppCompatActivity() {
                     binding.btnScan.backgroundTintList =
                         ContextCompat.getColorStateList(this, R.color.main)
                 }
-
                 else -> {
                     // 다른 메뉴가 선택되었을 때
                     binding.btnScan.setImageResource(R.drawable.ic_nav_scan_off)
@@ -68,13 +71,26 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        val accessToken = SharedPreferencesUtil.getAccessToken()
+        if (accessToken.isNullOrEmpty()) {
+            // 액세스 토큰이 없으면 로그인 화면으로 이동
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.container_main, LoginFragment())
+                .addToBackStack(null)
+                .commit()
+            return
+        }
+
+        // 액세스 토큰이 있을 경우
+        // 네비게이션 설정
+        // 초기 프래그먼트 설정
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, ContainerFragment())
                 .commit()
         }
-
     }
+
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
@@ -98,7 +114,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
 
     private fun navigateToCart(cartId: Long) {
         val navController =
