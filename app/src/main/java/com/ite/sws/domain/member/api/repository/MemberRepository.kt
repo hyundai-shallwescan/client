@@ -81,7 +81,7 @@ class MemberRepository {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 if (response.isSuccessful) {
                     // 액세스 토큰 삭제
-                    SharedPreferencesUtil.clearAccessToken()
+                    SharedPreferencesUtil.removeAccessToken()
                     onSuccess()
                 } else {
                     onFailure(Throwable("로그아웃 실패: ${response.code()}"))
