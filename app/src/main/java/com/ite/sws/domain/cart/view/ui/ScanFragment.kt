@@ -15,8 +15,10 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.ite.sws.R
 import com.ite.sws.databinding.FragmentScanBinding
+import com.ite.sws.domain.cart.view.adapter.CartRecyclerAdapter
 import com.ite.sws.util.CustomDialog
 import com.journeyapps.barcodescanner.BarcodeCallback
 import com.journeyapps.barcodescanner.BarcodeResult
@@ -46,6 +48,7 @@ class ScanFragment : Fragment() {
     // ViewModel 객체
     private lateinit var scanViewModel: ScanViewModel
     private lateinit var barcodeScannerView: DecoratedBarcodeView
+    private lateinit var cartRecyclerAdapter: CartRecyclerAdapter
 
     // 딜레이를 주기 위한 핸들러
     private val delayHandler = Handler(Looper.getMainLooper())
@@ -66,6 +69,11 @@ class ScanFragment : Fragment() {
             requestCameraPermissionLauncher.launch(android.Manifest.permission.CAMERA)
         }
 
+        setupRecyclerView()
+
+        // 장바구니 아이템 가져오기
+        scanViewModel.findCartItemList(cartId = 22)
+
         // ViewModel에서 발생한 이벤트를 관찰
         observeViewModel()
 
@@ -82,7 +90,7 @@ class ScanFragment : Fragment() {
                 result?.let {
                     val barcode = it.text
                     barcodeScannerView.pause()
-                    scanViewModel.putCartItem(barcode)
+                    scanViewModel.saveCartItem(barcode)
                 }
             }
 
@@ -101,6 +109,14 @@ class ScanFragment : Fragment() {
                 resumeScannerWithDelay()    // 요청 실패 시에도 동일하게 재개
             }
         })
+
+        scanViewModel.cartItems.observe(viewLifecycleOwner, { result ->
+            result.onSuccess { items ->
+//                cartRecyclerAdapter.submitList(items)
+            }.onFailure {
+                // 오류 처리
+            }
+        })
     }
 
     /**
@@ -110,6 +126,14 @@ class ScanFragment : Fragment() {
         delayHandler.postDelayed({
             barcodeScannerView.resume()
         }, 300)
+    }
+
+    private fun setupRecyclerView() {
+        cartRecyclerAdapter = CartRecyclerAdapter()
+        binding.recyclerviewCart.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = cartRecyclerAdapter
+        }
     }
 
     override fun onResume() {
