@@ -24,6 +24,8 @@ import com.ite.sws.domain.member.data.GetMemberRes
  * 수정일        수정자        수정내용
  * ----------  --------    ---------------------------
  * 2024.08.31   정은지        최초 생성
+ * 2024.08.31   정은지        로그인 추가
+ * 2024.09.02   정은지        회원 정보 조회 추가
  * </pre>
  */
 class MemberRepository {
@@ -80,8 +82,7 @@ class MemberRepository {
 
         // 토큰이 null이 아닌 경우에만 요청 수행
         if (token != null) {
-            val authHeader = "Bearer $token"
-            val call = memberService.getMyPageInfo(authHeader)
+            val call = memberService.getMyPageInfo()
 
             call.enqueue(object : Callback<GetMemberRes> {
                 override fun onResponse(call: Call<GetMemberRes>, response: Response<GetMemberRes>) {
