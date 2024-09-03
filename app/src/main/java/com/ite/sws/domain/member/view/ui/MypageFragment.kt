@@ -11,7 +11,6 @@ import com.ite.sws.R
 import com.ite.sws.databinding.FragmentMypageBinding
 import com.ite.sws.domain.member.api.repository.MemberRepository
 import com.ite.sws.util.hideBottomNavigation
-import com.ite.sws.util.showCustomDialog
 import setupToolbar
 
 /**
@@ -73,18 +72,18 @@ class MypageFragment : Fragment() {
 
         // 회원탈퇴 버튼 클릭
         binding.btnWithdraw.setOnClickListener {
-            showCustomDialog(
-                context = requireContext(),
-                title = "정말로 탈퇴하시겠어요?",
-                message = "탈퇴 시 작성한 리뷰는 모두 삭제됩니다.",
-                layoutId = R.layout.dialog_title_message_twobtn,
-                confirmText = "탈퇴",
-                cancelText = "취소",
-                onConfirm = {
-                    // TODO 탈퇴 처리 API
-                },
-                onCancel = {}
-            )
+//            showCustomDialog(
+//                context = requireContext(),
+//                title = "정말로 탈퇴하시겠어요?",
+//                message = "탈퇴 시 작성한 리뷰는 모두 삭제됩니다.",
+//                layoutId = R.layout.dialog_title_message_twobtn,
+//                confirmText = "탈퇴",
+//                cancelText = "취소",
+//                onConfirm = {
+//                    // TODO 탈퇴 처리 API
+//                },
+//                onCancel = {}
+//            )
         }
     }
 

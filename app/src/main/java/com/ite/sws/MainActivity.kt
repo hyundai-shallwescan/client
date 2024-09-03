@@ -47,7 +47,6 @@ class MainActivity : AppCompatActivity() {
             binding.navigationMain.setupWithNavController(it)
         }
 
-
         intent?.let { handleDeeplink(it) }
 
         // 화면 전환 시 FAB 아이콘 및 배경 변경
@@ -108,7 +107,7 @@ class MainActivity : AppCompatActivity() {
             val bundle = Bundle().apply {
                 putLong("cartId", cartId)
             }
-            navController.navigate(R.id.navigation_scan, bundle)
+            navController.navigate(R.id.navigation_container, bundle)
         } else {
             Log.e("MainActivity", "NavController is not set on container_main")
         }

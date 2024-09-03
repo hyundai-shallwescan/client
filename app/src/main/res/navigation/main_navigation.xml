@@ -93,7 +93,7 @@
     </fragment>
 
     <!-- 스캔앤고 내부 컨테이너 총괄 프래그먼트 -->
-    <fragment
+     <fragment
         android:id="@+id/navigation_container"
         android:name="com.ite.sws.domain.cart.view.ui.ContainerFragment"
         android:label="fragment_container"
@@ -116,7 +116,10 @@
         <action
             android:id="@+id/action_navigation_container_to_navigation_chat"
             app:destination="@id/navigation_chat" />
-    </fragment>
+         <action
+             android:id="@+id/action_navigation_container_to_navigation_cartLogin"
+             app:destination="@id/navigation_cartLogin" />
+     </fragment>
   
     <fragment
         android:id="@+id/navigation_chat"

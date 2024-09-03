@@ -27,8 +27,6 @@ import com.ite.sws.domain.cart.view.adapter.CartRecyclerAdapter
 import com.ite.sws.util.CustomDialog
 import com.ite.sws.domain.chat.view.ui.ChatFragment
 import ua.naiksoftware.stomp.dto.LifecycleEvent
-import androidx.lifecycle.ViewModelProvider
-import com.ite.sws.util.showCustomDialog
 import com.journeyapps.barcodescanner.BarcodeCallback
 import com.journeyapps.barcodescanner.BarcodeResult
 import com.journeyapps.barcodescanner.DecoratedBarcodeView
@@ -91,41 +89,41 @@ class ScanFragment : Fragment() {
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        val jwtToken = SharedPreferencesUtil.getString(requireContext(), "jwt_token")
-
-        if (jwtToken.isNullOrEmpty() || !isTokenValid(jwtToken)) {
-            findNavController().navigate(R.id.action_scanFragment_to_cartLoginFragment)
-            return
-        }
-
-        /**
-         * WebSocket 연결
-         */
-        WebSocketClient.connect(jwtToken) { event ->
-            when (event.type) {
-                LifecycleEvent.Type.OPENED -> {
-                    Log.d("STOMP", "WebSocket opened")
-                    val cartId = SharedPreferencesUtil.getLong(requireContext(), "cart_id")
-                    Log.d("STOMP", "Subscribing to cart $cartId")
-                    // 연결이 열리면 특정 장바구니에 구독
-                    subscribeToCart(cartId)
-                }
-                LifecycleEvent.Type.CLOSED -> {
-                    Log.d("STOMP", "WebSocket closed")
-                }
-                LifecycleEvent.Type.ERROR -> {
-                    Log.e("STOMP", "WebSocket error", event.exception)
-                }
-                else -> {
-                    Log.d("STOMP", "WebSocket event: ${event.message}")
-                }
-            }
-        }
-        setupClickListeners()
-    }
+//    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+//        super.onViewCreated(view, savedInstanceState)
+//
+//        val jwtToken = SharedPreferencesUtil.getString(requireContext(), "jwt_token")
+//
+//        if (jwtToken.isNullOrEmpty() || !isTokenValid(jwtToken)) {
+//            findNavController().navigate(R.id.action_navigation_container_to_navigation_cartLogin)
+//            return
+//        }
+//
+//        /**
+//         * WebSocket 연결
+//         */
+//        WebSocketClient.connect(jwtToken) { event ->
+//            when (event.type) {
+//                LifecycleEvent.Type.OPENED -> {
+//                    Log.d("STOMP", "WebSocket opened")
+//                    val cartId = SharedPreferencesUtil.getLong(requireContext(), "cart_id")
+//                    Log.d("STOMP", "Subscribing to cart $cartId")
+//                    // 연결이 열리면 특정 장바구니에 구독
+//                    subscribeToCart(cartId)
+//                }
+//                LifecycleEvent.Type.CLOSED -> {
+//                    Log.d("STOMP", "WebSocket closed")
+//                }
+//                LifecycleEvent.Type.ERROR -> {
+//                    Log.e("STOMP", "WebSocket error", event.exception)
+//                }
+//                else -> {
+//                    Log.d("STOMP", "WebSocket event: ${event.message}")
+//                }
+//            }
+//        }
+//        setupClickListeners()
+//    }
 
     private fun isTokenValid(token: String): Boolean {
 
@@ -156,12 +154,12 @@ class ScanFragment : Fragment() {
      * 채팅으로 이동
      */
     private fun setupClickListeners() {
-        binding.button3.setOnClickListener {
-            replaceFragmentWithAnimation(
-                containerId = R.id.container_main,
-                fragment = ChatFragment()
-            )
-        }
+//        binding.button3.setOnClickListener {
+//            replaceFragmentWithAnimation(
+//                containerId = R.id.container_main,
+//                fragment = ChatFragment()
+//            )
+//        }
     }
 
     /**
@@ -265,23 +263,6 @@ class ScanFragment : Fragment() {
                 }
             ).show(activity?.supportFragmentManager!!, "CustomDialog")
         }
-    }
-
-
-    override fun onResume() {
-        super.onResume()
-        barcodeScannerView.resume()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        barcodeScannerView.pause()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-
     }
 
 }
