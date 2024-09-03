@@ -2,6 +2,8 @@ package com.ite.sws.domain.cart.view.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.ite.sws.databinding.ItemCartBinding
@@ -20,8 +22,12 @@ import com.ite.sws.domain.cart.data.CartItem
  * 2024.09.02  김민정       장바구니 아이템 조회
  * </pre>
  */
-class CartRecyclerAdapter(private val items: List<CartItem>)
-    : RecyclerView.Adapter<CartRecyclerAdapter.CartViewHolder>() {
+class CartRecyclerAdapter :
+    ListAdapter<CartItem, CartRecyclerAdapter.CartViewHolder>(CartDiffCallback()) {
+
+    var onIncreaseQuantity: ((CartItem) -> Unit)? = null
+    var onDecreaseQuantity: ((CartItem) -> Unit)? = null
+    var onViewDetail: ((CartItem) -> Unit)? = null
 
     inner class CartViewHolder(private val binding: ItemCartBinding) : RecyclerView.ViewHolder(binding.root) {
 
@@ -30,22 +36,22 @@ class CartRecyclerAdapter(private val items: List<CartItem>)
             binding.textCartProductPrice.text = "${item.productPrice}원"
             binding.textCartCount.text = item.quantity.toString()
 
-            // 썸네일 이미지 로드 (Glide 또는 Picasso 라이브러리 사용)
+            // 썸네일 이미지 로드
             Glide.with(binding.root.context)
                 .load(item.productThumbnail)
                 .into(binding.imgCartProduct)
 
             // 버튼 클릭 리스너 설정
             binding.btnCartPlus.setOnClickListener {
-                // TODO: 수량 증가 처리
+                onIncreaseQuantity?.invoke(item)
             }
 
             binding.btnCartMinus.setOnClickListener {
-                // TODO: 수량 감소 처리
+                onDecreaseQuantity?.invoke(item)
             }
 
             binding.btnCartDetail.setOnClickListener {
-                // TODO: 상세 보기 처리
+                onViewDetail?.invoke(item)
             }
         }
     }
@@ -56,10 +62,16 @@ class CartRecyclerAdapter(private val items: List<CartItem>)
     }
 
     override fun onBindViewHolder(holder: CartViewHolder, position: Int) {
-        holder.bind(items[position])
+        holder.bind(getItem(position))
+    }
+}
+
+class CartDiffCallback : DiffUtil.ItemCallback<CartItem>() {
+    override fun areItemsTheSame(oldItem: CartItem, newItem: CartItem): Boolean {
+        return oldItem.productId == newItem.productId
     }
 
-    override fun getItemCount(): Int {
-        return items.size
+    override fun areContentsTheSame(oldItem: CartItem, newItem: CartItem): Boolean {
+        return oldItem == newItem
     }
 }

@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.ite.sws.databinding.FragmentExternalCartBinding
 
 /**
- * 외부인 장바구니 프래그먼트
+ * 외부일행 장바구니 프래그먼트
  * @author 김민정
  * @since 2024.09.03
  * @version 1.0

@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.ite.sws.domain.cart.api.repository.CartRepository
 
 /**
- * 외부인 장바구니 ViewModel
+ * 외부일행 장바구니 ViewModel
  * @author 김민정
  * @since 2024.09.03
  * @version 1.0
