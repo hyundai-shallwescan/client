@@ -9,8 +9,10 @@ import androidx.fragment.app.Fragment
 import com.ite.sws.MainActivity
 import com.ite.sws.R
 import com.ite.sws.databinding.FragmentLoginBinding
+import com.ite.sws.domain.cart.view.ui.ContainerFragment
 import com.ite.sws.domain.member.api.repository.MemberRepository
 import com.ite.sws.domain.member.data.PostLoginReq
+import com.ite.sws.util.CustomDialog
 import com.ite.sws.util.SharedPreferencesUtil
 import com.ite.sws.util.hideBottomNavigation
 import com.ite.sws.util.replaceFragmentWithAnimation
@@ -20,14 +22,12 @@ class LoginFragment : Fragment() {
 
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
-    private lateinit var memberRepository: MemberRepository
+    private val memberRepository = MemberRepository()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
-        memberRepository = MemberRepository(requireContext())
 
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
 
@@ -49,7 +49,7 @@ class LoginFragment : Fragment() {
 
         // 회원가입 버튼 클릭
         binding.tvSignup.setOnClickListener {
-//            replaceFragmentWithAnimation(R.id.container_main, SignUpFragment(), true)
+            replaceFragmentWithAnimation(R.id.container_main, SignUpFragment(), true)
         }
     }
 
@@ -68,14 +68,19 @@ class LoginFragment : Fragment() {
         val postLoginReq = PostLoginReq(loginId, password)
 
         memberRepository.login(postLoginReq,
+            // 성공 시 메인 화면으로 이동
             onSuccess = {
-                // TODO 이전 화면으로 돌아가기
-                val token = SharedPreferencesUtil.getString(requireContext(), "jwt_token")
-                Toast.makeText(requireContext(), "로그인 성공 $token", Toast.LENGTH_SHORT).show()
+                parentFragmentManager.popBackStack()
             },
+
+            // 실패 시 로그인 실패 모달
             onFailure = { errorRes ->
-                // TODO 로그인 실패 모달
-                Toast.makeText(requireContext(), "로그인 실패: ${errorRes.message}", Toast.LENGTH_SHORT).show()
+                CustomDialog(
+                    layoutId = R.layout.dialog_text1_btn1,
+                    title = "${errorRes.message}",
+                    confirmText = "확인",
+                    onConfirm = {}
+                ).show(activity?.supportFragmentManager!!, "CustomDialog")
             }
         )
     }

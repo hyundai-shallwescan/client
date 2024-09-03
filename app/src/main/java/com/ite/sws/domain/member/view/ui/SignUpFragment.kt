@@ -14,14 +14,12 @@ class SignUpFragment : Fragment() {
 
     private var _binding: FragmentSignupBinding? = null
     private val binding get() = _binding!!
-    private lateinit var memberRepository: MemberRepository
+    private val memberRepository =  MemberRepository()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
-        memberRepository = MemberRepository(requireContext())
 
         _binding = FragmentSignupBinding.inflate(inflater, container, false)
 

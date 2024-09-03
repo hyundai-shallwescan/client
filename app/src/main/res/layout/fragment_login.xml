@@ -20,6 +20,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/layout_login" />
 
+    <!-- 흰색 배경 -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layout_login"
         android:layout_width="match_parent"
@@ -30,135 +31,149 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/layout_id"
-            android:layout_height="130dp"
-            android:layout_width="380dp"
-            android:background="@drawable/btn_white_shadow"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:padding="10dp"
-            android:layout_marginTop="70dp"
-            android:layout_marginHorizontal="@dimen/common_horizontal_margin">
-
-            <TextView
-                android:id="@+id/tv_id"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/fragment_login_id"
-                android:textSize="18sp"
-                android:fontFamily="@font/happiness_sans_bold"
-                android:textColor="@color/black"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginTop="20dp"
-                android:layout_marginStart="20dp"
-                />
-
-            <!-- Nickname Input Field -->
-            <EditText
-                android:id="@+id/edt_id"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:hint="@string/fragment_login_hint_id"
-                android:inputType="text"
-                android:padding="12dp"
-                android:background="@android:color/transparent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_id"
-                android:layout_marginTop="4dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/password_card"
-            android:layout_height="130dp"
-            android:layout_width="380dp"
-            android:background="@drawable/btn_white_shadow"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/layout_id"
-            android:padding="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginHorizontal="40dp">
-
-            <TextView
-                android:id="@+id/tv_password"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/fragment_login_password"
-                android:textSize="18sp"
-                android:fontFamily="@font/happiness_sans_bold"
-                android:textColor="@color/black"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginTop="20dp"
-                android:layout_marginStart="20dp"
-                />
-
-            <EditText
-                android:id="@+id/edt_password"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:hint="@string/fragment_login_hint_password"
-                android:inputType="textPassword"
-                android:padding="12dp"
-                android:background="@android:color/transparent"
-                android:paddingHorizontal="0dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_password"
-                android:layout_marginTop="4dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <Button
-            android:id="@+id/btn_login"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:background="@drawable/btn_rounded_main"
-            android:text="@string/fragment_login"
-            android:textSize="20sp"
-            android:textColor="@color/white"
-            android:textFontWeight="1000"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/password_card"
-            android:layout_marginTop="20dp"
-            android:layout_marginHorizontal="30dp"/>
+            android:layout_height="0dp"
+            android:layout_marginTop="80dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/tv_signup_comment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/fragment_login_signup_comment"
-            android:textColor="@color/black"
-            android:layout_marginTop="40dp"
-            android:textFontWeight="700"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btn_login" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout_scroll_inner"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingBottom="50dp">
 
-        <TextView
-            android:id="@+id/tv_signup"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:textColor="@color/main"
-            android:text="@string/fragment_login_signup"
-            android:textSize="18sp"
-            android:textFontWeight="1000"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_signup_comment" />
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/layout_id"
+                    android:layout_width="380dp"
+                    android:layout_height="130dp"
+                    android:layout_marginHorizontal="@dimen/common_horizontal_margin"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/btn_white_shadow"
+                    android:padding="10dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
+                    <TextView
+                        android:id="@+id/tv_id"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="20dp"
+                        android:text="@string/fragment_login_id"
+                        android:textColor="@color/black"
+                        android:textFontWeight="1000"
+                        android:textSize="18sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <EditText
+                        android:id="@+id/edt_id"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginEnd="10dp"
+                        android:background="@android:color/transparent"
+                        android:hint="@string/fragment_login_hint_id"
+                        android:inputType="text"
+                        android:padding="12dp"
+                        android:textColor="@color/gray"
+                        android:textFontWeight="700"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_id" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/password_card"
+                    android:layout_width="380dp"
+                    android:layout_height="130dp"
+                    android:layout_marginHorizontal="40dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/btn_white_shadow"
+                    android:padding="10dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/layout_id">
+
+                    <TextView
+                        android:id="@+id/tv_password"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="20dp"
+                        android:text="@string/fragment_login_password"
+                        android:textColor="@color/black"
+                        android:textFontWeight="1000"
+                        android:textSize="18sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <EditText
+                        android:id="@+id/edt_password"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginEnd="10dp"
+                        android:background="@android:color/transparent"
+                        android:hint="@string/fragment_login_hint_password"
+                        android:inputType="textPassword"
+                        android:padding="12dp"
+                        android:paddingHorizontal="0dp"
+                        android:textColor="@color/gray"
+                        android:textFontWeight="700"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_password" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <Button
+                    android:id="@+id/btn_login"
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:layout_marginHorizontal="30dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/btn_rounded_main"
+                    android:text="@string/fragment_login"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textFontWeight="1000"
+                    android:textSize="20sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/password_card" />
+
+                <TextView
+                    android:id="@+id/tv_signup_comment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="40dp"
+                    android:text="@string/fragment_login_signup_comment"
+                    android:textColor="@color/black"
+                    android:textFontWeight="700"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/btn_login" />
+
+                <TextView
+                    android:id="@+id/tv_signup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/fragment_login_signup"
+                    android:textColor="@color/main"
+                    android:textFontWeight="1000"
+                    android:textSize="18sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_signup_comment" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

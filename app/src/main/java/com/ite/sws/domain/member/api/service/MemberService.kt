@@ -27,7 +27,7 @@ interface MemberService {
     fun login(@Body loginRequest: PostLoginReq
     ): Call<JwtToken>
 
-//    @GET("/members")
-//    fun getMyPageInfo(@Header("Authorization") authHeader: String
-//    ): Call<GetMemberRes>
+    @GET("/members")
+    fun getMyPageInfo(@Header("Authorization") authHeader: String
+    ): Call<GetMemberRes>
 }
