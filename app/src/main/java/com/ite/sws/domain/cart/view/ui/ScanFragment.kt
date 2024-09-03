@@ -129,11 +129,11 @@ class ScanFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        cartRecyclerAdapter = CartRecyclerAdapter()
-        binding.recyclerviewCart.apply {
-            layoutManager = LinearLayoutManager(context)
-            adapter = cartRecyclerAdapter
-        }
+//        cartRecyclerAdapter = CartRecyclerAdapter()
+//        binding.recyclerviewCart.apply {
+//            layoutManager = LinearLayoutManager(context)
+//            adapter = cartRecyclerAdapter
+//        }
     }
 
     override fun onResume() {
