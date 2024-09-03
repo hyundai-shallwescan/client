@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.ite.sws.databinding.ItemCartBinding
 import com.ite.sws.domain.cart.data.CartItem
+import com.ite.sws.domain.cart.view.ui.ScanViewModel
 
 /**
  * 장바구니 아이템 목록 리사이클러 어댑터
@@ -20,13 +21,12 @@ import com.ite.sws.domain.cart.data.CartItem
  * ----------  --------    ---------------------------
  * 2024.09.02  김민정       최초 생성
  * 2024.09.02  김민정       장바구니 아이템 조회
+ * 2024.09.02  김민정       장바구니 아이템 수량 변경
  * </pre>
  */
-class CartRecyclerAdapter :
+class CartRecyclerAdapter(private val viewModel: ScanViewModel) :
     ListAdapter<CartItem, CartRecyclerAdapter.CartViewHolder>(CartDiffCallback()) {
 
-    var onIncreaseQuantity: ((CartItem) -> Unit)? = null
-    var onDecreaseQuantity: ((CartItem) -> Unit)? = null
     var onViewDetail: ((CartItem) -> Unit)? = null
 
     inner class CartViewHolder(private val binding: ItemCartBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -43,11 +43,11 @@ class CartRecyclerAdapter :
 
             // 버튼 클릭 리스너 설정
             binding.btnCartPlus.setOnClickListener {
-                onIncreaseQuantity?.invoke(item)
+                viewModel.modifyCartItemQuantity(item.productId, 1)
             }
 
             binding.btnCartMinus.setOnClickListener {
-                onDecreaseQuantity?.invoke(item)
+                viewModel.modifyCartItemQuantity(item.productId, -1)
             }
 
             binding.btnCartDetail.setOnClickListener {
@@ -56,21 +56,36 @@ class CartRecyclerAdapter :
         }
     }
 
+    /**
+     *  ViewHolder 생성
+     */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartViewHolder {
         val binding = ItemCartBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return CartViewHolder(binding)
     }
 
+    /**
+     * ViewHolder에 데이터를 바인딩
+     */
     override fun onBindViewHolder(holder: CartViewHolder, position: Int) {
         holder.bind(getItem(position))
     }
 }
 
+/**
+ * DiffUtil.Callback 클래스
+ */
 class CartDiffCallback : DiffUtil.ItemCallback<CartItem>() {
+    /**
+     * 두 아이템이 같은지 비교
+     */
     override fun areItemsTheSame(oldItem: CartItem, newItem: CartItem): Boolean {
         return oldItem.productId == newItem.productId
     }
 
+    /**
+     * 두 아이템의 내용이 같은지 비교
+     */
     override fun areContentsTheSame(oldItem: CartItem, newItem: CartItem): Boolean {
         return oldItem == newItem
     }

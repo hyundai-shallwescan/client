@@ -13,7 +13,7 @@ package com.ite.sws.domain.cart.data
  * </pre>
  */
 data class CartItem(
-    val productId: Int,
+    val productId: Long,
     val quantity: Int,
     val productName: String,
     val productPrice: Int,
