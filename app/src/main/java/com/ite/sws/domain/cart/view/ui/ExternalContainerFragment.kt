@@ -16,7 +16,7 @@ import com.ite.sws.util.hideBottomNavigation
 import com.ite.sws.util.replaceFragmentWithAnimation
 
 /**
- * [외부인] 스캔앤고 내부 컨테이너(장바구니+요청리스트) 총괄 프래그먼트
+ * [외부일행] 스캔앤고 내부 컨테이너(장바구니+요청리스트) 총괄 프래그먼트
  *
  * : 각 버튼(장바구니, 요청 리스트)을 클릭하면 해당되는 프래그먼트를 로드하고 슬라이더 애니메이션을 실행
  *
