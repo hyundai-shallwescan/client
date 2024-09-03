@@ -13,7 +13,7 @@ import android.content.SharedPreferences
  * 수정일        	수정자        수정내용
  * ----------  --------    ---------------------------
  * 2024.08.31  	남진수       최초 생성
- * 2024.09.03   정은지       액세스 토큰 저장 및 추출 함수 추가
+ * 2024.09.03   정은지       액세스 토큰 관련 함수 추가
  * </pre>
  */
 object SharedPreferencesUtil {
@@ -94,5 +94,12 @@ object SharedPreferencesUtil {
      */
     fun getAccessToken(): String? {
         return sharedPreferences.getString(KEY_ACCESS_TOKEN, null)
+    }
+
+    /**
+     * 액세스 토큰 삭제
+     */
+        fun removeAccessToken() {
+        sharedPreferences.edit().remove(KEY_ACCESS_TOKEN).apply()
     }
 }

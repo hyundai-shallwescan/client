@@ -26,6 +26,7 @@ import com.ite.sws.domain.member.data.GetMemberRes
  * 2024.08.31   정은지        최초 생성
  * 2024.08.31   정은지        로그인 추가
  * 2024.09.02   정은지        회원 정보 조회 추가
+ * 2024.09.03   정은지        로그아웃 추가
  * </pre>
  */
 class MemberRepository {
@@ -66,6 +67,29 @@ class MemberRepository {
                     message = t.localizedMessage ?: "Unknown network error"
                 )
                 onFailure(networkError)
+            }
+        })
+    }
+
+
+    /**
+     * 로그아웃
+     */
+    fun logout(onSuccess: () -> Unit, onFailure: (Throwable) -> Unit) {
+        val call = memberService.logout()
+        call.enqueue(object : Callback<Void> {
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                if (response.isSuccessful) {
+                    // 액세스 토큰 삭제
+                    SharedPreferencesUtil.clearAccessToken()
+                    onSuccess()
+                } else {
+                    onFailure(Throwable("로그아웃 실패: ${response.code()}"))
+                }
+            }
+
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                onFailure(t)
             }
         })
     }

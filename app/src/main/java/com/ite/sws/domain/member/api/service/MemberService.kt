@@ -21,6 +21,7 @@ import retrofit2.http.POST
  * 2024.08.31   정은지        최초 생성
  * 2024.08.31   정은지        로그인 API 호출
  * 2024.09.02   정은지        회원 정보 조회 API 호출
+ * 2024.09.03   정은지        로그아웃 API 호출
  * </pre>
  */
 interface MemberService {
@@ -31,4 +32,7 @@ interface MemberService {
 
     @GET("/members")
     fun getMyPageInfo(): Call<GetMemberRes>
+
+    @POST("/members/logout")
+    fun logout(): Call<Void>
 }

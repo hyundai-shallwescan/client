@@ -1,14 +1,17 @@
 package com.ite.sws.domain.member.view.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import com.ite.sws.MainActivity
 import com.ite.sws.R
 import com.ite.sws.databinding.FragmentMypageBinding
+import com.ite.sws.domain.cart.view.ui.ContainerFragment
 import com.ite.sws.domain.member.api.repository.MemberRepository
 import com.ite.sws.util.CustomDialog
 import com.ite.sws.util.hideBottomNavigation
@@ -26,6 +29,7 @@ import setupToolbar
  * ----------  --------    ---------------------------
  * 2024.08.24  	정은지       최초 생성
  * 2024.09.03   정은지       버튼 클릭 리스너 설정
+ * 2024.09.03   정은지       로그아웃 기능 추가
  * </pre>
  */
 class MypageFragment : Fragment() {
@@ -57,7 +61,7 @@ class MypageFragment : Fragment() {
 
         // 리뷰 관리 버튼 클릭
         binding.btnReview.setOnClickListener {
-            replaceFragmentWithAnimation(R.id.container_main, MyReviewFragment(), true)
+            replaceFragmentWithAnimation(R.id.container_main, MyReviewFragment())
         }
 
         // 업데이트 버튼 클릭
@@ -72,7 +76,36 @@ class MypageFragment : Fragment() {
 
         // 로그아웃 버튼 클릭
         binding.btnLogout.setOnClickListener {
-            // TODO 로그아웃 API
+            CustomDialog(
+                layoutId = R.layout.dialog_text1_btn2,
+                title = "로그아웃 하시겠어요?",
+                confirmText = "확인",
+                cancelText = "취소",
+                onConfirm = {
+                    memberRepository.logout(
+                        // 로그아웃 성공 시
+                        onSuccess = {
+                            CustomDialog (
+                                layoutId = R.layout.dialog_text1_btn1,
+                                title = "로그아웃 되었습니다.",
+                                confirmText = "확인",
+                                onConfirm = {
+                                    // 백스택 모두 제거
+                                    requireActivity().supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+
+                                    // 로그인 화면으로 이동
+                                    replaceFragmentWithAnimation(R.id.container_main, LoginFragment(), false)
+                                }
+                            ).show(activity?.supportFragmentManager!!, "CustomDialog")
+                        },
+                        // 로그아웃 실패 시
+                        onFailure = { throwable ->
+                            Toast.makeText(requireContext(), "로그아웃 실패: ${throwable.message}", Toast.LENGTH_SHORT).show()
+                        }
+                    )
+                },
+                onCancel = {}
+            ).show(activity?.supportFragmentManager!!, "CustomDialog")
         }
 
         // 회원탈퇴 버튼 클릭
