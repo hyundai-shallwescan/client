@@ -99,7 +99,7 @@ object SharedPreferencesUtil {
     /**
      * 액세스 토큰 삭제
      */
-        fun clearAccessToken() {
-        sharedPreferences.edit().clear().apply()
+        fun removeAccessToken() {
+        sharedPreferences.edit().remove(KEY_ACCESS_TOKEN).apply()
     }
 }
