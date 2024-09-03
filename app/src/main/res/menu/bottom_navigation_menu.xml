@@ -10,7 +10,7 @@
         android:title="@string/title_checklist"
         android:icon="@drawable/selector_checklist" />
     <item
-        android:id="@+id/navigation_scan"
+        android:id="@+id/navigation_container"
         android:title=""
         app:showAsAction="never"/>
     <item

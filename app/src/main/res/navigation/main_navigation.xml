@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_navigation"
-    app:startDestination="@id/navigation_scan">
+    app:startDestination="@id/navigation_container">
 
     <fragment
         android:id="@+id/navigation_checklist"
@@ -20,11 +20,11 @@
             android:id="@+id/action_checklistFragment_to_parkingFragment"
             app:destination="@id/navigation_parking" />
         <action
-            android:id="@+id/action_checklistFragment_to_cartFragment"
-            app:destination="@id/navigation_scan" />
-        <action
             android:id="@+id/action_checklistFragment_self"
             app:destination="@id/navigation_checklist" />
+        <action
+            android:id="@+id/action_checklistFragment_to_containerFragment"
+            app:destination="@id/navigation_container" />
     </fragment>
     <fragment
         android:id="@+id/navigation_mypage"
@@ -41,8 +41,8 @@
             android:id="@+id/action_mypageFragment_to_checklistFragment"
             app:destination="@id/navigation_checklist" />
         <action
-            android:id="@+id/action_mypageFragment_to_cartFragment"
-            app:destination="@id/navigation_scan" />
+            android:id="@+id/action_mypageFragment_to_containerFragment"
+            app:destination="@id/navigation_container" />
         <action
             android:id="@+id/action_mypageFragment_self"
             app:destination="@id/navigation_mypage" />
@@ -59,8 +59,8 @@
             android:id="@+id/action_parkingFragment_to_reviewFragment"
             app:destination="@id/navigation_review" />
         <action
-            android:id="@+id/action_parkingFragment_to_cartFragment"
-            app:destination="@id/navigation_scan" />
+            android:id="@+id/action_parkingFragment_to_containerFragment"
+            app:destination="@id/navigation_container" />
         <action
             android:id="@+id/action_parkingFragment_to_checklistFragment"
             app:destination="@id/navigation_checklist" />
@@ -68,6 +68,8 @@
             android:id="@+id/action_parkingFragment_self"
             app:destination="@id/navigation_parking" />
     </fragment>
+
+    <!-- 리뷰 프래그먼트 -->
     <fragment
         android:id="@+id/navigation_review"
         android:name="com.ite.sws.domain.review.view.ui.ReviewFragment"
@@ -83,39 +85,39 @@
             android:id="@+id/action_reviewFragment_to_parkingFragment"
             app:destination="@id/navigation_parking" />
         <action
-            android:id="@+id/action_reviewFragment_to_cartFragment"
-            app:destination="@id/navigation_scan" />
+            android:id="@+id/action_reviewFragment_to_containerFragment"
+            app:destination="@id/navigation_container" />
         <action
             android:id="@+id/action_reviewFragment_self"
             app:destination="@id/navigation_review" />
     </fragment>
+
+    <!-- 스캔앤고 내부 컨테이너 총괄 프래그먼트 -->
     <fragment
-        android:id="@+id/navigation_scan"
-        android:name="com.ite.sws.domain.cart.view.ui.ScanFragment"
-        android:label="fragment_cart"
-        tools:layout="@layout/fragment_scan">
+        android:id="@+id/navigation_container"
+        android:name="com.ite.sws.domain.cart.view.ui.ContainerFragment"
+        android:label="fragment_container"
+        tools:layout="@layout/fragment_container" >
         <action
-            android:id="@+id/action_cartFragment_to_checklistFragment"
+            android:id="@+id/action_navigation_container_to_navigation_checklist"
             app:destination="@id/navigation_checklist" />
         <action
-            android:id="@+id/action_cartFragment_to_parkingFragment"
-            app:destination="@id/navigation_parking" />
-        <action
-            android:id="@+id/action_cartFragment_to_mypageFragment"
-            app:destination="@id/navigation_mypage" />
-        <action
-            android:id="@+id/action_cartFragment_to_reviewFragment"
+            android:id="@+id/action_navigation_container_to_navigation_review"
             app:destination="@id/navigation_review" />
         <action
-            android:id="@+id/action_cartFragment_self"
-            app:destination="@id/navigation_scan" />
+            android:id="@+id/action_navigation_container_to_navigation_parking"
+            app:destination="@id/navigation_parking" />
         <action
-            android:id="@+id/action_scanFragment_to_chatFragment"
+            android:id="@+id/action_navigation_container_to_navigation_mypage"
+            app:destination="@id/navigation_mypage" />
+        <action
+            android:id="@+id/action_navigation_container_self"
+            app:destination="@id/navigation_container" />
+        <action
+            android:id="@+id/action_navigation_container_to_navigation_chat"
             app:destination="@id/navigation_chat" />
-        <action
-            android:id="@+id/action_scanFragment_to_cartLoginFragment"
-            app:destination="@id/navigation_cartLogin" />
     </fragment>
+  
     <fragment
         android:id="@+id/navigation_chat"
         android:name="com.ite.sws.domain.chat.view.ui.ChatFragment"
