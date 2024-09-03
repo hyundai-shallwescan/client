@@ -19,7 +19,7 @@ fun Fragment.replaceFragmentWithAnimation(
     fragment: Fragment,
     addToBackStack: Boolean = true
 ) {
-    val fragmentManager = this.parentFragmentManager
+    val fragmentManager = requireActivity().supportFragmentManager
     val transaction = fragmentManager.beginTransaction()
 
     /**
