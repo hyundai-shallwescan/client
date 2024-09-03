@@ -1,9 +1,12 @@
 package com.ite.sws.domain.member.api.service
 
+import com.ite.sws.domain.member.data.GetMemberRes
 import com.ite.sws.domain.member.data.JwtToken
 import com.ite.sws.domain.member.data.PostLoginReq
 import retrofit2.Call
 import retrofit2.http.Body
+import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.POST
 
 /**
@@ -23,4 +26,8 @@ interface MemberService {
     @POST("/members/login")
     fun login(@Body loginRequest: PostLoginReq
     ): Call<JwtToken>
+
+//    @GET("/members")
+//    fun getMyPageInfo(@Header("Authorization") authHeader: String
+//    ): Call<GetMemberRes>
 }

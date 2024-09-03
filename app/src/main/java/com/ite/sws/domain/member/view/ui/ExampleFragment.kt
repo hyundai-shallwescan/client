@@ -29,7 +29,7 @@ class ExampleFragment : Fragment() {
 
     private var _binding: FragmentExampleBinding? = null
     private val binding get() = _binding!!
-    private val memberRepository = MemberRepository()
+//    private val memberRepository = MemberRepository()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -60,14 +60,14 @@ class ExampleFragment : Fragment() {
 
         val postLoginReq = PostLoginReq(loginId, password)
 
-        memberRepository.login(postLoginReq,
-            onSuccess = { jwtToken ->
-                binding.tvLoginResult.text = "로그인 성공 AccessToken: ${jwtToken.accessToken}"
-            },
-            onFailure = { errorRes ->
-                binding.tvLoginResult.text = "로그인 실패: ${errorRes.message}"
-            }
-        )
+//        memberRepository.login(postLoginReq,
+//            onSuccess = { jwtToken ->
+//                binding.tvLoginResult.text = "로그인 성공 AccessToken: ${jwtToken.accessToken}"
+//            },
+//            onFailure = { errorRes ->
+//                binding.tvLoginResult.text = "로그인 실패: ${errorRes.message}"
+//            }
+//        )
     }
 
     override fun onDestroyView() {

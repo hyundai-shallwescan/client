@@ -31,7 +31,7 @@ fun Fragment.setupToolbar(toolbar: Toolbar, title: String, showBackButton: Boole
     if (showBackButton) {
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back)
         toolbar.setNavigationOnClickListener {
-            activity?.onBackPressed()
+            parentFragmentManager.popBackStack()
         }
     } else {
         toolbar.navigationIcon = null

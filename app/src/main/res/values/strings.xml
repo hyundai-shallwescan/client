@@ -31,6 +31,25 @@
     <string name="modal_cancel">취소</string>
     <string name="modal_check">확인</string>
 
+    <!-- 로그인 -->
+    <string name="fragment_login">Login</string>
+    <string name="fragment_login_id">아이디</string>
+    <string name="fragment_login_password">비밀번호</string>
+    <string name="fragment_login_hint_id">아이디를 입력하세요.</string>
+    <string name="fragment_login_hint_password">비밀번호를 입력하세요.</string>
+    <string name="fragment_login_signup_comment">아직 회원이 아니신가요?</string>
+    <string name="fragment_login_signup">회원가입</string>
+
+    <!-- 회원가입 -->
+    <string name="fragment_signup">Sign Up</string>
+    <string name="fragment_signup_check_id">중복확인</string>
+    <string name="fragment_signup_password_confirm">비밀번호 확인</string>
+    <string name="fragment_signup_name">이름</string>
+    <string name="fragment_signup_age">나이</string>
+    <string name="fragment_signup_gender">성별</string>
+    <string name="fragment_signup_phone">핸드폰번호</string>
+    <string name="fragment_signup_car">차량</string>
+
     <!-- 버튼 -->
     <string name="btn_scanner_chat">채팅</string>
     <string name="btn_scanner_additional">일행초대</string>

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.ite.sws.MainActivity
@@ -11,6 +12,8 @@ import com.ite.sws.R
 import com.ite.sws.databinding.FragmentMypageBinding
 import com.ite.sws.domain.member.api.repository.MemberRepository
 import com.ite.sws.util.hideBottomNavigation
+import com.ite.sws.util.replaceFragmentWithAnimation
+import com.ite.sws.util.showCustomDialog
 import setupToolbar
 
 /**
@@ -29,13 +32,17 @@ class MypageFragment : Fragment() {
 
     private var _binding: FragmentMypageBinding? = null
     private val binding get() = _binding!!
-    private val memberRepository = MemberRepository()
+    private lateinit var memberRepository: MemberRepository
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentMypageBinding.inflate(inflater, container, false)
+
+        memberRepository = MemberRepository(requireContext())
+
+        getMyPageInfo()
 
         (activity as? MainActivity)?.let { mainActivity ->
             hideBottomNavigation(mainActivity.binding, false)
@@ -50,9 +57,14 @@ class MypageFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // 로그인 테스트
+        binding.login.setOnClickListener {
+            replaceFragmentWithAnimation(R.id.container_main, LoginFragment(), addToBackStack = true)
+        }
+
         // 리뷰 관리 버튼 클릭
         binding.btnReview.setOnClickListener {
-            // TODO 리뷰 관리 화면 이동
+            replaceFragmentWithAnimation(R.id.container_main, MyReviewFragment(), addToBackStack = true)
         }
 
         // 업데이트 버튼 클릭
@@ -85,6 +97,18 @@ class MypageFragment : Fragment() {
 //                onCancel = {}
 //            )
         }
+    }
+
+    private fun getMyPageInfo() {
+//        memberRepository.getMyPageInfo(
+//            onSuccess = { memberInfo ->
+//                // 사용자 이름을 TextView에 설정
+//                binding.tvName.text = memberInfo.name
+//            },
+//            onFailure = { errorRes ->
+//                Toast.makeText(requireContext(), "정보를 가져오지 못했습니다: ${errorRes.message}", Toast.LENGTH_SHORT).show()
+//            }
+//        )
     }
 
     override fun onDestroyView() {
