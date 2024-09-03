@@ -42,13 +42,19 @@ class CartRecyclerAdapter(private val viewModel: ScanViewModel) :
                 .load(item.productThumbnail)
                 .into(binding.imgCartProduct)
 
-            // 버튼 클릭 리스너 설정
+            // 수량 증가 버튼 클릭 리스너
             binding.btnCartPlus.setOnClickListener {
-                viewModel.modifyCartItemQuantity(item.productId, 1)
+                viewModel.modifyCartItemQuantity(item.productId, 1)    // 서버에 수량 증가 요청
+                updateItemQuantity(item, 1)    // 어댑터에서 수량 증가
             }
 
+            // 수량 감소 버튼 클릭 리스너
             binding.btnCartMinus.setOnClickListener {
-                viewModel.modifyCartItemQuantity(item.productId, -1)
+                // 수량이 1 이상일 때만 감소 가능
+                if (item.quantity > 1) {
+                    viewModel.modifyCartItemQuantity(item.productId, -1)    // 서버에 수량 감소 요청
+                    updateItemQuantity(item, -1)    // 어댑터에서 수량 감소
+                }
             }
 
             binding.btnCartDetail.setOnClickListener {
@@ -64,6 +70,19 @@ class CartRecyclerAdapter(private val viewModel: ScanViewModel) :
         val currentList = currentList.toMutableList()
         currentList.removeAt(position)
         submitList(currentList)
+    }
+
+    /**
+     * 아이템의 수량을 업데이트하고 리사이클러뷰에 반영
+     */
+    private fun updateItemQuantity(item: CartItem, delta: Int) {
+        val currentList = currentList.toMutableList()
+        val position = currentList.indexOf(item)
+        if (position != -1) {
+            val updatedItem = item.copy(quantity = item.quantity + delta)
+            currentList[position] = updatedItem
+            submitList(currentList)
+        }
     }
 
     /**
