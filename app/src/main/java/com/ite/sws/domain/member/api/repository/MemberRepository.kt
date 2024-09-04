@@ -14,6 +14,7 @@ import android.content.Context
 import android.util.Log
 import com.ite.sws.domain.member.data.GetMemberRes
 import com.ite.sws.domain.member.data.PostLoginRes
+import com.ite.sws.domain.member.data.PostMemberReq
 
 
 /**
@@ -117,7 +118,7 @@ class MemberRepository {
         val token = SharedPreferencesUtil.getAccessToken()
 
         if (token != null) {
-            val call = memberService.getMyPageInfo()
+            val call = memberService.getMyInfo()
 
             call.enqueue(object : Callback<GetMemberRes> {
                 override fun onResponse(call: Call<GetMemberRes>, response: Response<GetMemberRes>) {
@@ -177,6 +178,58 @@ class MemberRepository {
                     message = t.localizedMessage ?: "Unknown network error"
                 )
                 onFailure(networkError)
+            }
+        })
+    }
+
+    /**
+     * 회원가입
+     */
+    fun signup(
+        signupRequest: PostMemberReq,
+        onSuccess: () -> Unit,
+        onFailure: (Throwable) -> Unit
+    ) {
+        val call = memberService.signup(signupRequest)
+
+        call.enqueue(object : Callback<Void> {
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                if (response.isSuccessful) {
+                    onSuccess()
+                } else {
+                    onFailure(Throwable("Failed to sign up: ${response.code()}"))
+                }
+            }
+
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                onFailure(t)
+            }
+        })
+    }
+
+    /**
+     * 로그인 아이디 중복 체크
+     */
+    fun isLoginIdAvailable(
+        loginId: String,
+        onSuccess: () -> Unit,
+        onFailure: (String) -> Unit
+    ) {
+        val call = memberService.isLoginIdAvailable(loginId)
+
+        call.enqueue(object : Callback<Void> {
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                if (response.isSuccessful) {
+                    onSuccess()
+                } else {
+                    val errorBody = response.errorBody()?.string()
+                    val errorRes = Gson().fromJson(errorBody, ErrorRes::class.java)
+                    onFailure(errorRes.message)
+                }
+            }
+
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                onFailure(t.localizedMessage ?: "Network error occurred")
             }
         })
     }
