@@ -83,9 +83,12 @@
                         android:paddingTop="5dp"
                         android:textColor="@color/gray"
                         android:textFontWeight="700"
+                        android:hint="@string/fragment_signup_hint_id"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/tv_id" />
+                        app:layout_constraintTop_toBottomOf="@+id/tv_id"
+                        android:textColorHint="#D4D6D4"
+                        />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <!-- 중복확인 -->
@@ -153,9 +156,12 @@
                         android:paddingTop="5dp"
                         android:textColor="@color/gray"
                         android:textFontWeight="700"
+                        android:hint="@string/fragment_signup_hint_password"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/tv_password" />
+                        app:layout_constraintTop_toBottomOf="@+id/tv_password"
+                        android:textColorHint="#D4D6D4"
+                        />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <!-- 비밀번호 확인 -->
@@ -199,7 +205,10 @@
                         android:textFontWeight="700"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/tv_check_password" />
+                        app:layout_constraintTop_toBottomOf="@+id/tv_check_password"
+                        android:hint="@string/fragment_signup_hint_check_password"
+                        android:textColorHint="#D4D6D4"
+                        />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <!-- 이름 -->
@@ -243,7 +252,10 @@
                         android:textFontWeight="700"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/tv_name" />
+                        app:layout_constraintTop_toBottomOf="@+id/tv_name"
+                        android:hint="@string/fragment_signup_hint_name"
+                        android:textColorHint="#D4D6D4"
+                        />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <!-- 성별 -->
@@ -284,6 +296,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:buttonTint="@color/main"
+                            android:checked="true"
                             android:text="@string/fragment_signup_male"
                             android:textColor="@color/black" />
 
@@ -339,7 +352,10 @@
                         android:textFontWeight="700"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/tv_age" />
+                        app:layout_constraintTop_toBottomOf="@+id/tv_age"
+                        android:hint="@string/fragment_signup_hint_age"
+                        android:textColorHint="#D4D6D4"
+                        />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <!-- 핸드폰번호 -->
@@ -383,7 +399,10 @@
                         android:textFontWeight="700"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/tv_phone" />
+                        app:layout_constraintTop_toBottomOf="@+id/tv_phone"
+                        android:hint="@string/fragment_signup_hint_phone"
+                        android:textColorHint="#D4D6D4"
+                        />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <!-- 차량 번호 -->
@@ -427,7 +446,10 @@
                         android:textFontWeight="700"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/tv_car" />
+                        app:layout_constraintTop_toBottomOf="@+id/tv_car"
+                        android:hint="@string/fragment_signup_hint_car"
+                        android:textColorHint="#D4D6D4"
+                        />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <!-- 회원가입 버튼 -->
