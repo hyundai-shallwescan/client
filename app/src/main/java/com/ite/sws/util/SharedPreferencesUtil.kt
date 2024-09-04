@@ -22,6 +22,7 @@ object SharedPreferencesUtil {
     private const val PREFS_NAME = "auth_prefs"
     private const val KEY_ACCESS_TOKEN = "ACCESS_TOKEN"
     private const val KEY_CART_ID = "CART_ID"
+    private const val KEY_CART_MEMBER_NAME = "NAME"
     private lateinit var sharedPreferences: SharedPreferences
 
     fun init(context: Context) {
@@ -124,5 +125,19 @@ object SharedPreferencesUtil {
      */
     fun getCartId(): Long {
         return sharedPreferences.getLong(KEY_CART_ID, 0)
+    }
+
+    /**
+     * 장바구니 멤버 이름 저장
+     */
+    fun setCartMemberName(name: String) {
+        sharedPreferences.edit().putString(KEY_CART_MEMBER_NAME, name).apply()
+    }
+
+    /**
+     * 장바구니 멤버 이름 가져오기
+     */
+    fun getCartMemberName(): String? {
+        return sharedPreferences.getString(KEY_CART_MEMBER_NAME, "")
     }
 }

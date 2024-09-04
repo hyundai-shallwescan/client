@@ -55,9 +55,8 @@ class CartLoginFragment : Fragment() {
                 // 로그인 요청
                 cartRepository.login(postCartLoginReq,
                     onSuccess = { jwtToken ->
-                        saveJwtToken(jwtToken.accessToken)
-                        // 로그인 성공 시 사용자 이름 저장
-                        SharedPreferencesUtil.saveString(requireContext(), "name", loginId)
+                        saveAccessToken(jwtToken.accessToken)
+                        saveName(loginId)
                         binding.nicknameTitle.text = "로그인 성공 AccessToken: ${jwtToken.accessToken}"
                         navigateToNextScreen()
                     },
@@ -74,8 +73,15 @@ class CartLoginFragment : Fragment() {
     /**
      * JWT 토큰 저장
      */
-    private fun saveJwtToken(token: String) {
-        SharedPreferencesUtil.saveString(requireContext(), "jwt_token", token)
+    private fun saveAccessToken(token: String) {
+        SharedPreferencesUtil.setAccessToken(token)
+    }
+
+    /**
+     * 사용자 이름 저장
+     */
+    private fun saveName(name: String) {
+        SharedPreferencesUtil.setCartMemberName(name)
     }
 
     /**
@@ -84,7 +90,7 @@ class CartLoginFragment : Fragment() {
     private fun navigateToNextScreen() {
         replaceFragmentWithAnimation(
             R.id.container_main,
-            ScanFragment()
+            ExternalContainerFragment()
         )
     }
 

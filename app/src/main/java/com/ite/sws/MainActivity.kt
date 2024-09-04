@@ -3,14 +3,13 @@ package com.ite.sws
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.view.View
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.ite.sws.databinding.ActivityMainBinding
+import com.ite.sws.domain.cart.view.ui.CartLoginFragment
 import com.ite.sws.domain.cart.view.ui.ContainerFragment
 import com.ite.sws.domain.member.view.ui.LoginFragment
 import com.ite.sws.util.SharedPreferencesUtil
@@ -39,7 +38,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
-
         setContentView(binding.root)
 
         binding.navigationMain.itemIconTintList = null
@@ -51,7 +49,28 @@ class MainActivity : AppCompatActivity() {
         }
 
         // 딥링크 처리
-        intent?.let { handleDeeplink(it) }
+        if (intent?.action == Intent.ACTION_VIEW && intent?.data != null) {
+            // 딥링크로 접근한 경우에는 멤버 로그인 여부를 확인하지 않고 딥링크 처리
+            handleDeeplink(intent)
+        } else {
+            // 딥링크로 접근하지 않은 경우 멤버 로그인 여부를 확인
+            val accessToken = SharedPreferencesUtil.getAccessToken()
+            if (accessToken.isNullOrEmpty()) {
+                // 액세스 토큰이 없으면 로그인 화면으로 이동
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.container_main, LoginFragment())
+                    .addToBackStack(null)
+                    .commit()
+                return
+            }
+
+            // 액세스 토큰이 있을 경우 초기 프래그먼트 설정
+            if (savedInstanceState == null) {
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, ContainerFragment())
+                    .commit()
+            }
+        }
 
         // 화면 전환 시 FAB 아이콘 및 배경 변경
         navController?.addOnDestinationChangedListener { _, destination, _ ->
@@ -70,33 +89,16 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-
-        val accessToken = SharedPreferencesUtil.getAccessToken()
-        if (accessToken.isNullOrEmpty()) {
-            // 액세스 토큰이 없으면 로그인 화면으로 이동
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.container_main, LoginFragment())
-                .addToBackStack(null)
-                .commit()
-            return
-        }
-
-        // 액세스 토큰이 있을 경우
-        // 네비게이션 설정
-        // 초기 프래그먼트 설정
-        if (savedInstanceState == null) {
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, ContainerFragment())
-                .commit()
-        }
     }
-
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         intent?.let { handleDeeplink(it) }
     }
 
+    /**
+     * 딥링크 처리
+     */
     private fun handleDeeplink(intent: Intent) {
         val action: String? = intent.action
         val data: Uri? = intent.data
@@ -106,25 +108,34 @@ class MainActivity : AppCompatActivity() {
             val cartId: Long? = cartIdString?.toLongOrNull()
 
             if (cartId != null) {
-                Log.d("DeepLink", "Received cartId as Long: $cartId")
-                SharedPreferencesUtil.saveLong(this, "cart_id", cartId)
-                navigateToCart(cartId)
+                Log.d("DeepLink", "cartId: $cartId")
+                SharedPreferencesUtil.setCartId(cartId)
+                navigateToCartLogin(cartId)
             } else {
-                Log.d("DeepLink", "cartId is null or not a valid Long")
+                Log.d("DeepLink", "잘못된 cartId")
             }
         }
     }
 
-    private fun navigateToCart(cartId: Long) {
-        val navController =
-            supportFragmentManager.findFragmentById(R.id.container_main)?.findNavController()
-        if (navController != null) {
-            val bundle = Bundle().apply {
+    /**
+     * 장바구니 로그인 화면으로 이동
+     */
+    private fun navigateToCartLogin(cartId: Long) {
+        val fragment = CartLoginFragment().apply {
+            arguments = Bundle().apply {
                 putLong("cartId", cartId)
             }
-            navController.navigate(R.id.navigation_container, bundle)
-        } else {
-            Log.e("MainActivity", "NavController is not set on container_main")
         }
+
+        supportFragmentManager.beginTransaction()
+            .setCustomAnimations(
+                android.R.animator.fade_in,
+                android.R.animator.fade_out,
+                android.R.animator.fade_in,
+                android.R.animator.fade_out
+            )
+            .replace(R.id.container_main, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 }
