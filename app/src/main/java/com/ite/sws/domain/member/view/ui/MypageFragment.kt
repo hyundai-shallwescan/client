@@ -1,6 +1,5 @@
 package com.ite.sws.domain.member.view.ui
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,9 +10,9 @@ import androidx.fragment.app.FragmentManager
 import com.ite.sws.MainActivity
 import com.ite.sws.R
 import com.ite.sws.databinding.FragmentMypageBinding
-import com.ite.sws.domain.cart.view.ui.ContainerFragment
 import com.ite.sws.domain.member.api.repository.MemberRepository
 import com.ite.sws.util.CustomDialog
+import com.ite.sws.util.SharedPreferencesUtil
 import com.ite.sws.util.hideBottomNavigation
 import com.ite.sws.util.replaceFragmentWithAnimation
 import setupToolbar
@@ -30,6 +29,7 @@ import setupToolbar
  * 2024.08.24  	정은지       최초 생성
  * 2024.09.03   정은지       버튼 클릭 리스너 설정
  * 2024.09.03   정은지       로그아웃 기능 추가
+ * 2024.09.03   정은지       회원 탈퇴 기능 추가
  * </pre>
  */
 class MypageFragment : Fragment() {
@@ -61,17 +61,17 @@ class MypageFragment : Fragment() {
 
         // 리뷰 관리 버튼 클릭
         binding.btnReview.setOnClickListener {
-            replaceFragmentWithAnimation(R.id.container_main, MyReviewFragment())
+            replaceFragmentWithAnimation(R.id.container_main, MyReviewFragment(), true)
         }
 
         // 업데이트 버튼 클릭
         binding.btnUpdate.setOnClickListener {
-            // TODO 회원 정보 수정 화면 이동
+            TODO ("회원 정보 수정 화면 이동")
         }
 
         // 구매 내역 버튼 클릭
         binding.btnPayment.setOnClickListener {
-            // TODO 구매 내역 화면 이동
+            TODO ("구매 내역 화면 이동")
         }
 
         // 로그아웃 버튼 클릭
@@ -117,7 +117,25 @@ class MypageFragment : Fragment() {
                 confirmText = "탈퇴",
                 cancelText = "취소",
                 onConfirm = {
-                    // TODO 탈퇴 처리 API
+                    memberRepository.withdraw(
+                        onSuccess = {
+                            CustomDialog (
+                                layoutId = R.layout.dialog_text1_btn1,
+                                title = "탈퇴되었습니다.",
+                                confirmText = "확인",
+                                onConfirm = {
+                                    // 백스택 모두 제거
+                                    requireActivity().supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+
+                                    // 로그인 화면으로 이동
+                                    replaceFragmentWithAnimation(R.id.container_main, LoginFragment(), false)
+                                }
+                            ).show(activity?.supportFragmentManager!!, "CustomDialog")
+                        },
+                        onFailure = { errorRes ->
+                            Toast.makeText(requireContext(), "회원 탈퇴 실패: ${errorRes.message}", Toast.LENGTH_SHORT).show()
+                        }
+                    )
                 },
                 onCancel = {}
             ).show(activity?.supportFragmentManager!!, "CustomDialog")
@@ -127,7 +145,6 @@ class MypageFragment : Fragment() {
     private fun getMyPageInfo() {
         memberRepository.getMyPageInfo(
             onSuccess = { memberInfo ->
-                // 사용자 이름을 TextView에 설정
                 binding?.let {
                     binding.tvName.text = memberInfo.name +"님"
                 }

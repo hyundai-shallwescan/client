@@ -11,7 +11,9 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import android.content.Context
+import android.util.Log
 import com.ite.sws.domain.member.data.GetMemberRes
+import com.ite.sws.domain.member.data.PostLoginRes
 
 
 /**
@@ -27,6 +29,7 @@ import com.ite.sws.domain.member.data.GetMemberRes
  * 2024.08.31   정은지        로그인 추가
  * 2024.09.02   정은지        회원 정보 조회 추가
  * 2024.09.03   정은지        로그아웃 추가
+ * 2024.09.03   정은지        회원 탈퇴 추가
  * </pre>
  */
 class MemberRepository {
@@ -43,15 +46,25 @@ class MemberRepository {
         onFailure: (ErrorRes) -> Unit
     ) {
         val call = memberService.login(postLoginReq)
-        call.enqueue(object : Callback<JwtToken> {
-            override fun onResponse(call: Call<JwtToken>, response: Response<JwtToken>) {
+        call.enqueue(object : Callback<PostLoginRes> {
+            override fun onResponse(call: Call<PostLoginRes>, response: Response<PostLoginRes>) {
                 if (response.isSuccessful) {
-                    response.body()?.let { jwtToken ->
-                        // 로그인 성공 시 액세스 토큰을 SharedPreferences에 저장
-                        SharedPreferencesUtil.setAccessToken(jwtToken.accessToken)
-                        onSuccess()
+                    val accessToken = response.headers()["Authorization"]
+                    accessToken?.let {
+                        // 액세스 토큰 추출
+                        val token = it.removePrefix("Bearer ")
+
+                        // 액세스 토큰 SharedPreferences에 저장
+                        SharedPreferencesUtil.setAccessToken(token)
                     }
 
+                    // 장바구니 아이디 SharedPreferences에 저장
+                    response.body()?.cartId?.let { cartId ->
+                        SharedPreferencesUtil.setCartId(cartId)
+                        Log.d("MemberRepository", "장바구니 아이디: $cartId")
+                    }
+
+                    onSuccess()
                 } else {
                     val errorBodyString = response.errorBody()?.string()
                     val errorRes = Gson().fromJson(errorBodyString, ErrorRes::class.java)
@@ -59,7 +72,7 @@ class MemberRepository {
                 }
             }
 
-            override fun onFailure(call: Call<JwtToken>, t: Throwable) {
+            override fun onFailure(call: Call<PostLoginRes>, t: Throwable) {
                 t.printStackTrace()
                 val networkError = ErrorRes(
                     status = 0,
@@ -70,7 +83,6 @@ class MemberRepository {
             }
         })
     }
-
 
     /**
      * 로그아웃
@@ -104,7 +116,6 @@ class MemberRepository {
         // SharedPreferences에서 JWT 토큰을 가져오기
         val token = SharedPreferencesUtil.getAccessToken()
 
-        // 토큰이 null이 아닌 경우에만 요청 수행
         if (token != null) {
             val call = memberService.getMyPageInfo()
 
@@ -135,5 +146,38 @@ class MemberRepository {
             // 토큰이 없을 경우 실패 처리
             onFailure(ErrorRes(0, "NO_TOKEN", "JWT 토큰이 없습니다."))
         }
+    }
+
+    /**
+     * 회원 탈퇴
+     */
+    fun withdraw(
+        onSuccess: () -> Unit,
+        onFailure: (ErrorRes) -> Unit
+    ) {
+        val call = memberService.withdraw()
+        call.enqueue(object : Callback<Void> {
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                if (response.isSuccessful) {
+                    // SharedPrefer 비우기
+                    SharedPreferencesUtil.clearAll()
+                    onSuccess()
+                } else {
+                    val errorBodyString = response.errorBody()?.string()
+                    val errorRes = Gson().fromJson(errorBodyString, ErrorRes::class.java)
+                    onFailure(errorRes)
+                }
+            }
+
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                t.printStackTrace()
+                val networkError = ErrorRes(
+                    status = 0,
+                    errorCode = "NETWORK_ERROR",
+                    message = t.localizedMessage ?: "Unknown network error"
+                )
+                onFailure(networkError)
+            }
+        })
     }
 }

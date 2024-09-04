@@ -14,12 +14,14 @@ import android.content.SharedPreferences
  * ----------  --------    ---------------------------
  * 2024.08.31  	남진수       최초 생성
  * 2024.09.03   정은지       액세스 토큰 관련 함수 추가
+ * 2024.09.03   정은지       장바구니 아이디 관련 함수 추가
  * </pre>
  */
 object SharedPreferencesUtil {
 
     private const val PREFS_NAME = "auth_prefs"
     private const val KEY_ACCESS_TOKEN = "ACCESS_TOKEN"
+    private const val KEY_CART_ID = "CART_ID"
     private lateinit var sharedPreferences: SharedPreferences
 
     fun init(context: Context) {
@@ -83,7 +85,7 @@ object SharedPreferencesUtil {
     }
 
     /**
-     * 액세스 토큰 저장하기
+     * 액세스 토큰 저장
      */
     fun setAccessToken(accessToken: String) {
         sharedPreferences.edit().putString(KEY_ACCESS_TOKEN, accessToken).apply()
@@ -99,7 +101,28 @@ object SharedPreferencesUtil {
     /**
      * 액세스 토큰 삭제
      */
-        fun removeAccessToken() {
+    fun removeAccessToken() {
         sharedPreferences.edit().remove(KEY_ACCESS_TOKEN).apply()
+    }
+
+    /**
+     * 데이터 모두 삭제
+     */
+    fun clearAll() {
+        sharedPreferences.edit().clear().apply()
+    }
+
+    /**
+     * 카트 ID 저장
+     */
+    fun setCartId(cartId: Long) {
+        sharedPreferences.edit().putLong(KEY_CART_ID, cartId).apply()
+    }
+
+    /**
+     * 카트 ID 가져오기
+     */
+    fun getCartId(): Long {
+        return sharedPreferences.getLong(KEY_CART_ID, 0)
     }
 }
