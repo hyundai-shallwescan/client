@@ -68,8 +68,8 @@ class ChatFragment : Fragment() {
      */
     @SuppressLint("CheckResult")
     private fun sendMessage(payload: String, status: String) {
-        val cartId = SharedPreferencesUtil.getLong(requireContext(), "cart_id")
-        val name = SharedPreferencesUtil.getString(requireContext(), "name")
+        val cartId = SharedPreferencesUtil.getCartId()
+        val name = SharedPreferencesUtil.getCartMemberName()
         val chatMessageDTO = ChatMessageDTO(payload = payload, status = status, cartId = cartId, name = name)
         val data = Gson().toJson(chatMessageDTO)
 
@@ -84,7 +84,7 @@ class ChatFragment : Fragment() {
      * 메시지 수신
      */
     private fun receiveMessage() {
-        val cartId = SharedPreferencesUtil.getLong(requireContext(), "cart_id")
+        val cartId = SharedPreferencesUtil.getCartId()
         val subscriptionPath = "/sub/chat/$cartId"
 
         WebSocketClient.subscribe(subscriptionPath) { message ->
