@@ -80,7 +80,7 @@ class LoginFragment : Fragment() {
         memberRepository.login(postLoginReq,
             // 성공 시 메인 화면으로 이동
             onSuccess = {
-                replaceFragmentWithAnimation(R.id.container_main, ContainerFragment(), false)
+                parentFragmentManager.popBackStack()
             },
 
             // 실패 시 로그인 실패 모달

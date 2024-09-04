@@ -91,7 +91,7 @@ class MypageFragment : Fragment() {
                                 confirmText = "확인",
                                 onConfirm = {
                                     // 백스택 모두 제거
-                                    requireActivity().supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+//                                    requireActivity().supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
 
                                     // 로그인 화면으로 이동
                                     replaceFragmentWithAnimation(R.id.container_main, LoginFragment(), false)
@@ -125,7 +125,7 @@ class MypageFragment : Fragment() {
                                 confirmText = "확인",
                                 onConfirm = {
                                     // 백스택 모두 제거
-                                    requireActivity().supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+//                                    requireActivity().supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
 
                                     // 로그인 화면으로 이동
                                     replaceFragmentWithAnimation(R.id.container_main, LoginFragment(), false)
