@@ -45,12 +45,22 @@
     <!-- 회원가입 -->
     <string name="fragment_signup">Sign Up</string>
     <string name="fragment_signup_check_id">중복확인</string>
-    <string name="fragment_signup_password_confirm">비밀번호 확인</string>
+    <string name="fragment_signup_check_password">비밀번호 확인</string>
     <string name="fragment_signup_name">이름</string>
     <string name="fragment_signup_age">나이</string>
     <string name="fragment_signup_gender">성별</string>
-    <string name="fragment_signup_phone">핸드폰번호</string>
-    <string name="fragment_signup_car">차량</string>
+    <string name="fragment_signup_male">남</string>
+    <string name="fragment_signup_female">여</string>
+    <string name="fragment_signup_phone">전화번호</string>
+    <string name="fragment_signup_car">차량번호</string>
+    <string name="fragment_signup_hint_id">heendy123</string>
+    <string name="fragment_signup_hint_password">8~20글자의 비밀번호를 입력해주세요.</string>
+    <string name="fragment_signup_hint_check_password">비밀번호를 다시 입력해주세요.</string>
+    <string name="fragment_signup_hint_name">김흰디</string>
+    <string name="fragment_signup_hint_age">7</string>
+    <string name="fragment_signup_hint_phone">01000000000</string>
+    <string name="fragment_signup_hint_car">000가0000</string>
+
 
     <!-- 버튼 -->
     <string name="btn_scanner_chat">채팅</string>

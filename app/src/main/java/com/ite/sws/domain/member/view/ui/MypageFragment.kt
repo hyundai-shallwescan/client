@@ -94,7 +94,7 @@ class MypageFragment : Fragment() {
 //                                    requireActivity().supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
 
                                     // 로그인 화면으로 이동
-                                    replaceFragmentWithAnimation(R.id.container_main, LoginFragment(), false)
+                                    replaceFragmentWithAnimation(R.id.container_main, LoginFragment(), true)
                                 }
                             ).show(activity?.supportFragmentManager!!, "CustomDialog")
                         },
@@ -128,7 +128,7 @@ class MypageFragment : Fragment() {
 //                                    requireActivity().supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
 
                                     // 로그인 화면으로 이동
-                                    replaceFragmentWithAnimation(R.id.container_main, LoginFragment(), false)
+                                    replaceFragmentWithAnimation(R.id.container_main, LoginFragment(), true)
                                 }
                             ).show(activity?.supportFragmentManager!!, "CustomDialog")
                         },
@@ -153,10 +153,5 @@ class MypageFragment : Fragment() {
                 Toast.makeText(requireContext(), "정보를 가져오지 못했습니다: ${errorRes.message}", Toast.LENGTH_SHORT).show()
             }
         )
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }
