@@ -2,7 +2,6 @@ package com.ite.sws.domain.cart.view.ui
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ite.sws.domain.cart.api.repository.CartRepository
 import com.ite.sws.domain.cart.data.CartItem
@@ -26,7 +25,7 @@ import kotlinx.coroutines.launch
  * 2024.09.03  김민정       장바구니 아이템 삭제
  * </pre>
  */
-class ScanViewModel() : ViewModel() {
+class ScanViewModel : BaseCartViewModel() {
 
     private val cartRepository = CartRepository()
 
@@ -58,7 +57,7 @@ class ScanViewModel() : ViewModel() {
     /**
      * 장바구니 아이템 조회
      */
-    fun findCartItemList(cartId: Long) {
+    override fun findCartItemList(cartId: Long) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val items = cartRepository.findCartItemList(cartId)
@@ -72,7 +71,7 @@ class ScanViewModel() : ViewModel() {
     /**
      * 장바구니 아이템 수량 조절
      */
-    fun modifyCartItemQuantity(cartId: Long, productId: Long, delta: Int) {
+    override fun modifyCartItemQuantity(cartId: Long, productId: Long, delta: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 cartRepository.modifyCartItemQuantity(cartId, productId, delta)
@@ -86,7 +85,7 @@ class ScanViewModel() : ViewModel() {
     /**
      * 장바구니 아이템 삭제
      */
-    fun removeCartItem(cartId: Long, productId: Long) {
+    override fun removeCartItem(cartId: Long, productId: Long) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 cartRepository.removeCartItem(cartId, productId)

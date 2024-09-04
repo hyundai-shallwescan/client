@@ -22,7 +22,7 @@
             android:id="@+id/layout_cart_item"
             android:layout_width="match_parent"
             android:layout_height="130dp"
-            android:background="@drawable/bg_list_item"
+            android:background="@drawable/bg_list_item_shadow"
             android:orientation="horizontal"
             android:scaleType="fitCenter"
             android:paddingHorizontal="@dimen/common_horizontal_margin"
