@@ -6,11 +6,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.ite.sws.databinding.ItemCartBinding
 import com.ite.sws.domain.cart.data.CartItem
-import com.ite.sws.domain.cart.view.ui.ScanViewModel
+import com.ite.sws.domain.cart.view.ui.ExternalCartViewModel
 import com.ite.sws.util.SharedPreferencesUtil
 
 /**
- * 장바구니 아이템 목록 리사이클러 어댑터
+ * 외부일행 장바구니 아이템 목록 리사이클러 어댑터
  * @author 김민정
  * @since 2024.09.02
  * @version 1.0
@@ -18,16 +18,16 @@ import com.ite.sws.util.SharedPreferencesUtil
  * <pre>
  * 수정일       수정자        수정내용
  * ----------  --------    ---------------------------
- * 2024.09.02  김민정       최초 생성
- * 2024.09.02  김민정       장바구니 아이템 조회
- * 2024.09.03  김민정       장바구니 아이템 수량 변경
- * 2024.09.03  김민정       장바구니 아이템 삭제
+ * 2024.09.04  김민정       최초 생성
+ * 2024.09.04  김민정       장바구니 아이템 조회
+ * 2024.09.04  김민정       장바구니 아이템 수량 변경
+ * 2024.09.04  김민정       장바구니 아이템 삭제
  * </pre>
  */
-class CartRecyclerAdapter(private val viewModel: ScanViewModel) :
-    BaseCartAdapter<CartRecyclerAdapter.CartViewHolder, ScanViewModel>(viewModel) {
+class ExternalCartRecyclerAdapter(private val viewModel: ExternalCartViewModel) :
+    BaseCartAdapter<ExternalCartRecyclerAdapter.ExternalCartViewHolder, ExternalCartViewModel>(viewModel) {
 
-    inner class CartViewHolder(val binding: ItemCartBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class ExternalCartViewHolder(val binding: ItemCartBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: CartItem) {
             binding.textCartProductName.text = item.productName
@@ -75,15 +75,15 @@ class CartRecyclerAdapter(private val viewModel: ScanViewModel) :
     /**
      *  ViewHolder 생성
      */
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExternalCartViewHolder {
         val binding = ItemCartBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return CartViewHolder(binding)
+        return ExternalCartViewHolder(binding)
     }
 
     /**
      * ViewHolder에 데이터를 바인딩
      */
-    override fun onBindViewHolder(holder: CartViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ExternalCartViewHolder, position: Int) {
         holder.bind(getItem(position))
     }
 }

@@ -5,8 +5,8 @@ import android.view.View
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.ite.sws.R
-import com.ite.sws.domain.cart.view.adapter.CartRecyclerAdapter
-import com.ite.sws.domain.cart.view.ui.ScanViewModel
+import com.ite.sws.domain.cart.view.adapter.BaseCartAdapter
+import com.ite.sws.domain.cart.view.ui.BaseCartViewModel
 
 /**
  * SwipeHelperCallback
@@ -23,8 +23,8 @@ import com.ite.sws.domain.cart.view.ui.ScanViewModel
  * </pre>
  */
 class SwipeHelperCallback(
-    private val adapter: CartRecyclerAdapter,
-    private val viewModel: ScanViewModel
+    private val adapter: BaseCartAdapter<*, *>,
+    private val viewModel: BaseCartViewModel
 ) : ItemTouchHelper.Callback() {
 
     /**
@@ -56,7 +56,7 @@ class SwipeHelperCallback(
         // 스와이프 시 아이템 삭제
         val position = viewHolder.adapterPosition
         val deletedItem = adapter.currentList[position]
-        viewModel.removeCartItem(deletedItem.productId)
+        viewModel.removeCartItem(SharedPreferencesUtil.getCartId(), deletedItem.productId)
         adapter.removeItem(position)
     }
 
@@ -98,4 +98,3 @@ class SwipeHelperCallback(
         }
     }
 }
-

@@ -53,9 +53,9 @@ class ScanFragment : Fragment() {
     private val binding get() = _binding!!
 
     // ViewModel 객체
-    private lateinit var scanViewModel: ScanViewModel
+    private lateinit var viewModel: ScanViewModel
     private lateinit var barcodeScannerView: DecoratedBarcodeView
-    private lateinit var cartRecyclerAdapter: CartRecyclerAdapter
+    private lateinit var recyclerAdapter: CartRecyclerAdapter
 
     // 딜레이를 주기 위한 핸들러
     private val delayHandler = Handler(Looper.getMainLooper())
@@ -71,22 +71,18 @@ class ScanFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // TODO: cartId 하드코딩 지우기
-        SharedPreferencesUtil.saveLong(requireContext(), "cart_id", 27)
-
         // ViewModel 초기화
-        scanViewModel =
-            ViewModelProvider(this, ScanViewModelFactory(requireContext())).get(ScanViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(ScanViewModel::class.java)
         barcodeScannerView = binding.barcodeScanner
 
         // 리사이클러뷰 설정
-        setupRecyclerView(scanViewModel)
+        setupRecyclerView(viewModel)
 
         // 카메라 권한 체크 및 요청
         checkCameraPermission()
 
         // 장바구니 아이템 가져오기
-        scanViewModel.findCartItemList(SharedPreferencesUtil.getLong(requireContext(), "cart_id"))
+        viewModel.findCartItemList(SharedPreferencesUtil.getCartId())
 
         // ViewModel에서 발생한 이벤트를 관찰
         observeViewModel()
@@ -96,10 +92,10 @@ class ScanFragment : Fragment() {
      * RecyclerView 설정
      */
     private fun setupRecyclerView(scanViewModel : ScanViewModel) {
-        cartRecyclerAdapter = CartRecyclerAdapter(scanViewModel)
+        recyclerAdapter = CartRecyclerAdapter(scanViewModel)
         binding.recyclerviewCart.apply {
             layoutManager = LinearLayoutManager(requireContext()) // LayoutManager 설정
-            adapter = cartRecyclerAdapter
+            adapter = recyclerAdapter
         }
         itemTouchHelperSetting()
     }
@@ -109,7 +105,7 @@ class ScanFragment : Fragment() {
      * : 스와이프 동작 추가
      */
     private fun itemTouchHelperSetting() {
-        val swipeHelperCallback = SwipeHelperCallback(cartRecyclerAdapter, scanViewModel)
+        val swipeHelperCallback = SwipeHelperCallback(recyclerAdapter, viewModel)
         val itemTouchHelper = ItemTouchHelper(swipeHelperCallback)
         itemTouchHelper.attachToRecyclerView(binding.recyclerviewCart)
     }
@@ -136,7 +132,7 @@ class ScanFragment : Fragment() {
                 result?.let {
                     val barcode = it.text
                     barcodeScannerView.pause()
-                    scanViewModel.saveCartItem(barcode)
+                    viewModel.saveCartItem(barcode)
                 }
             }
 
@@ -149,16 +145,16 @@ class ScanFragment : Fragment() {
      */
     private fun observeViewModel() {
         // 상품 스캔 결과 관찰
-        scanViewModel.scanResult.observe(viewLifecycleOwner) {
+        viewModel.scanResult.observe(viewLifecycleOwner) {
             resumeScannerWithDelay()    // 요청 성공 또는 실패에 상관없이 재개
         }
 
         // 장바구니 아이템 조회 결과 관찰
-        scanViewModel.cartItems.observe(viewLifecycleOwner) { items ->
+        viewModel.cartItems.observe(viewLifecycleOwner) { items ->
             if (items.isNotEmpty()) {
                 binding.recyclerviewCart.visibility = View.VISIBLE
                 binding.layoutCartNotfound.visibility = View.GONE
-                cartRecyclerAdapter.submitList(items)
+                recyclerAdapter.submitList(items)
             } else {
                 binding.recyclerviewCart.visibility = View.GONE
                 binding.layoutCartNotfound.visibility = View.VISIBLE
@@ -166,7 +162,7 @@ class ScanFragment : Fragment() {
         }
 
         // 에러 상태 관찰
-        scanViewModel.error.observe(viewLifecycleOwner) { errorMessage ->
+        viewModel.error.observe(viewLifecycleOwner) { errorMessage ->
             errorMessage?.let {
                 Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
             }
