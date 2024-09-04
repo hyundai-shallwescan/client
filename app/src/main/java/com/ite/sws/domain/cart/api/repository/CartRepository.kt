@@ -24,6 +24,8 @@ import retrofit2.Response
  * 2024.08.31  남진수       최초 생성
  * 2024.08.31  김민정       장바구니 아이템 추가
  * 2024.09.02  김민정       장바구니 아이템 조회
+ * 2024.09.03  김민정       장바구니 아이템 수량 변경
+ * 2024.09.03  김민정       장바구니 아이템 삭제
  * </pre>
  */
 class CartRepository {
@@ -69,13 +71,29 @@ class CartRepository {
      * 장바구니 아이템 추가
      */
     suspend fun saveCartItem(request: PutCartItemReq) {
+        TODO("액세스 토큰 넘겨주는 것으로 변경")
         cartService.saveCartItem(request)
     }
 
     /**
      * 장바구니 아이템 조회
      */
-    suspend fun findCartItemList(cartId: Int): List<CartItem> {
+    suspend fun findCartItemList(cartId: Long): List<CartItem> {
         return cartService.findCartItemList(cartId).items
     }
+
+    /**
+     * 장바구니 아이템 수량 변경
+     */
+    suspend fun modifyCartItemQuantity(cartId: Long, productId: Long, delta: Int) {
+        cartService.modifyCartItemQuantity(cartId, productId, delta)
+    }
+
+    /**
+     * 장바구니 아이템 삭제
+     */
+    suspend fun removeCartItem(cartId: Long, productId: Long) {
+        cartService.deleteCartItem(cartId, productId)
+    }
+
 }

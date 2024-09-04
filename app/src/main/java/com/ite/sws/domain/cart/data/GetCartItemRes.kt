@@ -13,7 +13,7 @@ package com.ite.sws.domain.cart.data
  * </pre>
  */
 data class GetCartItemRes (
-    val cartId: Int,
+    val cartId: Long,
     val totalPrice: Int,
     val items: List<CartItem>
 )

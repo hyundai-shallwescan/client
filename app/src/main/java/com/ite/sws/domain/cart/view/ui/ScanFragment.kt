@@ -15,11 +15,14 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ite.sws.R
 import com.ite.sws.databinding.FragmentScanBinding
 import com.ite.sws.domain.cart.view.adapter.CartRecyclerAdapter
 import com.ite.sws.util.CustomDialog
+import com.ite.sws.util.SharedPreferencesUtil
+import com.ite.sws.util.SwipeHelperCallback
 import com.journeyapps.barcodescanner.BarcodeCallback
 import com.journeyapps.barcodescanner.BarcodeResult
 import com.journeyapps.barcodescanner.DecoratedBarcodeView
@@ -38,8 +41,9 @@ import com.journeyapps.barcodescanner.DecoratedBarcodeView
  * 2024.08.31   김민정       스캔한 상품을 장바구니 아이템으로 등록
  * 2024.09.01   김민정       카메라 권한 설정
  * 2024.09.01  	남진수       WebSocket 연결
- * 2024.08.31   김민정       장바구니 아이템 조회
- *
+ * 2024.09.02   김민정       장바구니 아이템 조회
+ * 2024.09.03   김민정       장바구니 아이템 수량 변경
+ * 2024.09.03   김민정       장바구니 아이템 삭제
  * </pre>
  */
 class ScanFragment : Fragment() {
@@ -67,18 +71,22 @@ class ScanFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // TODO: cartId 하드코딩 지우기
+        SharedPreferencesUtil.saveLong(requireContext(), "cart_id", 27)
+
         // ViewModel 초기화
-        scanViewModel = ViewModelProvider(this).get(ScanViewModel::class.java)
+        scanViewModel =
+            ViewModelProvider(this, ScanViewModelFactory(requireContext())).get(ScanViewModel::class.java)
         barcodeScannerView = binding.barcodeScanner
 
         // 리사이클러뷰 설정
-        setupRecyclerView()
+        setupRecyclerView(scanViewModel)
 
         // 카메라 권한 체크 및 요청
         checkCameraPermission()
 
         // 장바구니 아이템 가져오기
-        scanViewModel.findCartItemList(cartId = 27)
+        scanViewModel.findCartItemList(SharedPreferencesUtil.getLong(requireContext(), "cart_id"))
 
         // ViewModel에서 발생한 이벤트를 관찰
         observeViewModel()
@@ -87,12 +95,23 @@ class ScanFragment : Fragment() {
     /**
      * RecyclerView 설정
      */
-    private fun setupRecyclerView() {
-        cartRecyclerAdapter = CartRecyclerAdapter()
+    private fun setupRecyclerView(scanViewModel : ScanViewModel) {
+        cartRecyclerAdapter = CartRecyclerAdapter(scanViewModel)
         binding.recyclerviewCart.apply {
             layoutManager = LinearLayoutManager(requireContext()) // LayoutManager 설정
             adapter = cartRecyclerAdapter
         }
+        itemTouchHelperSetting()
+    }
+
+    /**
+     * ItemTouchHelper 설정
+     * : 스와이프 동작 추가
+     */
+    private fun itemTouchHelperSetting() {
+        val swipeHelperCallback = SwipeHelperCallback(cartRecyclerAdapter, scanViewModel)
+        val itemTouchHelper = ItemTouchHelper(swipeHelperCallback)
+        itemTouchHelper.attachToRecyclerView(binding.recyclerviewCart)
     }
 
     /**
@@ -209,5 +228,4 @@ class ScanFragment : Fragment() {
             ).show(activity?.supportFragmentManager!!, "CustomDialog")
         }
     }
-
 }
