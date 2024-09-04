@@ -56,7 +56,7 @@ class SwipeHelperCallback(
         // 스와이프 시 아이템 삭제
         val position = viewHolder.adapterPosition
         val deletedItem = adapter.currentList[position]
-        viewModel.removeCartItem(deletedItem.productId)
+        viewModel.removeCartItem(SharedPreferencesUtil.getCartId(), deletedItem.productId)
         adapter.removeItem(position)
     }
 

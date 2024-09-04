@@ -71,12 +71,8 @@ class ScanFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // TODO: cartId 하드코딩 지우기
-        SharedPreferencesUtil.saveLong(requireContext(), "cart_id", 27)
-
         // ViewModel 초기화
-        scanViewModel =
-            ViewModelProvider(this, ScanViewModelFactory(requireContext())).get(ScanViewModel::class.java)
+        scanViewModel = ViewModelProvider(this).get(ScanViewModel::class.java)
         barcodeScannerView = binding.barcodeScanner
 
         // 리사이클러뷰 설정
@@ -86,7 +82,7 @@ class ScanFragment : Fragment() {
         checkCameraPermission()
 
         // 장바구니 아이템 가져오기
-        scanViewModel.findCartItemList(SharedPreferencesUtil.getLong(requireContext(), "cart_id"))
+        scanViewModel.findCartItemList(SharedPreferencesUtil.getCartId())
 
         // ViewModel에서 발생한 이벤트를 관찰
         observeViewModel()

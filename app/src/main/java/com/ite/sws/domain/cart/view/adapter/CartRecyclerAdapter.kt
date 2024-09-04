@@ -9,6 +9,7 @@ import com.bumptech.glide.Glide
 import com.ite.sws.databinding.ItemCartBinding
 import com.ite.sws.domain.cart.data.CartItem
 import com.ite.sws.domain.cart.view.ui.ScanViewModel
+import com.ite.sws.util.SharedPreferencesUtil
 
 /**
  * 장바구니 아이템 목록 리사이클러 어댑터
@@ -44,16 +45,26 @@ class CartRecyclerAdapter(private val viewModel: ScanViewModel) :
 
             // 수량 증가 버튼 클릭 리스너
             binding.btnCartPlus.setOnClickListener {
-                viewModel.modifyCartItemQuantity(item.productId, 1)    // 서버에 수량 증가 요청
-                updateItemQuantity(item, 1)    // 어댑터에서 수량 증가
+                // 서버에 수량 증가 요청
+                viewModel.modifyCartItemQuantity(
+                    SharedPreferencesUtil.getCartId(),
+                    item.productId,
+                    1)
+                // 어댑터에서 수량 증가
+                updateItemQuantity(item, 1)
             }
 
             // 수량 감소 버튼 클릭 리스너
             binding.btnCartMinus.setOnClickListener {
                 // 수량이 1 이상일 때만 감소 가능
                 if (item.quantity > 1) {
-                    viewModel.modifyCartItemQuantity(item.productId, -1)    // 서버에 수량 감소 요청
-                    updateItemQuantity(item, -1)    // 어댑터에서 수량 감소
+                    // 서버에 수량 감소 요청
+                    viewModel.modifyCartItemQuantity(
+                        SharedPreferencesUtil.getCartId(),
+                        item.productId,
+                        -1)
+                    // 어댑터에서 수량 감소
+                    updateItemQuantity(item, -1)
                 }
             }
 
