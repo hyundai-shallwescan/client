@@ -14,6 +14,7 @@ import com.ite.sws.R
 import com.ite.sws.common.WebSocketClient
 import com.ite.sws.databinding.FragmentExternalContainerBinding
 import com.ite.sws.domain.chat.view.ui.ChatFragment
+import com.ite.sws.domain.sharelist.view.ui.ExternalShareListFragment
 import com.ite.sws.util.SharedPreferencesUtil
 import com.ite.sws.util.hideBottomNavigation
 import com.ite.sws.util.replaceFragmentWithAnimation
@@ -77,14 +78,12 @@ class ExternalContainerFragment : Fragment() {
      * @param fragment 로드할 프래그먼트
      */
     private fun loadFragment(fragment: Fragment) {
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.fragment_external_container, fragment)
-            .commit()
+        replaceFragmentWithAnimation(R.id.fragment_container, fragment, true)
     }
 
     /**
-    * 버튼 이벤트 설정
-    */
+     * 버튼 이벤트 설정
+     */
     private fun btnSettings() {
         // 장바구니 버튼
         binding.btnCart.setOnClickListener {
@@ -97,7 +96,7 @@ class ExternalContainerFragment : Fragment() {
         binding.btnShareList.setOnClickListener {
             moveSliderToShareList()
             updateButtonColors(binding.btnShareList, binding.btnCart)
-            loadFragment(ExternalCartFragment())
+            loadFragment(ExternalShareListFragment())
         }
 
         // 채팅 버튼

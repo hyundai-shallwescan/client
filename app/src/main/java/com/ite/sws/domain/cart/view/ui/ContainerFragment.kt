@@ -70,9 +70,7 @@ class ContainerFragment : Fragment() {
      * @param fragment 로드할 프래그먼트
      */
     private fun loadFragment(fragment: Fragment) {
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, fragment)
-            .commit()
+        replaceFragmentWithAnimation(R.id.fragment_container, fragment, true)
     }
 
     /**
