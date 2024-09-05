@@ -71,7 +71,6 @@ class CartRepository {
      * 장바구니 아이템 추가
      */
     suspend fun saveCartItem(request: PutCartItemReq) {
-        TODO("액세스 토큰 넘겨주는 것으로 변경")
         cartService.saveCartItem(request)
     }
 

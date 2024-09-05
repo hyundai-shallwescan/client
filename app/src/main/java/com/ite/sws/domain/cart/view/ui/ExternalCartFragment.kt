@@ -1,6 +1,7 @@
 package com.ite.sws.domain.cart.view.ui
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +10,10 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.gson.Gson
+import com.ite.sws.common.WebSocketClient
 import com.ite.sws.databinding.FragmentExternalCartBinding
+import com.ite.sws.domain.cart.data.CartItemDetail
 import com.ite.sws.domain.cart.view.adapter.ExternalCartRecyclerAdapter
 import com.ite.sws.util.SharedPreferencesUtil
 import com.ite.sws.util.SwipeHelperCallback
@@ -27,6 +31,7 @@ import com.ite.sws.util.SwipeHelperCallback
  * 2024.09.04  	김민정       장바구니 아이템 조회
  * 2024.09.04  	김민정       장바구니 아이템 수량 변경
  * 2024.09.04  	김민정       장바구니 아이템 삭제
+ * 2024.09.05   김민정       웹소켓을 통해 실시간으로 장바구니 아이템 변경 사항을 구독
  * </pre>
  */
 class ExternalCartFragment : Fragment() {
@@ -61,6 +66,9 @@ class ExternalCartFragment : Fragment() {
 
         // ViewModel에서 발생한 이벤트를 관찰
         observeViewModel()
+
+        // 공동 장바구니 아이템 변경 사항 관찰
+        observeCartItemUpdate()
     }
 
     /**
@@ -113,5 +121,35 @@ class ExternalCartFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    /**
+     * 웹소켓을 통해 실시간으로 장바구니 아이템 변경 사항을 구독
+     */
+    private fun observeCartItemUpdate() {
+        val cartId = SharedPreferencesUtil.getCartId()
+        val subscriptionPath = "/sub/cart/$cartId"
+
+        WebSocketClient.subscribe(subscriptionPath) { message ->
+            Log.d("STOMP CART", "Received message: $message")
+
+            val cartItemDto = Gson().fromJson(message, CartItemDetail::class.java)
+
+            activity?.runOnUiThread {
+                updateCartRecyclerView(cartItemDto)
+            }
+        }
+    }
+
+    /**
+     * 수신된 메시지에 따라 장바구니 리사이클러뷰 업데이트
+     */
+    private fun updateCartRecyclerView(cartItemDto: CartItemDetail) {
+        when (cartItemDto.action) {
+            "create" -> recyclerAdapter.addNewItem(cartItemDto)
+            "increase" -> recyclerAdapter.increaseItemQuantity(cartItemDto)
+            "decrease" -> recyclerAdapter.decreaseItemQuantity(cartItemDto)
+            "delete" -> recyclerAdapter.removeItem(cartItemDto)
+        }
     }
 }

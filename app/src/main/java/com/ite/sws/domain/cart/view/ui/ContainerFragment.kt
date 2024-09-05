@@ -58,6 +58,9 @@ class ContainerFragment : Fragment() {
             hideBottomNavigation(mainActivity.binding, false)
         }
 
+        // WebSocket 연결
+        connectWebSocket()
+
         return binding.root
     }
 
@@ -76,7 +79,7 @@ class ContainerFragment : Fragment() {
      * @param fragment 로드할 프래그먼트
      */
     private fun loadFragment(fragment: Fragment) {
-        replaceFragmentWithAnimation(R.id.fragment_container, fragment, true)
+        replaceFragmentWithAnimation(R.id.fragment_container, fragment, true, false)
     }
 
     /**
@@ -99,12 +102,12 @@ class ContainerFragment : Fragment() {
 
         // 채팅 버튼
         binding.btnScannerChat.setOnClickListener{
-            replaceFragmentWithAnimation(R.id.container_main, ChatFragment(), true)
+            replaceFragmentWithAnimation(R.id.container_main, ChatFragment(), true, false)
         }
 
         // 일행 초대 버튼
         binding.btnScannerAdditional.setOnClickListener{
-            replaceFragmentWithAnimation(R.id.container_main, ExternalContainerFragment(), true)
+            replaceFragmentWithAnimation(R.id.container_main, ExternalContainerFragment(), true, false)
         }
     }
 
@@ -151,29 +154,17 @@ class ContainerFragment : Fragment() {
                     LifecycleEvent.Type.OPENED -> {
                         Log.d("STOMP", "WebSocket opened")
                         val cartId = SharedPreferencesUtil.getCartId()
-                        Log.d("STOMP", "Subscribing to cart $cartId")
                         // 연결이 열리면 특정 장바구니에 구독
                         subscribeToCart(cartId)
                     }
-
-                    LifecycleEvent.Type.CLOSED -> {
-                        Log.d("STOMP", "WebSocket closed")
-                    }
-
-                    LifecycleEvent.Type.ERROR -> {
-                        Log.e("STOMP", "WebSocket error", event.exception)
-                    }
-
-                    else -> {
-                        Log.d("STOMP", "WebSocket event: ${event.message}")
-                    }
+                    LifecycleEvent.Type.CLOSED -> Log.d("STOMP", "WebSocket closed")
+                    LifecycleEvent.Type.ERROR -> Log.e("STOMP", "WebSocket error", event.exception)
+                    else -> Log.d("STOMP", "WebSocket event: ${event.message}")
                 }
             }
         } else {
             Log.e("STOMP", "accessToken is null")
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.fragment_external_container, CartLoginFragment())
-                .commit()
+            replaceFragmentWithAnimation(R.id.container_main, CartLoginFragment(), true)
         }
     }
 
@@ -181,18 +172,16 @@ class ContainerFragment : Fragment() {
      * 장바구니 구독
      */
     private fun subscribeToCart(cartId: Long) {
-//        if (cartId == 0L) {
-//            Log.e("ExternalCartFragment", "Invalid cartId: $cartId")
-//            return
-//        }
-//
-//        val subscriptionPath = "/sub/cart/$cartId"
-//        Log.d("ExternalCartFragment", "Subscribing to $subscriptionPath")
-//
-//        WebSocketClient.subscribe(subscriptionPath) { message ->
-//            Log.i("STOMP cart", "Received message for cart $cartId: $message")
-//            activity?.runOnUiThread {
-//            }
-//        }
+        if (cartId == 0L) {
+            Log.e("ExternalCartFragment", "Invalid cartId: $cartId")
+            return
+        }
+
+        val subscriptionPath = "/sub/cart/$cartId"
+        Log.d("ExternalCartFragment", "Subscribing to $subscriptionPath")
+
+        WebSocketClient.subscribe(subscriptionPath) { message ->
+            Log.i("STOMP cart", "Received message for cart $cartId: $message")
+        }
     }
 }
