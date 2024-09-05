@@ -3,6 +3,7 @@ package com.ite.sws.domain.cart.view.adapter
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.ite.sws.domain.cart.data.CartItem
+import com.ite.sws.domain.cart.data.CartItemDetail
 import com.ite.sws.domain.cart.view.ui.BaseCartViewModel
 
 /**
@@ -45,5 +46,59 @@ abstract class BaseCartAdapter<VH : RecyclerView.ViewHolder, VM : BaseCartViewMo
         val currentList = currentList.toMutableList()
         currentList.removeAt(position)
         submitList(currentList)
+    }
+
+    /**
+     * 리사이클러뷰에 아이템 추가
+     */
+    fun addNewItem(cartItem: CartItemDetail) {
+        val currentList = currentList.toMutableList()
+        val newItem = CartItem(
+            productId = cartItem.productId,
+            productName = cartItem.productName,
+            productPrice = cartItem.productPrice,
+            productThumbnail = cartItem.productThumbnail,
+            quantity = cartItem.quantity
+        )
+        currentList.add(0, newItem) // 리스트 맨 상단에 추가
+        submitList(currentList)
+    }
+
+    /**
+     * 리사이클러뷰에서 아이템 수량 증가
+     */
+    fun increaseItemQuantity(cartItem: CartItemDetail) {
+        val currentList = currentList.toMutableList()
+        val item = currentList.find { it.productId == cartItem.productId }
+        item?.let {
+            val updatedItem = it.copy(quantity = it.quantity + cartItem.quantity)
+            currentList[currentList.indexOf(it)] = updatedItem
+            submitList(currentList)
+        }
+    }
+
+    /**
+     * 리사이클러뷰에서 아이템 수량 감소
+     */
+    fun decreaseItemQuantity(cartItem: CartItemDetail) {
+        val currentList = currentList.toMutableList()
+        val item = currentList.find { it.productId == cartItem.productId }
+        item?.let {
+            val updatedItem = it.copy(quantity = it.quantity - cartItem.quantity)
+            currentList[currentList.indexOf(it)] = updatedItem
+            submitList(currentList)
+        }
+    }
+
+    /**
+     * 리사이클러뷰에서 아이템 제거
+     */
+    fun removeItem(cartItem: CartItemDetail) {
+        val currentList = currentList.toMutableList()
+        val item = currentList.find { it.productId == cartItem.productId }
+        item?.let {
+            currentList.remove(it)
+            submitList(currentList)
+        }
     }
 }

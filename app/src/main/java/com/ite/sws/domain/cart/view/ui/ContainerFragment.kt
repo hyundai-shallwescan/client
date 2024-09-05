@@ -2,6 +2,7 @@ package com.ite.sws.domain.cart.view.ui
 
 import android.animation.ValueAnimator
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -10,11 +11,14 @@ import android.widget.Button
 import androidx.core.content.ContextCompat
 import com.ite.sws.MainActivity
 import com.ite.sws.R
+import com.ite.sws.common.WebSocketClient
 import com.ite.sws.databinding.FragmentContainerBinding
 import com.ite.sws.domain.chat.view.ui.ChatFragment
 import com.ite.sws.domain.sharelist.view.ui.ShareListFragment
+import com.ite.sws.util.SharedPreferencesUtil
 import com.ite.sws.util.hideBottomNavigation
 import com.ite.sws.util.replaceFragmentWithAnimation
+import ua.naiksoftware.stomp.dto.LifecycleEvent
 
 /**
  * 스캔앤고 내부 컨테이너(장바구니+일행요청리스트) 총괄 프래그먼트
@@ -33,6 +37,8 @@ import com.ite.sws.util.replaceFragmentWithAnimation
  * 2024.09.02  김민정       슬라이더 버튼 애니메이션
  * 2024.09.03  김민정       버튼 색상 업데이트
  * 2024.09.03  김민정       채팅 프래그먼트 전환
+ * 2024.09.05  남진수       WebSocket 연결
+ * 2024.09.05  김민정       장바구니 구독
  * </pre>
  */
 class ContainerFragment : Fragment() {
@@ -132,5 +138,61 @@ class ContainerFragment : Fragment() {
     private fun updateButtonColors(activeButton: Button, inactiveButton: Button) {
         activeButton.setTextColor(ContextCompat.getColorStateList(requireContext(), R.color.white))
         inactiveButton.setTextColor(ContextCompat.getColorStateList(requireContext(), R.color.black))
+    }
+
+    /**
+     * WebSocket 연결
+     */
+    private fun connectWebSocket() {
+        val accessToken = SharedPreferencesUtil.getAccessToken()
+        if (accessToken != null) {
+            WebSocketClient.connect(accessToken) { event ->
+                when (event.type) {
+                    LifecycleEvent.Type.OPENED -> {
+                        Log.d("STOMP", "WebSocket opened")
+                        val cartId = SharedPreferencesUtil.getCartId()
+                        Log.d("STOMP", "Subscribing to cart $cartId")
+                        // 연결이 열리면 특정 장바구니에 구독
+                        subscribeToCart(cartId)
+                    }
+
+                    LifecycleEvent.Type.CLOSED -> {
+                        Log.d("STOMP", "WebSocket closed")
+                    }
+
+                    LifecycleEvent.Type.ERROR -> {
+                        Log.e("STOMP", "WebSocket error", event.exception)
+                    }
+
+                    else -> {
+                        Log.d("STOMP", "WebSocket event: ${event.message}")
+                    }
+                }
+            }
+        } else {
+            Log.e("STOMP", "accessToken is null")
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_external_container, CartLoginFragment())
+                .commit()
+        }
+    }
+
+    /**
+     * 장바구니 구독
+     */
+    private fun subscribeToCart(cartId: Long) {
+//        if (cartId == 0L) {
+//            Log.e("ExternalCartFragment", "Invalid cartId: $cartId")
+//            return
+//        }
+//
+//        val subscriptionPath = "/sub/cart/$cartId"
+//        Log.d("ExternalCartFragment", "Subscribing to $subscriptionPath")
+//
+//        WebSocketClient.subscribe(subscriptionPath) { message ->
+//            Log.i("STOMP cart", "Received message for cart $cartId: $message")
+//            activity?.runOnUiThread {
+//            }
+//        }
     }
 }
