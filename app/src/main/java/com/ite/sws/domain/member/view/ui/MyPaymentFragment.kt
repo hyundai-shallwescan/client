@@ -61,7 +61,11 @@ class MyPaymentFragment : Fragment() {
     private fun loadPaymentItemList() {
         viewModel.findPaymentItemList(
             onSuccess = { paymentItems ->
-                displayPaymentItems(paymentItems)
+                if (paymentItems.isNotEmpty()) {
+                    displayPaymentItems(paymentItems)
+                } else {
+                    showEmptyView()
+                }
             },
             onFailure = { errorMsg ->
                 showError(errorMsg)
@@ -69,10 +73,20 @@ class MyPaymentFragment : Fragment() {
         )
     }
 
+    // 구매 내역이 있을 경우 호출되는 함수
     private fun displayPaymentItems(items: List<GetMemberPaymentRes>) {
-        binding.rvPayment.layoutManager = LinearLayoutManager(context)  // LinearLayoutManager 설정
+        binding.rvPayment.visibility = View.VISIBLE
+        binding.layoutEmpty.visibility = View.GONE
+
+        binding.rvPayment.layoutManager = LinearLayoutManager(context)
         val adapter = MyPaymentRecyclerViewAdapter(items)
         binding.rvPayment.adapter = adapter
+    }
+
+    // 구매 내역이 없을 경우 호출되는 함수
+    private fun showEmptyView() {
+        binding.rvPayment.visibility = View.GONE
+        binding.layoutEmpty.visibility = View.VISIBLE
     }
 
     private fun showError(message: String) {

@@ -26,4 +26,35 @@
         app:layout_constraintBottom_toBottomOf="parent"
         tools:listitem="@layout/item_payment" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <!-- 구매 내역이 없을 경우 -->
+    <LinearLayout
+        android:id="@+id/layout_empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <ImageView
+            android:id="@+id/img_empty"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:src="@drawable/img_wink_heendy" />
+
+        <TextView
+            android:id="@+id/tv_empty_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/fragment_payment_nodata"
+            android:textFontWeight="1000"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:layout_marginTop="16dp" />
+    </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>

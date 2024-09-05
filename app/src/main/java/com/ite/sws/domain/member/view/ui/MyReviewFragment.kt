@@ -38,6 +38,8 @@ class MyReviewFragment : Fragment() {
             hideBottomNavigation(mainActivity.binding, true)
         }
 
+        setupToolbar(binding.toolbar.toolbar, "리뷰 관리", true)
+
         return binding.root
     }
 }

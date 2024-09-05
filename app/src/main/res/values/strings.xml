@@ -64,6 +64,9 @@
     <!-- 회원 정보 수정 -->
     <string name="fragment_modify_member">수정하기</string>
 
+    <!-- 구매 내역 -->
+    <string name="fragment_payment_nodata">구매 내역이 없습니다.</string>
+
     <!-- 버튼 -->
     <string name="btn_scanner_chat">채팅</string>
     <string name="btn_scanner_additional">일행초대</string>
