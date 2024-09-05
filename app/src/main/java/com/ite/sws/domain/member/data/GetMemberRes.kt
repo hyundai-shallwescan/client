@@ -12,7 +12,6 @@ package com.ite.sws.domain.member.data
  * 2024.09.02  	정은지        최초 생성
  * </pre>
  */
-
 data class GetMemberRes (
     val loginId: String,
     val name: String,
