@@ -32,7 +32,7 @@ import com.ite.sws.util.SharedPreferencesUtil
  */
 class MainActivity : AppCompatActivity() {
 
-    public lateinit var binding: ActivityMainBinding
+    lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,11 +65,11 @@ class MainActivity : AppCompatActivity() {
             }
 
             // 액세스 토큰이 있을 경우 초기 프래그먼트 설정
-            if (savedInstanceState == null) {
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, ContainerFragment())
-                    .commit()
-            }
+//            if (savedInstanceState == null) {
+//                supportFragmentManager.beginTransaction()
+//                    .replace(R.id.fragment_container, ContainerFragment())
+//                    .commit()
+//            }
         }
 
         // 화면 전환 시 FAB 아이콘 및 배경 변경
