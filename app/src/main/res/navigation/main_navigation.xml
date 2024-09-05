@@ -28,7 +28,7 @@
     </fragment>
     <fragment
         android:id="@+id/navigation_mypage"
-        android:name="com.ite.sws.domain.member.view.ui.MyPageFragment"
+        android:name="com.ite.sws.domain.member.view.ui.MypageFragment"
         android:label="fragment_mypage"
         tools:layout="@layout/fragment_mypage">
         <action
