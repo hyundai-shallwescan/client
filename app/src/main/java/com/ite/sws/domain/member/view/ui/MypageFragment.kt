@@ -6,13 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import com.ite.sws.MainActivity
 import com.ite.sws.R
 import com.ite.sws.databinding.FragmentMypageBinding
 import com.ite.sws.domain.member.api.repository.MemberRepository
 import com.ite.sws.util.CustomDialog
-import com.ite.sws.util.SharedPreferencesUtil
 import com.ite.sws.util.hideBottomNavigation
 import com.ite.sws.util.replaceFragmentWithAnimation
 import setupToolbar
@@ -30,6 +28,7 @@ import setupToolbar
  * 2024.09.03   정은지       버튼 클릭 리스너 설정
  * 2024.09.03   정은지       로그아웃 기능 추가
  * 2024.09.03   정은지       회원 탈퇴 기능 추가
+ * 2024.09.04   정은지       회원 정보 수정 기능 추가
  * </pre>
  */
 class MypageFragment : Fragment() {
@@ -66,7 +65,7 @@ class MypageFragment : Fragment() {
 
         // 업데이트 버튼 클릭
         binding.btnUpdate.setOnClickListener {
-            TODO ("회원 정보 수정 화면 이동")
+            replaceFragmentWithAnimation(R.id.container_main, ModifyMemberFragment(), true)
         }
 
         // 구매 내역 버튼 클릭
@@ -90,9 +89,6 @@ class MypageFragment : Fragment() {
                                 title = "로그아웃 되었습니다.",
                                 confirmText = "확인",
                                 onConfirm = {
-                                    // 백스택 모두 제거
-//                                    requireActivity().supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-
                                     // 로그인 화면으로 이동
                                     replaceFragmentWithAnimation(R.id.container_main, LoginFragment(), true)
                                 }
@@ -124,9 +120,6 @@ class MypageFragment : Fragment() {
                                 title = "탈퇴되었습니다.",
                                 confirmText = "확인",
                                 onConfirm = {
-                                    // 백스택 모두 제거
-//                                    requireActivity().supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-
                                     // 로그인 화면으로 이동
                                     replaceFragmentWithAnimation(R.id.container_main, LoginFragment(), true)
                                 }

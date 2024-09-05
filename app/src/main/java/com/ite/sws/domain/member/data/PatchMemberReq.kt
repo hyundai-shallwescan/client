@@ -1,7 +1,7 @@
 package com.ite.sws.domain.member.data
 
 /**
- * 회원가입 Request DTO
+ * 회원 정보 수정 Request DTO
  * @author 정은지
  * @since 2024.09.04
  * @version 1.0
@@ -12,12 +12,8 @@ package com.ite.sws.domain.member.data
  * 2024.09.04   정은지        최초 생성
  * </pre>
  */
-data class PostMemberReq (
-    val loginId: String,
+data class PatchMemberReq(
     val password: String,
-    val name: String,
-    val gender: Char,
-    val age: Int,
     val phoneNumber: String,
     val carNumber: String? = null
 )

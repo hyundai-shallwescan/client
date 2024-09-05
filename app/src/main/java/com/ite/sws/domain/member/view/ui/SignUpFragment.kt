@@ -84,10 +84,10 @@ class SignUpFragment : Fragment() {
                     onConfirm = {}
                 ).show(activity?.supportFragmentManager!!, "CustomDialog")
             },
-            onFailure = { errorMessage ->
+            onFailure = { ErrorRes ->
                 CustomDialog(
                     layoutId = R.layout.dialog_text1_btn1,
-                    title = errorMessage,
+                    title = ErrorRes.message,
                     confirmText = "확인",
                     onConfirm = {}
                 ).show(activity?.supportFragmentManager!!, "CustomDialog")

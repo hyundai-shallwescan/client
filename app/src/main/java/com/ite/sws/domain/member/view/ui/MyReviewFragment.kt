@@ -9,6 +9,7 @@ import com.ite.sws.MainActivity
 import com.ite.sws.R
 import com.ite.sws.databinding.FragmentMyReviewBinding
 import com.ite.sws.util.hideBottomNavigation
+import setupToolbar
 
 /**
  * 리뷰 관리 프래그먼트

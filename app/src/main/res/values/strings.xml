@@ -61,6 +61,8 @@
     <string name="fragment_signup_hint_phone">01000000000</string>
     <string name="fragment_signup_hint_car">000가0000</string>
 
+    <!-- 회원 정보 수정 -->
+    <string name="fragment_modify_member">수정하기</string>
 
     <!-- 버튼 -->
     <string name="btn_scanner_chat">채팅</string>
