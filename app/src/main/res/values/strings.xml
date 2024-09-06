@@ -67,6 +67,10 @@
     <!-- 구매 내역 -->
     <string name="fragment_payment_nodata">구매 내역이 없습니다.</string>
 
+    <!-- 리뷰 관리 -->
+    <string name="fragment_my_review_written">작성한 리뷰</string>
+    <string name="fragment_my_review_write">리뷰 작성</string>
+
     <!-- 버튼 -->
     <string name="btn_scanner_chat">채팅</string>
     <string name="btn_scanner_additional">일행초대</string>

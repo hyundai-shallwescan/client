@@ -1,0 +1,33 @@
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginRight="10dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="0dp">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- 리뷰 이미지 -->
+        <ImageView
+            android:id="@+id/img_review"
+            android:layout_width="200dp"
+            android:layout_height="400dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/img_product"/>
+
+        <!-- 삭제 버튼 -->
+        <ImageButton
+            android:id="@+id/btn_delete_review"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="7dp"
+            android:layout_gravity="end|top"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_delete" />
+    </FrameLayout>
+
+</androidx.cardview.widget.CardView>
