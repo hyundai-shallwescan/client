@@ -10,7 +10,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.ite.sws.databinding.ActivityMainBinding
 import com.ite.sws.domain.cart.view.ui.CartLoginFragment
-import com.ite.sws.domain.cart.view.ui.ContainerFragment
 import com.ite.sws.domain.member.view.ui.LoginFragment
 import com.ite.sws.util.SharedPreferencesUtil
 
@@ -123,16 +122,16 @@ class MainActivity : AppCompatActivity() {
     private fun navigateToCartLogin(cartId: Long) {
         val fragment = CartLoginFragment().apply {
             arguments = Bundle().apply {
-                putLong("cartId", cartId)
+                SharedPreferencesUtil.setCartId(cartId)
             }
         }
 
         supportFragmentManager.beginTransaction()
             .setCustomAnimations(
-                android.R.animator.fade_in,
-                android.R.animator.fade_out,
-                android.R.animator.fade_in,
-                android.R.animator.fade_out
+                R.anim.anim_fade_in,  // 들어올 때 애니메이션
+                R.anim.anim_fade_out, // 나갈 때 애니메이션
+                R.anim.anim_fade_in,  // 뒤로 돌아올 때 애니메이션
+                R.anim.anim_fade_out  // 뒤로 갈 때 애니메이션
             )
             .replace(R.id.container_main, fragment)
             .addToBackStack(null)
