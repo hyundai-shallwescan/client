@@ -1,5 +1,6 @@
 package com.ite.sws.domain.member.api.service
 
+import com.ite.sws.domain.member.data.GetMemberPaymentRes
 import com.ite.sws.domain.member.data.GetMemberRes
 import com.ite.sws.domain.member.data.PatchMemberReq
 import com.ite.sws.domain.member.data.PostLoginReq
@@ -30,6 +31,7 @@ import retrofit2.http.Query
  * 2024.09.04   정은지        회원가입 API 호출
  * 2024.09.04   정은지        로그인 아이디 중복 체크 API 호출
  * 2024.09.04   정은지        회원 정보 수정 API 호출
+ * 2024.09.05   정은지        회원 구매 내역 조회 API 호출
  * </pre>
  */
 interface MemberService {
@@ -75,4 +77,10 @@ interface MemberService {
      */
     @PATCH("/members")
     fun modifyMember(@Body modifyRequest: PatchMemberReq): Call<Void>
+
+    /**
+     * 구매 내역 조회
+     */
+    @GET("/members/payments")
+    fun findPaymentItemList(): Call<List<GetMemberPaymentRes>>
 }

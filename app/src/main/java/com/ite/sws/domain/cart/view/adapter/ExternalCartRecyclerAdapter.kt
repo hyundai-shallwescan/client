@@ -7,6 +7,7 @@ import com.bumptech.glide.Glide
 import com.ite.sws.databinding.ItemCartBinding
 import com.ite.sws.domain.cart.data.CartItem
 import com.ite.sws.domain.cart.view.ui.ExternalCartViewModel
+import com.ite.sws.util.NumberFormatterUtil.formatCurrencyWithCommas
 import com.ite.sws.util.SharedPreferencesUtil
 
 /**
@@ -31,7 +32,7 @@ class ExternalCartRecyclerAdapter(private val viewModel: ExternalCartViewModel) 
 
         fun bind(item: CartItem) {
             binding.textCartProductName.text = item.productName
-            binding.textCartProductPrice.text = "${item.productPrice}원"
+            binding.textCartProductPrice.text = "${formatCurrencyWithCommas(item.productPrice)}"
             binding.textCartCount.text = item.quantity.toString()
 
             // 썸네일 이미지 로드
@@ -47,8 +48,6 @@ class ExternalCartRecyclerAdapter(private val viewModel: ExternalCartViewModel) 
                     item.productId,
                     1
                 )
-                // 어댑터에서 수량 증가
-                updateItemQuantity(item, 1)
             }
 
             // 수량 감소 버튼 클릭 리스너
@@ -61,8 +60,6 @@ class ExternalCartRecyclerAdapter(private val viewModel: ExternalCartViewModel) 
                         item.productId,
                         -1
                     )
-                    // 어댑터에서 수량 감소
-                    updateItemQuantity(item, -1)
                 }
             }
 

@@ -38,6 +38,7 @@ import ua.naiksoftware.stomp.dto.LifecycleEvent
  * 2024.09.03  김민정       버튼 색상 업데이트
  * 2024.09.03  김민정       채팅 프래그먼트 전환
  * 2024.09.04  남진수       WebSocket 연결
+ * 2024.09.05  김민정       장바구니 구독
  * </pre>
  */
 class ExternalContainerFragment : Fragment() {
@@ -78,7 +79,7 @@ class ExternalContainerFragment : Fragment() {
      * @param fragment 로드할 프래그먼트
      */
     private fun loadFragment(fragment: Fragment) {
-        replaceFragmentWithAnimation(R.id.fragment_external_container, fragment, true)
+        replaceFragmentWithAnimation(R.id.fragment_external_container, fragment, true, false)
     }
 
     /**
@@ -101,7 +102,7 @@ class ExternalContainerFragment : Fragment() {
 
         // 채팅 버튼
         binding.btnScannerChat.setOnClickListener{
-            replaceFragmentWithAnimation(R.id.container_main, ChatFragment(), true)
+            replaceFragmentWithAnimation(R.id.container_main, ChatFragment(), true, false)
         }
     }
 
@@ -150,6 +151,7 @@ class ExternalContainerFragment : Fragment() {
                         val cartId = SharedPreferencesUtil.getCartId()
                         Log.d("STOMP", "Subscribing to cart $cartId")
                         // 연결이 열리면 특정 장바구니에 구독
+                        subscribeToChat(cartId)
                         subscribeToCart(cartId)
                     }
 
@@ -168,16 +170,14 @@ class ExternalContainerFragment : Fragment() {
             }
         } else {
             Log.e("STOMP", "accessToken is null")
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.fragment_external_container, CartLoginFragment())
-                .commit()
+            replaceFragmentWithAnimation(R.id.container_main, CartLoginFragment(), true)
         }
     }
 
     /**
-     * 장바구니 구독
+     * 채팅 구독
      */
-    private fun subscribeToCart(cartId: Long) {
+    private fun subscribeToChat(cartId: Long) {
         if (cartId == 0L) {
             Log.e("ScanFragment", "Invalid cartId: $cartId")
             return
@@ -191,6 +191,23 @@ class ExternalContainerFragment : Fragment() {
             activity?.runOnUiThread {
 
             }
+        }
+    }
+
+    /**
+     * 장바구니 구독
+     */
+    private fun subscribeToCart(cartId: Long) {
+        if (cartId == 0L) {
+            Log.e("ExternalCartFragment", "Invalid cartId: $cartId")
+            return
+        }
+
+        val subscriptionPath = "/sub/cart/$cartId"
+        Log.d("ExternalCartFragment", "Subscribing to $subscriptionPath")
+
+        WebSocketClient.subscribe(subscriptionPath) { message ->
+            Log.i("STOMP cart", "Received message for cart $cartId: $message")
         }
     }
 
