@@ -12,6 +12,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import android.content.Context
 import android.util.Log
+import com.ite.sws.domain.member.data.GetMemberPaymentRes
 import com.ite.sws.domain.member.data.GetMemberRes
 import com.ite.sws.domain.member.data.PatchMemberReq
 import com.ite.sws.domain.member.data.PostLoginRes
@@ -216,6 +217,29 @@ class MemberRepository {
             }
 
             override fun onFailure(call: Call<Void>, t: Throwable) {
+                handleFailure(call, t, onFailure)
+            }
+        })
+    }
+
+    /**
+     * 회원 구매 내역 조회
+     */
+    fun findPaymentItemList(
+        onSuccess: (List<GetMemberPaymentRes>) -> Unit,
+        onFailure: (ErrorRes) -> Unit
+    ) {
+        memberService.findPaymentItemList().enqueue(object : Callback<List<GetMemberPaymentRes>> {
+            override fun onResponse(call: Call<List<GetMemberPaymentRes>>, response: Response<List<GetMemberPaymentRes>>) {
+                if (response.isSuccessful) {
+                    response.body()?.let { onSuccess(it) }
+                } else {
+                    val errorRes = Gson().fromJson(response.errorBody()?.string(), ErrorRes::class.java)
+                    onFailure(errorRes)
+                }
+            }
+
+            override fun onFailure(call: Call<List<GetMemberPaymentRes>>, t: Throwable) {
                 handleFailure(call, t, onFailure)
             }
         })

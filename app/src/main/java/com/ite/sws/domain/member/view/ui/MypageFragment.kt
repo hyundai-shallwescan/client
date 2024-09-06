@@ -29,6 +29,7 @@ import setupToolbar
  * 2024.09.03   정은지       로그아웃 기능 추가
  * 2024.09.03   정은지       회원 탈퇴 기능 추가
  * 2024.09.04   정은지       회원 정보 수정 기능 추가
+ * 2024.09.05   정은지       구매 내역 조회 기능 추가
  * </pre>
  */
 class MypageFragment : Fragment() {
@@ -70,7 +71,7 @@ class MypageFragment : Fragment() {
 
         // 구매 내역 버튼 클릭
         binding.btnPayment.setOnClickListener {
-            TODO ("구매 내역 화면 이동")
+            replaceFragmentWithAnimation(R.id.container_main, MyPaymentFragment(), true)
         }
 
         // 로그아웃 버튼 클릭
