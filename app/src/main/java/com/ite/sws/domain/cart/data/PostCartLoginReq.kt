@@ -14,5 +14,6 @@ package com.ite.sws.domain.cart.data
  */
 data class PostCartLoginReq(
     val loginId: String,
-    val password: String
+    val password: String,
+    val cartId: Long
 )
