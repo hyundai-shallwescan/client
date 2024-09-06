@@ -14,6 +14,7 @@ import android.content.Context
 import android.util.Log
 import com.ite.sws.domain.member.data.GetMemberPaymentRes
 import com.ite.sws.domain.member.data.GetMemberRes
+import com.ite.sws.domain.member.data.GetMemberReviewRes
 import com.ite.sws.domain.member.data.PatchMemberReq
 import com.ite.sws.domain.member.data.PostLoginRes
 import com.ite.sws.domain.member.data.PostMemberReq
@@ -35,6 +36,8 @@ import com.ite.sws.domain.member.data.PostMemberReq
  * 2024.09.03   정은지        회원 탈퇴 추가
  * 2024.09.04   정은지        회원가입 추가
  * 2024.09.04   정은지        회원 정보 수정 추가
+ * 2024.09.05   정은지        구매 내역 조회 추가
+ * 2024.09.06   정은지        작성 리뷰 조회 추가
  * </pre>
  */
 class MemberRepository {
@@ -246,6 +249,23 @@ class MemberRepository {
     }
 
     /**
+     * 작성 리뷰 조회
+     */
+    suspend fun findReviewList(page: Int, size: Int): List<GetMemberReviewRes> {
+        return try {
+            val response = memberService.findReviewList(page, size)
+
+            if (response.isSuccessful) {
+                response.body() ?: emptyList()
+            } else {
+                throw Exception("${response.errorBody()?.string()}")
+            }
+        } catch (e: Exception) {
+            throw Exception("Network error: ${e.localizedMessage}")
+        }
+    }
+
+    /**
      * 공통 처리 함수
      */
     private fun <T> handleFailure(call: Call<T>, t: Throwable, onFailure: (ErrorRes) -> Unit) {
@@ -256,5 +276,4 @@ class MemberRepository {
         )
         onFailure(networkError)
     }
-
 }

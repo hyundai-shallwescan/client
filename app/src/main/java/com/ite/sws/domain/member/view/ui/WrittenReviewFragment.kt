@@ -5,10 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.ite.sws.databinding.FragmentMyReviewWrittenBinding
-import com.ite.sws.domain.member.data.GetMemberReviewRes
 import com.ite.sws.domain.member.view.adapter.MyReviewRecyclerViewAdapter
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 /**
  * 작성 리뷰 조회 프래그먼트
@@ -26,8 +29,7 @@ class WrittenReviewFragment : Fragment() {
 
     private var _binding: FragmentMyReviewWrittenBinding? = null
     private val binding get() = _binding!!
-    private lateinit var reviewAdapter: MyReviewRecyclerViewAdapter
-    private val reviewList = mutableListOf<GetMemberReviewRes>()
+    private val viewModel: MemberViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,28 +39,29 @@ class WrittenReviewFragment : Fragment() {
 
         setupRecyclerView()
 
-        loadReviews()
+        loadMemberReviews()
 
         return binding.root
     }
 
+    /**
+     * 리사이클러뷰 설정
+     */
     private fun setupRecyclerView() {
-        val gridLayoutManager = GridLayoutManager(context, 2)
-        binding.rvWrittenReviews.layoutManager = gridLayoutManager
-
-        reviewAdapter = MyReviewRecyclerViewAdapter(reviewList)
-        binding.rvWrittenReviews.adapter = reviewAdapter
+        val adapter = MyReviewRecyclerViewAdapter()
+        binding.rvWrittenReviews.layoutManager = GridLayoutManager(context, 2)  // 2열 그리드
+        binding.rvWrittenReviews.adapter = adapter
     }
 
-    // 리뷰 데이터를 로드하는 메서드
-    private fun loadReviews() {
-        val sampleReview1 = GetMemberReviewRes(1L, "url", "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FmDj1d%2FbtroWDhqP4j%2FolDh8NFhgtLtWQ6krrJdxK%2Fimg.png")
-        val sampleReview2 = GetMemberReviewRes(2L, "url", "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FmDj1d%2FbtroWDhqP4j%2FolDh8NFhgtLtWQ6krrJdxK%2Fimg.png")
-
-        reviewList.add(sampleReview1)
-        reviewList.add(sampleReview2)
-
-        reviewAdapter.notifyDataSetChanged()
+    /**
+     * 리뷰 불러오기
+     */
+    private fun loadMemberReviews() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.getPagedMemberReviews().collectLatest { pagingData ->
+                (binding.rvWrittenReviews.adapter as MyReviewRecyclerViewAdapter).submitData(pagingData)
+            }
+        }
     }
 
     override fun onDestroyView() {
