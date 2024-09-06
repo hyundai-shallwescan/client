@@ -3,6 +3,7 @@ package com.ite.sws.domain.cart.view.adapter
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.ite.sws.domain.cart.data.CartItem
+import com.ite.sws.domain.cart.data.CartItemDetail
 import com.ite.sws.domain.cart.view.ui.BaseCartViewModel
 
 /**
@@ -15,8 +16,10 @@ import com.ite.sws.domain.cart.view.ui.BaseCartViewModel
  * 수정일       수정자        수정내용
  * ----------  --------    ---------------------------
  * 2024.09.02  김민정       최초 생성
- * 2024.09.02  김민정       리사이클러뷰에서 아이템 수량 변경
- * 2024.09.03  김민정       리사이클러뷰에서 아이템 삭제
+ * 2024.09.05  김민정       리사이클러뷰 아이템 추가
+ * 2024.09.05  김민정       리사이클러뷰 아이템 수량 증가
+ * 2024.09.05  김민정       리사이클러뷰 아이템 수량 감소
+ * 2024.09.05  김민정       리사이클러뷰 아이템 제거
  * </pre>
  */
 abstract class BaseCartAdapter<VH : RecyclerView.ViewHolder, VM : BaseCartViewModel>(
@@ -26,24 +29,58 @@ abstract class BaseCartAdapter<VH : RecyclerView.ViewHolder, VM : BaseCartViewMo
     var onViewDetail: ((CartItem) -> Unit)? = null
 
     /**
-     * 아이템의 수량을 업데이트하고 리사이클러뷰에 반영
+     * 리사이클러뷰에 아이템 추가
      */
-    fun updateItemQuantity(item: CartItem, delta: Int) {
+    fun addNewItem(cartItem: CartItemDetail) {
         val currentList = currentList.toMutableList()
-        val position = currentList.indexOf(item)
-        if (position != -1) {
-            val updatedItem = item.copy(quantity = item.quantity + delta)
-            currentList[position] = updatedItem
+        val newItem = CartItem(
+            productId = cartItem.productId,
+            productName = cartItem.productName,
+            productPrice = cartItem.productPrice,
+            productThumbnail = cartItem.productThumbnail,
+            quantity = cartItem.quantity
+        )
+        currentList.add(0, newItem) // 리스트 맨 상단에 추가
+        submitList(currentList)
+    }
+
+    /**
+     * 리사이클러뷰에서 아이템 수량 증가
+     */
+    fun increaseItemQuantity(cartItem: CartItemDetail) {
+        val currentList = currentList.toMutableList()
+        val item = currentList.find { it.productId == cartItem.productId }
+        item?.let {
+            val updatedItem = it.copy(quantity = it.quantity + 1)
+            currentList[currentList.indexOf(it)] = updatedItem
             submitList(currentList)
         }
     }
 
     /**
-     * 리사이클러뷰에서 해당 포지션 아이템 삭제
+     * 리사이클러뷰에서 아이템 수량 감소
      */
-    fun removeItem(position: Int) {
+    fun decreaseItemQuantity(cartItem: CartItemDetail) {
         val currentList = currentList.toMutableList()
-        currentList.removeAt(position)
-        submitList(currentList)
+        val item = currentList.find { it.productId == cartItem.productId }
+        item?.let {
+            if (it.quantity > 1) {
+                val updatedItem = it.copy(quantity = it.quantity - 1)
+                currentList[currentList.indexOf(it)] = updatedItem
+                submitList(currentList)
+            }
+        }
+    }
+
+    /**
+     * 리사이클러뷰에서 아이템 제거
+     */
+    fun removeItem(cartItem: CartItemDetail) {
+        val currentList = currentList.toMutableList()
+        val item = currentList.find { it.productId == cartItem.productId }
+        item?.let {
+            currentList.remove(it)
+            submitList(currentList)
+        }
     }
 }
