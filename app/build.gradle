@@ -99,4 +99,7 @@ dependencies {
 
     // recyclerView 스와이프
     implementation 'com.github.xabaras:RecyclerViewSwipeDecorator:1.4'
+
+    // paging
+    implementation 'androidx.paging:paging-runtime:3.1.1'
 }

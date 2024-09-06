@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ite.sws.MainActivity
 import com.ite.sws.databinding.FragmentMyPaymentBinding
@@ -32,7 +31,7 @@ class MyPaymentFragment : Fragment() {
 
     private var _binding: FragmentMyPaymentBinding? = null
     private val binding get() = _binding!!
-    private val viewModel: MyPaymentViewModel by viewModels()
+    private val viewModel: MemberViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
