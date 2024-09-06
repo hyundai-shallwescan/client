@@ -1,7 +1,5 @@
 package com.ite.sws.domain.member.data
 
-import java.time.LocalDateTime
-
 /**
  * 회원 구매 내역 조회 Response DTO
  * @author 정은지
