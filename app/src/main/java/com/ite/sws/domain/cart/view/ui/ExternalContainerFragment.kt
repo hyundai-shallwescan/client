@@ -78,7 +78,7 @@ class ExternalContainerFragment : Fragment() {
      * @param fragment 로드할 프래그먼트
      */
     private fun loadFragment(fragment: Fragment) {
-        replaceFragmentWithAnimation(R.id.fragment_container, fragment, true)
+        replaceFragmentWithAnimation(R.id.fragment_external_container, fragment, true)
     }
 
     /**
