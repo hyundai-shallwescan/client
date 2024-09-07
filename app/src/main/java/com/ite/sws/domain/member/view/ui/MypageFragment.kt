@@ -11,6 +11,7 @@ import com.ite.sws.R
 import com.ite.sws.databinding.FragmentMypageBinding
 import com.ite.sws.domain.member.api.repository.MemberRepository
 import com.ite.sws.util.CustomDialog
+import com.ite.sws.util.SharedPreferencesUtil
 import com.ite.sws.util.hideBottomNavigation
 import com.ite.sws.util.replaceFragmentWithAnimation
 import setupToolbar
@@ -44,7 +45,7 @@ class MypageFragment : Fragment() {
     ): View? {
         _binding = FragmentMypageBinding.inflate(inflater, container, false)
 
-        getMyPageInfo()
+        binding.tvName.text = SharedPreferencesUtil.getCartMemberName() + "님"
 
         (activity as? MainActivity)?.let { mainActivity ->
             hideBottomNavigation(mainActivity.binding, false)
@@ -134,18 +135,5 @@ class MypageFragment : Fragment() {
                 onCancel = {}
             ).show(activity?.supportFragmentManager!!, "CustomDialog")
         }
-    }
-
-    private fun getMyPageInfo() {
-        memberRepository.getMyPageInfo(
-            onSuccess = { memberInfo ->
-                binding?.let {
-                    binding.tvName.text = memberInfo.name +"님"
-                }
-            },
-            onFailure = { errorRes ->
-                Toast.makeText(requireContext(), "정보를 가져오지 못했습니다: ${errorRes.message}", Toast.LENGTH_SHORT).show()
-            }
-        )
     }
 }
