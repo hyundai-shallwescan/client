@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.ite.sws.databinding.ItemPaymentItemBinding
 import com.ite.sws.domain.member.data.GetMemberPaymentRes
+import com.ite.sws.util.NumberFormatterUtil.formatCurrencyWithCommas
 
 /**
  * 회원 구매 내역 아이템 리사이클러 어댑터
@@ -40,7 +41,7 @@ class MyPaymentItemRecyclerViewAdapter(
         fun bind(item: GetMemberPaymentRes.GetMemberPaymentItemRes) {
             binding.tvProductName.text = item.name
             binding.tvProductQuantity.text = "${item.quantity}개"
-            binding.tvProductPrice.text = "${item.price}원"
+            binding.tvProductPrice.text = formatCurrencyWithCommas(item.price)
 
             // 썸네일 이미지 로드
             Glide.with(binding.root.context)
