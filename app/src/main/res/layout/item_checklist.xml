@@ -1,0 +1,59 @@
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardBackgroundColor="@android:color/transparent"
+    app:cardElevation="0dp">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:background="@drawable/bg_checklist"
+            android:padding="16dp">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp">
+
+                        <!-- 아이콘 -->
+                        <ImageView
+                            android:layout_marginStart="8dp"
+                            android:id="@+id/img_icon"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:src="@drawable/ic_fruit"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <!-- 항목 이름 -->
+                        <TextView
+                            android:id="@+id/tv_item_name"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="30dp"
+                            android:text="항목 이름"
+                            android:textColor="@color/black"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@id/checkbox_status"
+                            app:layout_constraintStart_toEndOf="@id/img_icon"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <!-- 체크박스 -->
+                        <CheckBox
+                            android:id="@+id/checkbox_status"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_marginRight="12dp"
+                            android:button="@drawable/selector_check_status"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+        </FrameLayout>
+</androidx.cardview.widget.CardView>
