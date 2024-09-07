@@ -61,7 +61,7 @@ class ModifyMemberFragment : Fragment() {
         }
     }
     private fun getMemberInfo() {
-        memberRepository.getMyPageInfo(
+        memberRepository.getMyInfo(
             onSuccess = { member ->
                 binding.edtId.setText(member.loginId)
                 binding.edtName.setText(member.name)

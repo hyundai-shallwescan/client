@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ite.sws.R
 import com.ite.sws.databinding.ItemPaymentBinding
 import com.ite.sws.domain.member.data.GetMemberPaymentRes
+import com.ite.sws.util.NumberFormatterUtil.formatCurrencyWithCommas
 
 /**
  * 회원 구매 내역 리사이클러 어댑터
@@ -42,7 +43,7 @@ class MyPaymentRecyclerViewAdapter(
 
         fun bind(paymentItem: GetMemberPaymentRes, position: Int) {
             binding.tvPaymentDate.text = paymentItem.createdAt
-            binding.tvTotalAmount.text = "${paymentItem.amount}원"
+            binding.tvTotalAmount.text = formatCurrencyWithCommas(paymentItem.amount)
 
             // 최신 내역은 확장된 상태로 처리
             val isExpanded = if (position == 0) {

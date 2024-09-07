@@ -45,7 +45,7 @@ class MypageFragment : Fragment() {
     ): View? {
         _binding = FragmentMypageBinding.inflate(inflater, container, false)
 
-        getMyPageInfo()
+        binding.tvName.text = SharedPreferencesUtil.getCartMemberName() + "님"
 
         (activity as? MainActivity)?.let { mainActivity ->
             hideBottomNavigation(mainActivity.binding, false)
@@ -135,19 +135,5 @@ class MypageFragment : Fragment() {
                 onCancel = {}
             ).show(activity?.supportFragmentManager!!, "CustomDialog")
         }
-    }
-
-    private fun getMyPageInfo() {
-        memberRepository.getMyPageInfo(
-            onSuccess = { memberInfo ->
-                SharedPreferencesUtil.setCartMemberName(memberInfo.name)
-                binding?.let {
-                    binding.tvName.text = memberInfo.name +"님"
-                }
-            },
-            onFailure = { errorRes ->
-                Toast.makeText(requireContext(), "정보를 가져오지 못했습니다: ${errorRes.message}", Toast.LENGTH_SHORT).show()
-            }
-        )
     }
 }
