@@ -13,7 +13,7 @@ if (localPropertiesFile.exists()) {
 
 android {
     namespace 'com.ite.sws'
-    compileSdk 31
+    compileSdk 26
 
     defaultConfig {
         buildConfigField "String", "BASE_URL", "\"${properties['BASE_URL']}\""
@@ -65,6 +65,8 @@ dependencies {
     // retrofit
     implementation "com.squareup.retrofit2:retrofit:2.9.0"
     implementation "com.squareup.retrofit2:converter-gson:2.9.0"
+    implementation 'com.squareup.okhttp3:okhttp:4.9.3'
+
 
     // gson
     implementation 'com.google.code.gson:gson:2.9.0'
