@@ -11,6 +11,7 @@ import com.ite.sws.R
 import com.ite.sws.databinding.FragmentMypageBinding
 import com.ite.sws.domain.member.api.repository.MemberRepository
 import com.ite.sws.util.CustomDialog
+import com.ite.sws.util.SharedPreferencesUtil
 import com.ite.sws.util.hideBottomNavigation
 import com.ite.sws.util.replaceFragmentWithAnimation
 import setupToolbar
@@ -139,6 +140,7 @@ class MypageFragment : Fragment() {
     private fun getMyPageInfo() {
         memberRepository.getMyPageInfo(
             onSuccess = { memberInfo ->
+                SharedPreferencesUtil.setCartMemberName(memberInfo.name)
                 binding?.let {
                     binding.tvName.text = memberInfo.name +"님"
                 }
