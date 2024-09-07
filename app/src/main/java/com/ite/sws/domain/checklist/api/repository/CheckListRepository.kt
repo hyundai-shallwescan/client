@@ -11,7 +11,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 /**
- * 회원 Repository
+ * 체크리스트 Repository
  * @author 정은지
  * @since 2024.09.06
  * @version 1.0
