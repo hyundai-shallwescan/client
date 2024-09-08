@@ -94,4 +94,11 @@ class ScanViewModel : BaseCartViewModel() {
             }
         }
     }
+
+    /**
+     * 장바구니 아이템 업데이트
+     */
+    override fun updateCartItems(newItems: List<CartItem>) {
+        _cartItems.value = newItems // _cartItems는 MutableLiveData
+    }
 }

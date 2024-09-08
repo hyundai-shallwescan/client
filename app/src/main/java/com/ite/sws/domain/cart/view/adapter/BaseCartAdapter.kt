@@ -22,9 +22,9 @@ import com.ite.sws.domain.cart.view.ui.BaseCartViewModel
  * 2024.09.05  김민정       리사이클러뷰 아이템 제거
  * </pre>
  */
-abstract class BaseCartAdapter<VH : RecyclerView.ViewHolder, VM : BaseCartViewModel>(
-    private val viewModel: VM
-) : ListAdapter<CartItem, VH>(CartDiffCallback()) {
+abstract class BaseCartAdapter<ViewHolder : RecyclerView.ViewHolder, ViewModel : BaseCartViewModel>(
+    private val viewModel: ViewModel
+) : ListAdapter<CartItem, ViewHolder>(CartDiffCallback()) {
 
     var onViewDetail: ((CartItem) -> Unit)? = null
 
@@ -41,7 +41,12 @@ abstract class BaseCartAdapter<VH : RecyclerView.ViewHolder, VM : BaseCartViewMo
             quantity = cartItem.quantity
         )
         currentList.add(0, newItem) // 리스트 맨 상단에 추가
-        submitList(currentList)
+
+        // 리사이클러뷰가 비어있을 때만 뷰모델 업데이트
+        if (currentList.size == 1) {
+            viewModel.updateCartItems(currentList)
+        }
+        submitList(currentList) // RecyclerView 업데이트
     }
 
     /**
