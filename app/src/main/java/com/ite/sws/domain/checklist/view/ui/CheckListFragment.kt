@@ -7,9 +7,15 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.ite.sws.MainActivity
+import com.ite.sws.R
 import com.ite.sws.databinding.FragmentChecklistBinding
+import com.ite.sws.domain.chat.view.ui.ChatFragment
+import com.ite.sws.domain.chatbot.view.ui.ChatBotFragment
 import com.ite.sws.domain.checklist.data.GetCheckListRes
 import com.ite.sws.domain.checklist.view.adapter.CheckListRecyclerViewAdapter
+import com.ite.sws.util.hideBottomNavigation
+import com.ite.sws.util.replaceFragmentWithAnimation
 import setupToolbar
 
 /**
@@ -39,6 +45,11 @@ class CheckListFragment : Fragment() {
         // 툴바
         setupToolbar(binding.toolbar.toolbar, "체크리스트", false)
 
+        // 내비게이션 바 노출
+        (activity as? MainActivity)?.let { mainActivity ->
+            hideBottomNavigation(mainActivity.binding, false)
+        }
+
         // RecyclerView 설정
         setupRecyclerView()
 
@@ -49,6 +60,15 @@ class CheckListFragment : Fragment() {
 
         return binding.root
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.btnChatbot.setOnClickListener {
+            replaceFragmentWithAnimation(R.id.container_main, ChatBotFragment(), true)
+        }
+    }
+
 
     private fun setupRecyclerView() {
         binding.rvChecklist.layoutManager = LinearLayoutManager(requireContext())
