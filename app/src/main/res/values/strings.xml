@@ -77,4 +77,16 @@
     <!-- 버튼 -->
     <string name="btn_scanner_chat">채팅</string>
     <string name="btn_scanner_additional">일행초대</string>
+
+    <!-- 주차 정산 -->
+    <string name="fragment_parking_payment_message_empty">영수증 할인은 자동으로 이뤄집니다!</string>
+    <string name="fragment_parking_entrance_time">입차 시간</string>
+    <string name="fragment_parking_time">주차 시간</string>
+    <string name="fragment_parking_discount">영수증 할인</string>
+    <string name="fragment_parking_fee_time">정산 필요 시간</string>
+    <string name="fragment_parking_fee">정산 금액</string>
+    <string name="btn_parking_payment">정산하기</string>
+    <string name="btn_parking_payment_complete">무료 출차가 가능합니다!</string>
+    <string name="fragment_parking_cart_guide">영수증 할인 금액은 현재 장바구니에 담긴 금액으로 추정됩니다.</string>
+
 </resources>
