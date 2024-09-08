@@ -182,7 +182,7 @@ class ScanFragment : Fragment() {
     private fun resumeScannerWithDelay() {
         delayHandler.postDelayed({
             barcodeScannerView.resume()
-        }, 300)
+        }, 150)
     }
 
     override fun onResume() {
@@ -241,9 +241,7 @@ class ScanFragment : Fragment() {
 
         WebSocketClient.subscribe(subscriptionPath) { message ->
             Log.d("STOMP CART", "Received message: $message")
-
             val cartItemDto = Gson().fromJson(message, CartItemDetail::class.java)
-
             activity?.runOnUiThread {
                 updateCartRecyclerView(cartItemDto)
             }
