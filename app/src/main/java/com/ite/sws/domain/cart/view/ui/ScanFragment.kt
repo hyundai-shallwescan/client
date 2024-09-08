@@ -24,9 +24,11 @@ import com.ite.sws.common.WebSocketClient
 import com.ite.sws.databinding.FragmentScanBinding
 import com.ite.sws.domain.cart.data.CartItemDetail
 import com.ite.sws.domain.cart.view.adapter.CartRecyclerAdapter
+import com.ite.sws.domain.payment.view.ui.PaymentFragment
 import com.ite.sws.util.CustomDialog
 import com.ite.sws.util.SharedPreferencesUtil
 import com.ite.sws.util.SwipeHelperCallback
+import com.ite.sws.util.replaceFragmentWithAnimation
 import com.journeyapps.barcodescanner.BarcodeCallback
 import com.journeyapps.barcodescanner.BarcodeResult
 import com.journeyapps.barcodescanner.DecoratedBarcodeView
@@ -48,6 +50,7 @@ import com.journeyapps.barcodescanner.DecoratedBarcodeView
  * 2024.09.03   김민정       장바구니 아이템 수량 변경
  * 2024.09.03   김민정       장바구니 아이템 삭제
  * 2024.09.05   김민정       웹소켓을 통해 실시간으로 장바구니 아이템 변경 사항을 구독
+ * 2024.09.09   김민정       결제 버튼 이벤트 설정
  * </pre>
  */
 class ScanFragment : Fragment() {
@@ -93,6 +96,9 @@ class ScanFragment : Fragment() {
 
         // 공동 장바구니 아이템 변경 사항 관찰
         observeCartItemUpdate()
+
+        // 버튼 설정
+        btnSettings()
     }
 
     /**
@@ -160,10 +166,12 @@ class ScanFragment : Fragment() {
         viewModel.cartItems.observe(viewLifecycleOwner) { items ->
             if (items.isNotEmpty()) {
                 binding.recyclerviewCart.visibility = View.VISIBLE
+                binding.layoutBtnPay.visibility = View.VISIBLE
                 binding.layoutCartNotfound.visibility = View.GONE
                 recyclerAdapter.submitList(items)
             } else {
                 binding.recyclerviewCart.visibility = View.GONE
+                binding.layoutBtnPay.visibility = View.GONE
                 binding.layoutCartNotfound.visibility = View.VISIBLE
             }
         }
@@ -257,6 +265,16 @@ class ScanFragment : Fragment() {
             "increase" -> recyclerAdapter.increaseItemQuantity(cartItemDto)
             "decrease" -> recyclerAdapter.decreaseItemQuantity(cartItemDto)
             "delete" -> recyclerAdapter.removeItem(cartItemDto)
+        }
+    }
+
+    /**
+     * 버튼 이벤트 설정
+     */
+    private fun btnSettings() {
+        // 결제 버튼
+        binding.btnPay.setOnClickListener {
+            replaceFragmentWithAnimation(R.id.container_main, PaymentFragment(), true, false)
         }
     }
 }

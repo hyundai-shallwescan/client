@@ -77,7 +77,17 @@
     <!-- 체크리스트 -->
     <string name="fragment_checklist_add">추가</string>
 
+    <!-- 결제 -->
+    <string name="fragment_payment_pay">결제하기</string>
+    <string name="fragment_payment_method">결제 수단</string>
+    <string name="fragment_payment_product">상품</string>
+    <string name="fragment_payment_totalprice">총 결제 금액</string>
+    <string name="fragment_payment_agree">결제내역을 확인하였으며 구매에 동의합니다.</string>
+    <string name="fragment_payment_external">일행에게 결제 요청하기</string>
+
     <!-- 버튼 -->
     <string name="btn_scanner_chat">채팅</string>
     <string name="btn_scanner_additional">일행초대</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
