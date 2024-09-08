@@ -77,6 +77,9 @@
     <!-- 체크리스트 -->
     <string name="fragment_checklist_add">추가</string>
 
+    <!-- 챗봇 -->
+    <string name="fragment_chatbot_comment">젤뽀가 안내하는 상품의 추가 버튼을 클릭하면 체크리스트에 추가돼요!</string>
+
     <!-- 버튼 -->
     <string name="btn_scanner_chat">채팅</string>
     <string name="btn_scanner_additional">일행초대</string>
