@@ -20,6 +20,7 @@ data class GetMemberPaymentRes(
 ) {
     data class GetMemberPaymentItemRes(
         val paymentItemId: Long,
+        val productId: Long,
         val name: String,
         val price: Int,
         val quantity: Int,
