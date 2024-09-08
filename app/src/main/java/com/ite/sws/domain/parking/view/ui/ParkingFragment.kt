@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.ite.sws.databinding.FragmentParkingBinding
 import com.ite.sws.domain.parking.api.repository.ParkingRepository
+import com.ite.sws.util.NumberFormatterUtil
 
 /**
  * 주차정산 프래그먼트
@@ -106,7 +107,8 @@ class ParkingFragment : Fragment() {
                 binding.parkingDiscountMinute.text = "00분"
                 binding.parkingFeeTimeHour.text = "${parkingInfo.paymentHour}시간"
                 binding.parkingFeeTimeMinute.text = "${parkingInfo.paymentMinute}분"
-                binding.parkingFee.text = "${parkingInfo.parkingFee}원"
+                binding.parkingFee.text = NumberFormatterUtil.formatCurrencyWithCommas(parkingInfo.parkingFee.toInt())
+
             },
             onFailure = { error ->
                 // 에러 처리
