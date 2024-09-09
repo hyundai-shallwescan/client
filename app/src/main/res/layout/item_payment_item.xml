@@ -37,6 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:text="친환경 애호박"
+            android:maxLength="50"
             android:textColor="@color/black"
             android:textFontWeight="1000"
             android:textSize="14sp" />
