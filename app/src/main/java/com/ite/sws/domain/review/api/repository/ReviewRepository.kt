@@ -2,7 +2,6 @@ package com.ite.sws.domain.review.api.repository
 
 import com.ite.sws.common.RetrofitClient
 import com.ite.sws.domain.review.api.service.ReviewService
-import com.ite.sws.domain.review.data.GetMemberPaymentProductReviewRes
 import com.ite.sws.domain.review.data.PostCreateReviewReq
 import okhttp3.MultipartBody
 import retrofit2.Call
@@ -32,15 +31,13 @@ class ReviewRepository {
     fun createReview(
         postCreateReviewReq: PostCreateReviewReq,
         shortFormFile: File,
-        imageFile: File,
         onSuccess: () -> Unit,
         onFailure: (Throwable) -> Unit
     ) {
         val postCreateReviewReqBody = createRequestBody(postCreateReviewReq.toString(), "text/plain")
         val shortFormPart = createMultipartBodyPart("shortForm", shortFormFile, "video/*")
-        val imagePart = createMultipartBodyPart("image", imageFile, "image/jpeg")
 
-        reviewService.uploadReview(postCreateReviewReqBody, shortFormPart, imagePart).enqueue(object : Callback<Void> {
+        reviewService.uploadReview(postCreateReviewReqBody, shortFormPart).enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 if (response.isSuccessful) {
                     onSuccess()
@@ -55,26 +52,6 @@ class ReviewRepository {
         })
     }
 
-    fun getMyReviewList(
-        onSuccess: (List<GetMemberPaymentProductReviewRes>) -> Unit,
-        onFailure: (Throwable) -> Unit
-    ) {
-        reviewService.findMemberReviewPaymentHistory().enqueue(object : Callback<List<GetMemberPaymentProductReviewRes>> {
-            override fun onResponse(call: Call<List<GetMemberPaymentProductReviewRes>>, response: Response<List<GetMemberPaymentProductReviewRes>>) {
-                if (response.isSuccessful) {
-                    response.body()?.let { result ->
-                        onSuccess(result)
-                    } ?: onFailure(Exception("Response body is null"))
-                } else {
-                    onFailure(Exception("Failed to receive a valid response."))
-                }
-            }
-
-            override fun onFailure(call: Call<List<GetMemberPaymentProductReviewRes>>, t: Throwable) {
-                onFailure(t)
-            }
-        })
-    }
     private fun createRequestBody(content: String, mediaType: String) =
         content.toRequestBody(mediaType.toMediaTypeOrNull())
 

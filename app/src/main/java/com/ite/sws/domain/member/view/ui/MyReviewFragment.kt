@@ -13,7 +13,7 @@ import com.ite.sws.R
 import com.ite.sws.databinding.FragmentMyReviewBinding
 import com.ite.sws.domain.review.view.ui.WriteReviewFragment
 import com.ite.sws.util.hideBottomNavigation
-import com.ite.sws.util.replaceFragmentWithAnimation
+
 import setupToolbar
 
 /**
@@ -57,6 +57,8 @@ class MyReviewFragment : Fragment() {
         val transaction = parentFragmentManager.beginTransaction()
         transaction.replace(R.id.fragment_container_review, fragment)
         transaction.commit()
+
+
     }
 
     /**

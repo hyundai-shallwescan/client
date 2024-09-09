@@ -1,6 +1,5 @@
 package com.ite.sws.domain.review.api.service
 
-import com.ite.sws.domain.review.data.GetMemberPaymentProductReviewRes
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
@@ -29,13 +28,8 @@ interface ReviewService {
     @POST("/reviews")
     fun uploadReview(
         @Part("postCreateReviewReq") postCreateReviewReq: RequestBody,
-        @Part shortForm: MultipartBody.Part,
-        @Part image: MultipartBody.Part
-    ): Call<Void>
+        @Part shortForm: MultipartBody.Part): Call<Void>
 
-
-    @GET("/members/payments")
-    fun findMemberReviewPaymentHistory(): Call<List<GetMemberPaymentProductReviewRes>>
 
 
 

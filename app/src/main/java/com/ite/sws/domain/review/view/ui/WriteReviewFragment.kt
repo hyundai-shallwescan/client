@@ -1,21 +1,21 @@
 package com.ite.sws.domain.review.view.ui
 
 
-import android.R
+import com.ite.sws.R
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.ite.sws.MainActivity
 import com.ite.sws.databinding.FragmentMyReviewListBinding
-import com.ite.sws.domain.review.view.adapter.ReviewWriteRecyclerViewAdapter
-import com.ite.sws.domain.review.data.GetMemberPaymentProductReviewRes
-import com.ite.sws.util.hideBottomNavigation
-import setupToolbar
+import com.ite.sws.domain.member.data.GetMemberPaymentRes
+import com.ite.sws.domain.member.view.ui.MyReviewFragment
+import com.ite.sws.domain.member.view.ui.WrittenReviewFragment
+import com.ite.sws.domain.review.view.adapter.WriteReviewRecyclerViewAdapter
 
 /**
  * 리뷰 작성 프래그먼트
@@ -34,25 +34,19 @@ class WriteReviewFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel: MyPaymentReviewViewModel by viewModels()
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentMyReviewListBinding.inflate(inflater, container, false)
-
-        (activity as? MainActivity)?.let { mainActivity ->
-            hideBottomNavigation(mainActivity.binding, true)
-        }
-
-        setupToolbar(binding.toolbar.toolbar, "구매 내역", true)
-
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.getMyReviewList(
+        viewModel.findPaymentItemList(
             onSuccess = { reviewItems ->
                 if (reviewItems.isNotEmpty()) {
                     displayReviewList(reviewItems)
@@ -71,30 +65,26 @@ class WriteReviewFragment : Fragment() {
         binding.layoutEmpty.visibility = View.VISIBLE
     }
 
-    private fun displayReviewList(items: List<GetMemberPaymentProductReviewRes>) {
+    private fun displayReviewList(items: List<GetMemberPaymentRes>) {
         binding.rvPayment.visibility = View.VISIBLE
+        binding.layoutEmpty.visibility = View.GONE
 
         binding.rvPayment.layoutManager = LinearLayoutManager(context)
 
-        val adapter = ReviewWriteRecyclerViewAdapter(items) { reviewItem ->
-            onCreateReviewClick(reviewItem)
-        }
 
+        val adapter = WriteReviewRecyclerViewAdapter(items) { paymentItem ->
+            val bundle = Bundle().apply {
+                putParcelable("paymentItem", paymentItem)
+            }
+            val fragment = ReviewUploadFragment().apply {
+                arguments = bundle
+            }
+
+            val transaction = parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container_review_write, fragment)
+            transaction.commit()
+        }
         binding.rvPayment.adapter = adapter
-    }
-
-    private fun onCreateReviewClick(item: GetMemberPaymentProductReviewRes) {
-        val reviewUploadFragment = ReviewUploadFragment()
-
-        val bundle = Bundle().apply {
-            putParcelable("reviewItem", item)
-        }
-        reviewUploadFragment.arguments = bundle
-
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container_review, reviewUploadFragment)
-            .addToBackStack(null)
-            .commit()
     }
 
     private fun showError(message: String) {
@@ -106,7 +96,6 @@ class WriteReviewFragment : Fragment() {
         _binding = null
     }
 }
-
 
 
 //create the button and ic,  apply the recyclable view in here

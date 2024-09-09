@@ -70,6 +70,9 @@
     <!-- 리뷰 관리 -->
     <string name="fragment_my_review_written">작성한 리뷰</string>
     <string name="fragment_my_review_write">리뷰 작성</string>
+    <string name="fragment_review_upload_select">업로드 영상 선택</string>
+    <string name="fragment_my_review_upload">업로드</string>
+    <string name="fragment_my_review_upload_delete">삭제</string>
 
     <!-- 버튼 -->
     <string name="btn_scanner_chat">채팅</string>

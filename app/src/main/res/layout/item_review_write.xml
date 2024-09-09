@@ -5,9 +5,7 @@
     android:layout_height="wrap_content"
     android:layout_marginVertical="12dp">
 
-    <!-- 상품 이미지 -->
 
-    <!-- 상품명&수량 -->
     <ImageView
         android:id="@+id/img_review_thumbnail"
         android:layout_width="80dp"
@@ -29,6 +27,7 @@
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/img_review_thumbnail"
+        app:layout_constraintEnd_toStartOf="@id/img_action_buttons"
         app:layout_constraintTop_toTopOf="parent">
 
         <!-- 상품명 -->
@@ -37,7 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:text="친환경 애호박"
+            android:text="친환경 애호박asdfasdfasfasdfasasfasdfasdfadasdfaasdfsdf"
             android:textColor="@color/black"
             android:textFontWeight="1000"
             android:textSize="14sp" />
