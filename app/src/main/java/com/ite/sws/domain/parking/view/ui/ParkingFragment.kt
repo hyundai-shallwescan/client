@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import com.ite.sws.databinding.FragmentParkingBinding
 import com.ite.sws.domain.parking.api.repository.ParkingRepository
 import com.ite.sws.util.NumberFormatterUtil
+import setupToolbar
 
 /**
  * 주차정산 프래그먼트
@@ -38,6 +39,7 @@ class ParkingFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentParkingBinding.inflate(inflater, container, false)
+        setupToolbar(binding.toolbar.toolbar, "주차 정산", false)
         return binding.root
     }
 
