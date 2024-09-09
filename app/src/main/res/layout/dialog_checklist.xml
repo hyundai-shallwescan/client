@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:minWidth="350dp"
+    android:orientation="vertical"
+    android:background="@drawable/bg_round_white"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="체크리스트 항목 추가"
+        android:textFontWeight="1000"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:layout_gravity="center"
+        android:paddingBottom="8dp"/>
+
+    <FrameLayout
+        android:layout_marginVertical="@dimen/common_vertical_margin"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginHorizontal="5dp"
+        android:background="@drawable/bg_round_line_green">
+
+        <!-- 항목 입력 창 -->
+        <EditText
+            android:id="@+id/edt_item"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:hint="추가할 항목을 입력하세요."
+            android:inputType="text"
+            android:padding="12dp"
+            android:textColor="@color/black" />`
+    </FrameLayout>
+
+    <!-- 항목 추가 버튼 -->
+    <Button
+        android:id="@+id/btn_add"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:textFontWeight="1000"
+        android:textSize="15sp"
+        android:textColor="@color/white"
+        android:text="@string/fragment_checklist_add"
+        android:background="@drawable/btn_rounded_main"
+        android:layout_gravity="center"
+        android:padding="12dp"
+        android:stateListAnimator="@null"
+        />
+</LinearLayout>

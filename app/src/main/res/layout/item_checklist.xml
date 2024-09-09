@@ -15,32 +15,52 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp">
+                    android:layout_marginTop="10dp">
 
-                        <!-- 아이콘 -->
-                        <ImageView
-                            android:layout_marginStart="8dp"
-                            android:id="@+id/img_icon"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:src="@drawable/ic_fruit"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                        <!-- 항목 이름 -->
+                        <!-- 아이템 이름 -->
                         <TextView
                             android:id="@+id/tv_item_name"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="30dp"
-                            android:text="항목 이름"
+                            android:text="이름"
                             android:textColor="@color/black"
                             android:textSize="16sp"
                             android:textStyle="bold"
+                            android:layout_marginLeft="7dp"
                             app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toStartOf="@id/checkbox_status"
-                            app:layout_constraintStart_toEndOf="@id/img_icon"
+                            app:layout_constraintEnd_toStartOf="@id/btn_update"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <!-- 아이템 이름 변경 -->
+                        <EditText
+                            android:id="@+id/edt_item_name"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:hint=""
+                            android:textColor="@color/black"
+                            android:textSize="16sp"
+                            android:layout_marginLeft="7dp"
+                            android:textStyle="bold"
+                            android:background="@android:color/transparent"
+                            android:visibility="gone"
+                            android:inputType="text"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toStartOf="@id/btn_update"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"/>
+
+                        <!-- 수정 버튼 -->
+                        <ImageButton
+                            android:id="@+id/btn_update"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:background="@android:color/transparent"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/ic_pencil"
+                            android:layout_marginRight="15dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@+id/checkbox_status"
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <!-- 체크박스 -->

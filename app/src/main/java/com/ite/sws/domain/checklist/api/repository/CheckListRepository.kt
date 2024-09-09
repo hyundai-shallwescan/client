@@ -6,6 +6,7 @@ import com.ite.sws.common.data.CheckStatus
 import com.ite.sws.common.data.ErrorRes
 import com.ite.sws.domain.checklist.api.service.CheckListService
 import com.ite.sws.domain.checklist.data.GetCheckListRes
+import com.ite.sws.domain.checklist.data.PostCheckListReq
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -20,8 +21,11 @@ import retrofit2.Response
  * 수정일        수정자        수정내용
  * ----------  --------    ---------------------------
  * 2024.09.06  정은지        최초생성
- * 2024.09.06  정은지        체크리스트 조회 추가
- * 2024.09.06  정은지        체크리스트 상태 변경 추가
+ * 2024.09.06  정은지        체크리스트 조회
+ * 2024.09.06  정은지        체크리스트 상태 변경
+ * 2024.09.08  정은지        체크리스트 아이템 추가
+ * 2024.09.09  정은지        체크리스트 아이템 변경
+ * 2024.09.09  정은지        체크리스트 아이템 삭제
  * </pre>
  */
 class CheckListRepository {
@@ -69,6 +73,79 @@ class CheckListRepository {
         onFailure: (ErrorRes) -> Unit
     ) {
         checkListService.modifyCheckListItemStatus(myCheckListItemId).enqueue(object : Callback<Void> {
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                if (response.isSuccessful) {
+                    onSuccess()
+                } else {
+                    val errorRes = Gson().fromJson(response.errorBody()?.string(), ErrorRes::class.java)
+                    onFailure(errorRes)
+                }
+            }
+
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                handleFailure(call, t, onFailure)
+            }
+        })
+    }
+
+    /**
+     * 체크리스트 아이템 추가
+     */
+    fun addMyCheckListItem(
+        postCheckListReq: PostCheckListReq,
+        onSuccess: () -> Unit,
+        onFailure: (ErrorRes) -> Unit
+    ) {
+        checkListService.addMyCheckListItem(postCheckListReq).enqueue(object : Callback<Void> {
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                if (response.isSuccessful) {
+                    onSuccess()
+                } else {
+                    val errorRes = Gson().fromJson(response.errorBody()?.string(), ErrorRes::class.java)
+                    onFailure(errorRes)
+                }
+            }
+
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                handleFailure(call, t, onFailure)
+            }
+        })
+    }
+
+    /**
+     * 체크리스트 아이템 변경
+     */
+    fun modifyMyCheckListItem(
+        myCheckListItemId: Long,
+        item: String,
+        onSuccess: () -> Unit,
+        onFailure: (ErrorRes) -> Unit
+    ) {
+        checkListService.modifyMyCheckListItem(myCheckListItemId, item).enqueue(object : Callback<Void> {
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                if (response.isSuccessful) {
+                    onSuccess()
+                } else {
+                    val errorRes = Gson().fromJson(response.errorBody()?.string(), ErrorRes::class.java)
+                    onFailure(errorRes)
+                }
+            }
+
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                handleFailure(call, t, onFailure)
+            }
+        })
+    }
+
+    /**
+     * 체크리스트 아이템 삭제
+     */
+    fun deleteMyCheckListItem(
+        myCheckListItemId: Long,
+        onSuccess: () -> Unit,
+        onFailure: (ErrorRes) -> Unit
+    ) {
+        checkListService.deleteMyCheckListItem(myCheckListItemId).enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 if (response.isSuccessful) {
                     onSuccess()
