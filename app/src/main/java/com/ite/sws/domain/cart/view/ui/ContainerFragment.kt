@@ -39,6 +39,7 @@ import ua.naiksoftware.stomp.dto.LifecycleEvent
  * 2024.09.03  김민정       채팅 프래그먼트 전환
  * 2024.09.05  남진수       WebSocket 연결
  * 2024.09.05  김민정       장바구니 구독
+ * 2024.09.09  김민정       일행 초대 버튼으로 바텀 시트 생성
  * </pre>
  */
 class ContainerFragment : Fragment() {
@@ -107,7 +108,8 @@ class ContainerFragment : Fragment() {
 
         // 일행 초대 버튼
         binding.btnScannerAdditional.setOnClickListener{
-            replaceFragmentWithAnimation(R.id.container_main, ExternalContainerFragment(), true, false)
+            val bottomSheetFragment = CustomBottomSheetFragment()
+            bottomSheetFragment.show(childFragmentManager, bottomSheetFragment.tag)
         }
     }
 
