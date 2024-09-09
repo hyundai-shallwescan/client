@@ -72,17 +72,16 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:background="@drawable/bg_round_line_green"
-                android:paddingHorizontal="5dp"
                 android:layout_marginRight="10dp">
 
                 <ImageButton
                     android:id="@+id/btn_cart_minus"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_weight="0"
+                    android:layout_width="30dp"
+                    android:layout_height="25dp"
                     android:layout_gravity="center"
-                    android:scaleType="fitCenter"
+                    android:layout_weight="0"
                     android:background="@android:color/transparent"
+                    android:scaleType="fitCenter"
                     android:src="@drawable/ic_minus" />
 
                 <TextView
@@ -97,12 +96,12 @@
 
                 <ImageButton
                     android:id="@+id/btn_cart_plus"
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
-                    android:layout_weight="0"
+                    android:layout_width="28dp"
+                    android:layout_height="21dp"
                     android:layout_gravity="center"
-                    android:scaleType="fitCenter"
+                    android:layout_weight="0"
                     android:background="@android:color/transparent"
+                    android:scaleType="fitCenter"
                     android:src="@drawable/ic_plus" />
             </LinearLayout>
 

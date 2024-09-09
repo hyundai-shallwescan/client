@@ -26,6 +26,8 @@ import retrofit2.Response
  * 2024.09.02  김민정       장바구니 아이템 조회
  * 2024.09.03  김민정       장바구니 아이템 수량 변경
  * 2024.09.03  김민정       장바구니 아이템 삭제
+ * 2024.09.08  김민정       공통 응답 처리 함수
+ * 2024.09.08  김민정       공통 네트워크 예외 처리 함수
  * </pre>
  */
 class CartRepository {
@@ -71,28 +73,65 @@ class CartRepository {
      * 장바구니 아이템 추가
      */
     suspend fun saveCartItem(request: PutCartItemReq) {
-        cartService.saveCartItem(request)
+        try {
+            val response = cartService.saveCartItem(request)
+            handleResponse(response)
+        } catch (e: Exception) {
+            throw handleNetworkException(e)
+        }
     }
 
     /**
      * 장바구니 아이템 조회
      */
     suspend fun findCartItemList(cartId: Long): List<CartItem> {
-        return cartService.findCartItemList(cartId).items
+        return try {
+            val response = cartService.findCartItemList(cartId)
+            handleResponse(response)?.items ?: emptyList()
+        } catch (e: Exception) {
+            throw handleNetworkException(e)
+        }
     }
 
     /**
      * 장바구니 아이템 수량 변경
      */
     suspend fun modifyCartItemQuantity(cartId: Long, productId: Long, delta: Int) {
-        cartService.modifyCartItemQuantity(cartId, productId, delta)
+        try {
+            val response = cartService.modifyCartItemQuantity(cartId, productId, delta)
+            handleResponse(response)
+        } catch (e: Exception) {
+            throw handleNetworkException(e)
+        }
     }
 
     /**
      * 장바구니 아이템 삭제
      */
     suspend fun removeCartItem(cartId: Long, productId: Long) {
-        cartService.deleteCartItem(cartId, productId)
+        try {
+            val response = cartService.deleteCartItem(cartId, productId)
+            handleResponse(response)
+        } catch (e: Exception) {
+            throw handleNetworkException(e)
+        }
     }
 
+    /**
+     * 공통 응답 처리 함수
+     */
+    private fun <T> handleResponse(response: Response<T>): T? {
+        return if (response.isSuccessful) {
+            response.body()
+        } else {
+            throw Exception("Error: ${response.errorBody()?.string()}")
+        }
+    }
+
+    /**
+     * 공통 네트워크 예외 처리 함수
+     */
+    private fun handleNetworkException(e: Exception): Exception {
+        return Exception("Network error: ${e.localizedMessage}")
+    }
 }

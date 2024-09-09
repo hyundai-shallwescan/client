@@ -5,6 +5,7 @@ import com.ite.sws.domain.cart.data.PostCartLoginReq
 import com.ite.sws.domain.cart.data.PutCartItemReq
 import com.ite.sws.domain.member.data.JwtToken
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -40,13 +41,13 @@ interface CartService {
      * 장바구니 아이템 추가 API
      */
     @PUT("carts")
-    suspend fun saveCartItem(@Body request: PutCartItemReq)
+    suspend fun saveCartItem(@Body request: PutCartItemReq): Response<Void>
 
     /**
      * 장바구니 아이템 조회 API
      */
     @GET("carts/{cartId}")
-    suspend fun findCartItemList(@Path("cartId") cartId: Long): GetCartItemRes
+    suspend fun findCartItemList(@Path("cartId") cartId: Long): Response<GetCartItemRes>
 
     /**
      * 장바구니 아이템 수량 변경 API
@@ -56,7 +57,7 @@ interface CartService {
         @Path("cartId") cartId: Long,
         @Path("productId") productId: Long,
         @Query("delta") delta: Int
-    )
+    ): Response<Void>
 
     /**
      * 장바구니 아이템 삭제 API
@@ -65,6 +66,6 @@ interface CartService {
     suspend fun deleteCartItem(
         @Path("cartId") cartId: Long,
         @Path("productId") productId: Long
-    )
+    ): Response<Void>
 
 }

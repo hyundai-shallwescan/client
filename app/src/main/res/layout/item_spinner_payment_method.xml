@@ -1,0 +1,12 @@
+<TextView
+    android:id="@+id/text_payment_method"
+    android:fontFamily="@font/happiness_sans_bold"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:lineSpacingExtra="6sp"
+    android:paddingHorizontal="10dp"
+    android:paddingVertical="10dp"
+    android:textColor="@color/gray"
+    android:textSize="15sp"
+    android:textStyle="normal"
+    xmlns:android="http://schemas.android.com/apk/res/android" />

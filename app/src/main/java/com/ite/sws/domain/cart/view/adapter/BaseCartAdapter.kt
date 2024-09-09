@@ -86,6 +86,10 @@ abstract class BaseCartAdapter<ViewHolder : RecyclerView.ViewHolder, ViewModel :
         item?.let {
             currentList.remove(it)
             submitList(currentList)
+
+            if (currentList.size == 0) {
+                viewModel.updateCartItems(currentList)
+            }
         }
     }
 }
