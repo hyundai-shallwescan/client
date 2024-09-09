@@ -1,11 +1,14 @@
 package com.ite.sws.domain.checklist.view.adapter
 
+import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ite.sws.common.data.CheckStatus
 import com.ite.sws.databinding.ItemChecklistBinding
-import com.ite.sws.domain.checklist.data.CheckListCategory
 import com.ite.sws.domain.checklist.data.GetCheckListRes
 
 /**
@@ -22,9 +25,9 @@ import com.ite.sws.domain.checklist.data.GetCheckListRes
  */
 class CheckListRecyclerViewAdapter (
     private val items: List<GetCheckListRes>,
-    private val onItemChecked: (GetCheckListRes, Boolean) -> Unit
-) : RecyclerView.Adapter<CheckListRecyclerViewAdapter.CheckListViewHolder>()
-    {
+    private val onItemChecked: (GetCheckListRes, Boolean) -> Unit,
+    private val onItemEdited: (GetCheckListRes, String) -> Unit
+) : RecyclerView.Adapter<CheckListRecyclerViewAdapter.CheckListViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CheckListViewHolder {
         val binding =
@@ -42,17 +45,59 @@ class CheckListRecyclerViewAdapter (
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: GetCheckListRes) {
-            binding.tvItemName.text = item.itemName
 
-            // 카테고리 아이콘 설정
-            val category = CheckListCategory.fromId(item.myCheckListCategoryId)
-            binding.imgIcon.setImageResource(category.iconId)
+            // 아이템명 설정
+            binding.tvItemName.text = item.itemName
+            binding.edtItemName.setText(item.itemName)
 
             // 체크박스 상태 설정
             binding.checkboxStatus.isChecked = item.status == CheckStatus.CHECKED
             binding.checkboxStatus.setOnCheckedChangeListener { _, isChecked ->
                 onItemChecked(item, isChecked)
             }
+
+            // 수정 버튼 클릭 시
+            binding.btnUpdate.setOnClickListener {
+                binding.tvItemName.visibility = View.GONE   // TextView 숨김
+                binding.edtItemName.visibility = View.VISIBLE  // EditText 표시
+                binding.edtItemName.requestFocus()  // EditText에 포커스 설정
+
+                // 키보드 노출
+                val imm = itemView.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.showSoftInput(binding.edtItemName, InputMethodManager.SHOW_IMPLICIT)
+            }
+
+            binding.edtItemName.apply {
+                // EditText가 포커스를 잃을 시
+                setOnFocusChangeListener { _, hasFocus ->
+                    if (!hasFocus) {
+                        handleEditCompleted(item)
+                    }
+                }
+
+                // 엔터키가 눌렸을 시
+                setOnEditorActionListener { _, actionId, _ ->
+                    if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_NEXT) {
+                        handleEditCompleted(item)
+                        true
+                    } else {
+                        false
+                    }
+                }
+            }
+        }
+
+        private fun handleEditCompleted(item: GetCheckListRes) {
+            val newText = binding.edtItemName.text.toString()
+            binding.tvItemName.text = newText  // TextView 수정
+            binding.tvItemName.visibility = View.VISIBLE  // TextView 표시
+            binding.edtItemName.visibility = View.GONE  // EditText 숨김
+
+            // 키보드 숨김
+            val imm = itemView.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(binding.edtItemName.windowToken, 0)
+
+            onItemEdited(item, newText) // 수정 내용 전달
         }
     }
 }

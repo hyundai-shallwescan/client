@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.ite.sws.common.data.CheckStatus
 import com.ite.sws.domain.checklist.api.repository.CheckListRepository
 import com.ite.sws.domain.checklist.data.GetCheckListRes
+import com.ite.sws.domain.checklist.data.PostCheckListReq
 
 /**
  * 체크리스트 ViewModel
@@ -19,6 +20,9 @@ import com.ite.sws.domain.checklist.data.GetCheckListRes
  * 2024.09.07  정은지        최초 생성
  * 2024.09.07  정은지        체크리스트 조회
  * 2024.09.07  정은지        체크 상태 변경
+ * 2024.09.08  정은지        체크리스트 아이템 추가
+ * 2024.09.09  정은지        체크리스트 아이템 수정
+ * 2024.09.09  정은지        체크리스트 아이템 삭제
  * </pre>
  */
 class CheckListViewModel() : ViewModel() {
@@ -64,6 +68,50 @@ class CheckListViewModel() : ViewModel() {
                     }
                 }
                 _checkListItems.value = updatedList
+            },
+            onFailure = { errorRes ->
+                _errorMessage.value = errorRes.message
+            }
+        )
+    }
+
+    /**
+     * 체크리스트 아이템 추가
+     */
+    fun addCheckListItem(postCheckListReq: PostCheckListReq) {
+        checkListRepository.addMyCheckListItem(postCheckListReq,
+            onSuccess = {
+                loadCheckListItems()
+            },
+            onFailure = { errorRes ->
+                _errorMessage.value = errorRes.message
+            }
+        )
+    }
+
+    /**
+     * 체크리스트 아이템 변경
+     */
+    fun editCheckListItem(itemId: Long, newName: String) {
+        checkListRepository.modifyMyCheckListItem(
+            itemId, newName,
+            onSuccess = {
+                loadCheckListItems()
+            },
+            onFailure = { errorRes ->
+                _errorMessage.value = errorRes.message
+            }
+        )
+    }
+
+    /**
+     * 체크리스트 아이템 삭제
+     */
+    fun deleteItem(itemId: Long) {
+        checkListRepository.deleteMyCheckListItem(
+            itemId,
+            onSuccess = {
+                loadCheckListItems()
             },
             onFailure = { errorRes ->
                 _errorMessage.value = errorRes.message

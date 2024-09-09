@@ -1,9 +1,7 @@
 package com.ite.sws.domain.checklist.data
 
-import com.ite.sws.common.data.CheckStatus
-
 /**
- * 체크리스트 조회 Response DTO
+ * 체크리스트 항목 추가 Request DTO
  * @author 정은지
  * @since 2024.09.07
  * @version 1.0
@@ -14,8 +12,6 @@ import com.ite.sws.common.data.CheckStatus
  * 2024.09.07  	정은지        최초 생성
  * </pre>
  */
-data class GetCheckListRes(
-    val myCheckListItemId: Long,
-    val itemName: String,
-    val status: CheckStatus
+data class PostCheckListReq (
+    val item: String
 )
