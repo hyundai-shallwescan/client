@@ -5,9 +5,9 @@
     android:layout_height="wrap_content"
     android:layout_marginVertical="12dp">
 
-    <!-- 상품이미지 -->
+
     <ImageView
-        android:id="@+id/img_product_thumbnail"
+        android:id="@+id/img_review_thumbnail"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:scaleType="centerCrop"
@@ -26,43 +26,54 @@
         android:gravity="center_vertical"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/tv_product_price"
-        app:layout_constraintStart_toEndOf="@id/img_product_thumbnail"
+        app:layout_constraintStart_toEndOf="@id/img_review_thumbnail"
+        app:layout_constraintEnd_toStartOf="@id/img_action_buttons"
         app:layout_constraintTop_toTopOf="parent">
 
         <!-- 상품명 -->
         <TextView
-            android:id="@+id/tv_product_name"
+            android:id="@+id/review_product_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:text="친환경 애호박"
+            android:text="친환경 애호박asdfasdfasfasdfasasfasdfasdfadasdfaasdfsdf"
             android:textColor="@color/black"
             android:textFontWeight="1000"
             android:textSize="14sp" />
 
-        <!-- 수량 -->
-        <TextView
-            android:id="@+id/tv_product_quantity"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="1개"
-            android:textColor="@color/black"
-            android:textFontWeight="1000"
-            android:textSize="13sp" />
-    </LinearLayout>
 
-    <!-- 가격 -->
-    <TextView
-        android:id="@+id/tv_product_price"
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/img_action_buttons"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:text="5,700원"
-        android:textColor="@color/black"
-        android:textFontWeight="1000"
-        android:textSize="14sp"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <!-- 이미지 버튼 -->
+        <ImageButton
+            android:id="@+id/create_review_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/btn_create_review"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:layout_marginRight="10dp"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <!-- 체크 아이콘 이미지뷰 -->
+        <ImageView
+            android:id="@+id/review_check_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_already_created_review"
+            android:layout_marginRight="10dp"
+            android:visibility="gone" />
+    </LinearLayout>
+
+
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
