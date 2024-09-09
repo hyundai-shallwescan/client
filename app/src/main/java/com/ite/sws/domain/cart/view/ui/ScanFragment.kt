@@ -167,11 +167,13 @@ class ScanFragment : Fragment() {
             if (items.isNotEmpty()) {
                 binding.recyclerviewCart.visibility = View.VISIBLE
                 binding.layoutBtnPay.visibility = View.VISIBLE
+                binding.btnPay.visibility = View.VISIBLE
                 binding.layoutCartNotfound.visibility = View.GONE
                 recyclerAdapter.submitList(items)
             } else {
                 binding.recyclerviewCart.visibility = View.GONE
                 binding.layoutBtnPay.visibility = View.GONE
+                binding.btnPay.visibility = View.GONE
                 binding.layoutCartNotfound.visibility = View.VISIBLE
             }
         }
@@ -185,12 +187,12 @@ class ScanFragment : Fragment() {
     }
 
     /**
-     * 스캐너 재시작 시, 0.3초(300밀리초)딜레이
+     * 스캐너 재시작 시, 0.2초(200밀리초)딜레이
      */
     private fun resumeScannerWithDelay() {
         delayHandler.postDelayed({
             barcodeScannerView.resume()
-        }, 150)
+        }, 200)
     }
 
     override fun onResume() {
