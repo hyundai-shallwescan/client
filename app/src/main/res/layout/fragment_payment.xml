@@ -204,8 +204,9 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="@+id/btn_pay_external" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
-
             </LinearLayout>
+            <!-- 버튼 끝 -->
         </LinearLayout>
+        <!-- 내부 요소 끝 -->
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
