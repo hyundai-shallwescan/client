@@ -104,4 +104,6 @@ dependencies {
 
     // recyclerView 스와이프
     implementation 'com.github.xabaras:RecyclerViewSwipeDecorator:1.4'
+    //gson
+    implementation 'com.google.code.gson:gson:2.8.9'
 }

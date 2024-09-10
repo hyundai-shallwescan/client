@@ -1,5 +1,7 @@
 package com.ite.sws.domain.review.api.repository
 
+import android.media.Image
+import com.google.gson.Gson
 import com.ite.sws.common.RetrofitClient
 import com.ite.sws.domain.review.api.service.ReviewService
 import com.ite.sws.domain.review.data.PostCreateReviewReq
@@ -31,13 +33,16 @@ class ReviewRepository {
     fun createReview(
         postCreateReviewReq: PostCreateReviewReq,
         shortFormFile: File,
+        image: File,
         onSuccess: () -> Unit,
         onFailure: (Throwable) -> Unit
     ) {
-        val postCreateReviewReqBody = createRequestBody(postCreateReviewReq.toString(), "text/plain")
-        val shortFormPart = createMultipartBodyPart("shortForm", shortFormFile, "video/*")
-
-        reviewService.uploadReview(postCreateReviewReqBody, shortFormPart).enqueue(object : Callback<Void> {
+        val gson = Gson()
+        val postCreateReviewReqJson = gson.toJson(postCreateReviewReq)
+        val postCreateReviewReqBody = createRequestBody(postCreateReviewReqJson, "application/json")
+        val shortFormPart = createMultipartBodyPart("shortForm", shortFormFile, "File")
+        val imagePart = createMultipartBodyPart("image", image, "File")
+        reviewService.uploadReview(postCreateReviewReqBody,imagePart, shortFormPart).enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 if (response.isSuccessful) {
                     onSuccess()
@@ -52,7 +57,8 @@ class ReviewRepository {
         })
     }
 
-    private fun createRequestBody(content: String, mediaType: String) =
+
+    private fun createRequestBody(content: String, mediaType: String)=
         content.toRequestBody(mediaType.toMediaTypeOrNull())
 
     private fun createMultipartBodyPart(partName: String, file: File, mediaType: String): MultipartBody.Part {

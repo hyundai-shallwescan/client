@@ -10,7 +10,8 @@ package com.ite.sws.domain.review.data
  * ----------  --------    ---------------------------
  * 2024.09.06   구지웅        최초 생성
  */
+
 data class PostCreateReviewReq(
-    val paymentId: Long,
-    val productId: Long
+    val paymentItemId: Long?,
+    val productId: Long?
 )

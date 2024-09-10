@@ -28,9 +28,6 @@ interface ReviewService {
     @POST("/reviews")
     fun uploadReview(
         @Part("postCreateReviewReq") postCreateReviewReq: RequestBody,
+        @Part image: MultipartBody.Part,
         @Part shortForm: MultipartBody.Part): Call<Void>
-
-
-
-
 }
