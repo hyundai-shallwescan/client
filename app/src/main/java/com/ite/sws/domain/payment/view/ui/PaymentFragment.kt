@@ -18,6 +18,7 @@ import com.ite.sws.domain.payment.view.adapter.PaymentRecyclerAdapter
 import com.ite.sws.util.NumberFormatterUtil.formatCurrencyWithCommas
 import com.ite.sws.util.SharedPreferencesUtil
 import com.ite.sws.util.hideBottomNavigation
+import com.ite.sws.util.replaceFragmentWithAnimation
 import setupToolbar
 
 /**
@@ -32,6 +33,7 @@ import setupToolbar
  * 2024.09.09   김민정       최초 생성
  * 2024.09.09   김민정       결제 수단 스피너 설정
  * 2024.09.09   김민정       결제를 위한 장바구니 아이템 조회
+ * 2024.09.10   김민정       추가 결제 상품 추천
  * </pre>
  */
 class PaymentFragment : Fragment() {
@@ -104,6 +106,24 @@ class PaymentFragment : Fragment() {
             binding.tvPaymentTotalPrice.text = "${formatCurrencyWithCommas(cartItemsResponse.totalPrice)}"
         }
 
+        // 추가 상품 추천 조회 결과 관찰
+        viewModel.recommendation.observe(viewLifecycleOwner) { recommendationResponse ->
+            if (recommendationResponse.remainingParkingFee != null
+                && recommendationResponse.remainingParkingFee != 0) {
+                val bottomSheetFragment = ProductRecommendBottomSheet(
+                    recommendationResponse.thumbnailImage,
+                    recommendationResponse.productName,
+                    formatCurrencyWithCommas(recommendationResponse.productPrice)
+                ) {
+                    // 결제 버튼 클릭 시 처리
+                    navigateToPaymentCardFragment()
+                }
+                bottomSheetFragment.show(childFragmentManager, bottomSheetFragment.tag)
+            } else {
+                navigateToPaymentCardFragment()
+            }
+        }
+
         // 에러 상태 관찰
         viewModel.error.observe(viewLifecycleOwner) { errorMessage ->
             errorMessage?.let {
@@ -135,7 +155,38 @@ class PaymentFragment : Fragment() {
     private fun btnSettings() {
         // 결제 버튼
         binding.btnPay.setOnClickListener {
-
+            viewModel.cartItems.value?.let { cartItemsResponse ->
+                viewModel.findRecommendProduct(
+                    SharedPreferencesUtil.getCartId(),
+                    cartItemsResponse.totalPrice
+                )
+            } ?: Toast.makeText(requireContext(), "장바구니 정보를 불러오지 못했습니다.", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    /**
+     * 결제 카드 선택 프레그먼트로 이동
+     */
+    private fun navigateToPaymentCardFragment() {
+        val fragment = PaymentCardFragment()
+        val bundle = Bundle()
+
+        // 여기서 productId와 quantity 정보를 번들에 추가할 수 있음
+        viewModel.cartItems.value?.items?.let { cartItems ->
+            val productIdArray = cartItems.map { it.productId }.toLongArray()
+            val quantityArray = cartItems.map { it.quantity }.toIntArray()
+
+            bundle.putLongArray("productIds", productIdArray)
+            bundle.putIntArray("quantities", quantityArray)
+        }
+
+        fragment.arguments = bundle
+
+        replaceFragmentWithAnimation(
+            R.id.container_main,
+            fragment,
+            false,
+            false
+        )
     }
 }

@@ -84,8 +84,4 @@
                 app:layout_constraintTop_toBottomOf="@+id/btn_url" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
-
-
-
-    <!-- 추가적인 뷰 구성 -->
 </LinearLayout>
