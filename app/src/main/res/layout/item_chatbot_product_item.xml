@@ -27,7 +27,7 @@
         android:gravity="center_vertical"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/img_add_checklist"
+        app:layout_constraintEnd_toStartOf="@id/btn_add_checklist"
         app:layout_constraintStart_toEndOf="@id/img_product_thumbnail"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -38,6 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:text="친환경 애호박"
+            android:maxLength="50"
             android:textColor="@color/black"
             android:textFontWeight="1000"
             android:textSize="14sp" />
@@ -55,9 +56,9 @@
 
     <!-- 체크리스트 추가 버튼 -->
     <ImageButton
+        android:id="@+id/btn_add_checklist"
         android:src="@drawable/ic_add"
         android:background="@android:color/transparent"
-        android:id="@+id/img_add_checklist"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:scaleType="fitCenter"

@@ -24,9 +24,10 @@ import com.ite.sws.domain.checklist.data.GetCheckListRes
  * </pre>
  */
 class CheckListRecyclerViewAdapter (
-    private val items: List<GetCheckListRes>,
+    private var items: MutableList<GetCheckListRes>,
     private val onItemChecked: (GetCheckListRes, Boolean) -> Unit,
-    private val onItemEdited: (GetCheckListRes, String) -> Unit
+    private val onItemEdited: (GetCheckListRes, String) -> Unit,
+    private val onItemRemoved: (Long) -> Unit
 ) : RecyclerView.Adapter<CheckListRecyclerViewAdapter.CheckListViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CheckListViewHolder {
@@ -37,6 +38,15 @@ class CheckListRecyclerViewAdapter (
 
     override fun onBindViewHolder(holder: CheckListViewHolder, position: Int) {
         holder.bind(items[position])
+    }
+
+    fun setItems(newItems: MutableList<GetCheckListRes>) {
+        items = newItems
+        notifyDataSetChanged() // 리스트가 변경되면 RecyclerView를 새로 고침
+    }
+
+    fun getItemIdAt(position: Int): Long {
+        return items[position].myCheckListItemId
     }
 
     override fun getItemCount(): Int = items.size
@@ -50,8 +60,11 @@ class CheckListRecyclerViewAdapter (
             binding.tvItemName.text = item.itemName
             binding.edtItemName.setText(item.itemName)
 
+            binding.checkboxStatus.setOnCheckedChangeListener(null) // 기존 리스너 제거
+
             // 체크박스 상태 설정
             binding.checkboxStatus.isChecked = item.status == CheckStatus.CHECKED
+
             binding.checkboxStatus.setOnCheckedChangeListener { _, isChecked ->
                 onItemChecked(item, isChecked)
             }
@@ -99,5 +112,22 @@ class CheckListRecyclerViewAdapter (
 
             onItemEdited(item, newText) // 수정 내용 전달
         }
+    }
+
+    fun removeItem(checkListId: Long) {
+        // 삭제할 ID 기반으로 해당 항목을 리스트에서 찾음
+        val position = items.indexOfFirst { it.myCheckListItemId == checkListId }
+        if (position != -1) {
+            items.removeAt(position)
+            notifyItemRemoved(position)
+            onItemRemoved(checkListId) // 서버에 삭제 요청
+        }
+    }
+
+    // 리스트 갱신
+    fun updateItems(newItems: MutableList<GetCheckListRes>) {
+        items.clear()
+        items.addAll(newItems)
+        notifyDataSetChanged()
     }
 }

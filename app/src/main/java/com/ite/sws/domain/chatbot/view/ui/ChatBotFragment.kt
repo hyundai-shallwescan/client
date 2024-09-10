@@ -6,13 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ite.sws.MainActivity
 import com.ite.sws.databinding.FragmentChatbotBinding
 import com.ite.sws.domain.chatbot.data.GetChatGptRes
 import com.ite.sws.domain.chatbot.view.adpater.ChatBotRecyclerViewAdapter
+import com.ite.sws.domain.checklist.view.ui.CheckListViewModel
 import com.ite.sws.util.hideBottomNavigation
 import setupToolbar
 
@@ -34,7 +36,8 @@ class ChatBotFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var adapter: ChatBotRecyclerViewAdapter
-    private lateinit var chatViewModel: ChatBotViewModel
+    private val chatViewModel: ChatBotViewModel by viewModels()
+    private val checkListModel: CheckListViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -57,12 +60,9 @@ class ChatBotFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         // RecyclerView 설정
-        adapter = ChatBotRecyclerViewAdapter(mutableListOf())
+        adapter = ChatBotRecyclerViewAdapter(mutableListOf(), parentFragmentManager, checkListModel)
         binding.rvChatbot.layoutManager = LinearLayoutManager(requireContext())
         binding.rvChatbot.adapter = adapter
-
-        // ViewModel 초기화
-        chatViewModel = ViewModelProvider(this).get(ChatBotViewModel::class.java)
 
         // 메시지 업데이트 시 UI 갱신
         chatViewModel.chatMessages.observe(viewLifecycleOwner, Observer { messages ->

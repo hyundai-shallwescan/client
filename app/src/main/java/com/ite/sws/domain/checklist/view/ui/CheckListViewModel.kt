@@ -29,8 +29,8 @@ class CheckListViewModel() : ViewModel() {
 
     private val checkListRepository = CheckListRepository()
 
-    private val _checkListItems = MutableLiveData<List<GetCheckListRes>>()
-    val checkListItems: LiveData<List<GetCheckListRes>> get() = _checkListItems
+    private val _checkListItems = MutableLiveData<MutableList<GetCheckListRes>>()
+    val checkListItems: LiveData<MutableList<GetCheckListRes>> get() = _checkListItems
 
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> get() = _errorMessage
@@ -45,7 +45,7 @@ class CheckListViewModel() : ViewModel() {
     fun loadCheckListItems() {
         checkListRepository.findMyCheckList(
             onSuccess = { items ->
-                _checkListItems.value = items
+                _checkListItems.value = items.toMutableList()
             },
             onFailure = { errorRes ->
                 _errorMessage.value = errorRes.message
@@ -60,14 +60,16 @@ class CheckListViewModel() : ViewModel() {
         checkListRepository.modifyCheckListItemStatus(
             myCheckListItemId = item.myCheckListItemId,
             onSuccess = {
-                val updatedList = _checkListItems.value?.map {
-                    if (it.myCheckListItemId == item.myCheckListItemId) {
-                        it.copy(status = if (it.status == CheckStatus.CHECKED) CheckStatus.UNCHECKED else CheckStatus.CHECKED)
-                    } else {
-                        it
-                    }
+                _checkListItems.value?.let { list ->
+                    val updatedList = list.map { currentItem ->
+                        if (currentItem.myCheckListItemId == item.myCheckListItemId) {
+                            currentItem.copy(status = if (currentItem.status == CheckStatus.CHECKED) CheckStatus.UNCHECKED else CheckStatus.CHECKED)
+                        } else {
+                            currentItem
+                        }
+                    }.toMutableList()
+                    _checkListItems.value = updatedList
                 }
-                _checkListItems.value = updatedList
             },
             onFailure = { errorRes ->
                 _errorMessage.value = errorRes.message
@@ -81,7 +83,17 @@ class CheckListViewModel() : ViewModel() {
     fun addCheckListItem(postCheckListReq: PostCheckListReq) {
         checkListRepository.addMyCheckListItem(postCheckListReq,
             onSuccess = {
-                loadCheckListItems()
+                // 새로운 아이템을 리스트 맨 상단에 추가
+                val newItem = GetCheckListRes(
+                    myCheckListItemId = it.myCheckListItemId,
+                    itemName = postCheckListReq.item,
+                    status = CheckStatus.UNCHECKED // 기본 상태로 추가
+                )
+                // 기존 리스트를 MutableList로 변환
+                val updatedList = _checkListItems.value?.toMutableList() ?: mutableListOf()
+
+                updatedList.add(0, newItem) // 리스트 상단에 추가
+                _checkListItems.value = updatedList // LiveData 업데이트
             },
             onFailure = { errorRes ->
                 _errorMessage.value = errorRes.message
@@ -96,7 +108,16 @@ class CheckListViewModel() : ViewModel() {
         checkListRepository.modifyMyCheckListItem(
             itemId, newName,
             onSuccess = {
-                loadCheckListItems()
+                _checkListItems.value?.let { list ->
+                    val updatedList = list.map { currentItem ->
+                        if (currentItem.myCheckListItemId == itemId) {
+                            currentItem.copy(itemName = newName)
+                        } else {
+                            currentItem
+                        }
+                    }.toMutableList()
+                    _checkListItems.value = updatedList
+                }
             },
             onFailure = { errorRes ->
                 _errorMessage.value = errorRes.message
@@ -107,11 +128,11 @@ class CheckListViewModel() : ViewModel() {
     /**
      * 체크리스트 아이템 삭제
      */
-    fun deleteItem(itemId: Long) {
-        checkListRepository.deleteMyCheckListItem(
-            itemId,
+    fun deleteItem(checkListId: Long) {
+        checkListRepository.deleteMyCheckListItem(checkListId,
             onSuccess = {
-                loadCheckListItems()
+                val updatedList = _checkListItems.value?.filterNot { it.myCheckListItemId == checkListId }?.toMutableList()
+                _checkListItems.value = updatedList
             },
             onFailure = { errorRes ->
                 _errorMessage.value = errorRes.message
