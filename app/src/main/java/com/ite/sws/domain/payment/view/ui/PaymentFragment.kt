@@ -172,12 +172,14 @@ class PaymentFragment : Fragment() {
         val bundle = Bundle()
 
         // 여기서 productId와 quantity 정보를 번들에 추가할 수 있음
-        viewModel.cartItems.value?.items?.let { cartItems ->
-            val productIdArray = cartItems.map { it.productId }.toLongArray()
-            val quantityArray = cartItems.map { it.quantity }.toIntArray()
+        viewModel.cartItems.value?.let { cartItemsResponse ->
+            val productIdArray = cartItemsResponse.items.map { it.productId }.toLongArray()
+            val quantityArray = cartItemsResponse.items.map { it.quantity }.toIntArray()
+            val totalPrice = cartItemsResponse.totalPrice
 
             bundle.putLongArray("productIds", productIdArray)
             bundle.putIntArray("quantities", quantityArray)
+            bundle.putInt("totalPrice", totalPrice)
         }
 
         fragment.arguments = bundle

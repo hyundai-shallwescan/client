@@ -94,7 +94,7 @@
 
             </LinearLayout>
 
-            <!-- 상품 -->
+            <!-- 총 결제 금액 -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

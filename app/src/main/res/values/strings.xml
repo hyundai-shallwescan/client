@@ -95,6 +95,13 @@
     <string name="fragment_recommend_info2">무료</string>
     <string name="fragment_recommend_info3">예요!</string>
     <string name="fragment_recommend_button">그냥 결제할게요!</string>
+    <string name="fragment_payment_card_thehundai">더현대 닷컴</string>
+    <string name="fragment_payment_card_appcard_title">앱 카드 결제</string>
+    <string name="fragment_payment_card_appcard_body">현대백화점 앱에 등록한 카드로 결제하기</string>
+    <string name="fragment_payment_card_easy_title">간편 결제</string>
+    <string name="fragment_payment_card_easy_body">간편 결제 서비스 등록 후 카드 비밀번호로 결제하기</string>
+    <string name="fragment_payment_card_general_title">일반 결제</string>
+    <string name="fragment_payment_card_general_body">카드정보를 입력하여 결제하기</string>
 
     <!-- 챗봇 -->
     <string name="fragment_chatbot_comment">젤뽀가 안내하는 상품의 추가 버튼을 클릭하면 체크리스트에 추가돼요!</string>

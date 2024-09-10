@@ -2,8 +2,11 @@ package com.ite.sws.domain.payment.api.service
 
 import com.ite.sws.domain.cart.data.GetCartItemRes
 import com.ite.sws.domain.payment.data.GetRecommendRes
+import com.ite.sws.domain.payment.data.PostPaymentReq
 import retrofit2.Response
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -19,6 +22,7 @@ import retrofit2.http.Query
  * 2024.09.09   김민정       최초 생성
  * 2024.09.09   김민정       상품 결제 아이템 조회 API 호출
  * 2024.09.10   김민정       추가 결제 상품 추천 API 호출
+ * 2024.09.10   김민정       결제 등록 API 호출
  * </pre>
  */
 interface PaymentService {
@@ -37,4 +41,10 @@ interface PaymentService {
         @Path("cartId") cartId: Long,
         @Query("totalPrice") totalPrice: Int
     ): Response<GetRecommendRes>
+
+    /**
+     * 결제 등록 API
+     */
+    @POST("payments")
+    suspend fun savePayment(@Body paymentRequestDto: PostPaymentReq): Response<Void>
 }

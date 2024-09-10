@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.ite.sws.domain.cart.data.GetCartItemRes
 import com.ite.sws.domain.payment.api.repository.PaymentRepository
 import com.ite.sws.domain.payment.data.GetRecommendRes
+import com.ite.sws.domain.payment.data.PostPaymentReq
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -20,6 +21,10 @@ import kotlinx.coroutines.launch
  * 수정일        수정자        수정내용
  * ----------  --------    ---------------------------
  * 2024.09.09   김민정       최초 생성
+ * 2024.09.09   김민정       장바구니 아이템 조회
+ * 2024.09.09   김민정       추가 결제 상품 추천 요청
+ * 2024.09.09   김민정       추가 결제 상품 추천 요청
+ * 2024.09.10   김민정       결제 요청
  * </pre>
  */
 class PaymentViewModel : ViewModel() {
@@ -51,7 +56,7 @@ class PaymentViewModel : ViewModel() {
     }
 
     /**
-     * 결제 추천 요청
+     * 추가 결제 상품 추천 요청
      */
     fun findRecommendProduct(cartId: Long, totalPrice: Int) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -64,6 +69,20 @@ class PaymentViewModel : ViewModel() {
                 }
             } catch (e: Exception) {
                 _error.postValue(e.message)  // 에러 처리
+            }
+        }
+    }
+
+    /**
+     * 결제 요청
+     */
+    fun savePayment(paymentRequestDto: PostPaymentReq, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                paymentRepository.savePayment(paymentRequestDto)
+                onSuccess()
+            } catch (e: Exception) {
+                onFailure(e.message ?: "결제 요청 실패")
             }
         }
     }

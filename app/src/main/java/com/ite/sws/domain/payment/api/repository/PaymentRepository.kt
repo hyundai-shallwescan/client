@@ -4,6 +4,7 @@ import com.ite.sws.common.RetrofitClient
 import com.ite.sws.domain.cart.data.GetCartItemRes
 import com.ite.sws.domain.payment.api.service.PaymentService
 import com.ite.sws.domain.payment.data.GetRecommendRes
+import com.ite.sws.domain.payment.data.PostPaymentReq
 import retrofit2.Response
 
 /**
@@ -45,6 +46,17 @@ class PaymentRepository {
     suspend fun findRecommendProduct(cartId: Long, totalPrice: Int): GetRecommendRes? {
         return try {
             handleResponse(paymentService.findRecommendProduct(cartId, totalPrice))
+        } catch (e: Exception) {
+            throw handleNetworkException(e)
+        }
+    }
+
+    /**
+     * 결제 등록
+     */
+    suspend fun savePayment(postPaymentReq: PostPaymentReq): Void? {
+        return try {
+            handleResponse(paymentService.savePayment(postPaymentReq))
         } catch (e: Exception) {
             throw handleNetworkException(e)
         }
