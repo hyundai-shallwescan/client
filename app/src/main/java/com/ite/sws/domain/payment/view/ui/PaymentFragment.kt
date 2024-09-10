@@ -78,7 +78,10 @@ class PaymentFragment : Fragment() {
         setupSpinner()
 
         // 장바구니 아이템 가져오기
-        viewModel.findCartItemList(SharedPreferencesUtil.getCartId())
+        viewModel.findPaymentItemList(SharedPreferencesUtil.getCartId())
+
+        // 버튼 설정
+        btnSettings()
     }
 
     /**
@@ -114,7 +117,7 @@ class PaymentFragment : Fragment() {
      */
     private fun setupSpinner() {
         // Spinner에 표시될 결제 수단 배열
-        val paymentMethods = arrayOf("토스페이먼츠", "네이버페이", "카카오페이")
+        val paymentMethods = arrayOf("현대백화점카드", "무통장입금", "신용카드", "토스페이", "네이버페이")
 
         // Spinner 설정
         val spinner: Spinner = binding.spinnerPaymentMethod
@@ -124,5 +127,15 @@ class PaymentFragment : Fragment() {
             paymentMethods                        // 항목 데이터
         )
         spinner.adapter = adapter
+    }
+
+    /**
+     * 버튼 이벤트 설정
+     */
+    private fun btnSettings() {
+        // 결제 버튼
+        binding.btnPay.setOnClickListener {
+
+        }
     }
 }
