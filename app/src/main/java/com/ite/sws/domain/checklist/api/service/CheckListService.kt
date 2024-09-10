@@ -2,6 +2,7 @@ package com.ite.sws.domain.checklist.api.service
 
 import com.ite.sws.domain.checklist.data.GetCheckListRes
 import com.ite.sws.domain.checklist.data.PostCheckListReq
+import com.ite.sws.domain.checklist.data.PostCheckListRes
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -48,7 +49,7 @@ interface CheckListService {
      * 체크리스트 아이템 추가
      */
     @POST("/my-checklist")
-    fun addMyCheckListItem(@Body postCheckListReq: PostCheckListReq): Call<Void>
+    fun addMyCheckListItem(@Body postCheckListReq: PostCheckListReq): Call<PostCheckListRes>
 
     /**
      * 체크리스트 아이템 변경

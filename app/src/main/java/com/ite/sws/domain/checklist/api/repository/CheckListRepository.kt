@@ -7,6 +7,7 @@ import com.ite.sws.common.data.ErrorRes
 import com.ite.sws.domain.checklist.api.service.CheckListService
 import com.ite.sws.domain.checklist.data.GetCheckListRes
 import com.ite.sws.domain.checklist.data.PostCheckListReq
+import com.ite.sws.domain.checklist.data.PostCheckListRes
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -93,20 +94,20 @@ class CheckListRepository {
      */
     fun addMyCheckListItem(
         postCheckListReq: PostCheckListReq,
-        onSuccess: () -> Unit,
+        onSuccess: (PostCheckListRes) -> Unit,
         onFailure: (ErrorRes) -> Unit
     ) {
-        checkListService.addMyCheckListItem(postCheckListReq).enqueue(object : Callback<Void> {
-            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+        checkListService.addMyCheckListItem(postCheckListReq).enqueue(object : Callback<PostCheckListRes> {
+            override fun onResponse(call: Call<PostCheckListRes>, response: Response<PostCheckListRes>) {
                 if (response.isSuccessful) {
-                    onSuccess()
+                    response.body()?.let { onSuccess(it) }
                 } else {
                     val errorRes = Gson().fromJson(response.errorBody()?.string(), ErrorRes::class.java)
                     onFailure(errorRes)
                 }
             }
 
-            override fun onFailure(call: Call<Void>, t: Throwable) {
+            override fun onFailure(call: Call<PostCheckListRes>, t: Throwable) {
                 handleFailure(call, t, onFailure)
             }
         })
