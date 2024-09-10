@@ -2,7 +2,7 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-parcelize'
-
+    id 'com.google.gms.google-services'
 }
 
 def properties = new Properties()
@@ -16,7 +16,6 @@ if (localPropertiesFile.exists()) {
 android {
     namespace 'com.ite.sws'
     compileSdk 31
-
 
     defaultConfig {
         buildConfigField "String", "BASE_URL", "\"${properties['BASE_URL']}\""
@@ -107,4 +106,10 @@ dependencies {
 
     // paging
     implementation 'androidx.paging:paging-runtime:3.1.1'
+
+    // fcm
+    implementation platform('com.google.firebase:firebase-bom:30.3.2')
+    implementation 'com.google.firebase:firebase-messaging-ktx:22.0.0'
+    implementation 'com.google.firebase:firebase-analytics-ktx:20.2.0'
+
 }

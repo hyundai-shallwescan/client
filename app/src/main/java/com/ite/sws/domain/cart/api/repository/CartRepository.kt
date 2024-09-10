@@ -1,5 +1,6 @@
 package com.ite.sws.domain.cart.api.repository
 
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.Gson
 import com.ite.sws.common.RetrofitClient
 import com.ite.sws.common.data.ErrorRes
@@ -28,6 +29,7 @@ import retrofit2.Response
  * 2024.09.03  김민정       장바구니 아이템 삭제
  * 2024.09.08  김민정       공통 응답 처리 함수
  * 2024.09.08  김민정       공통 네트워크 예외 처리 함수
+ * 2024.09.10  남진수       FCM 토큰 발급 추가
  * </pre>
  */
 class CartRepository {
@@ -40,33 +42,34 @@ class CartRepository {
      */
     fun login(
         postCartLoginReq: PostCartLoginReq,
-        onSuccess: (JwtToken) -> Unit,
-        onFailure: (ErrorRes) -> Unit
+        onResult: (Result<JwtToken>) -> Unit
     ) {
-        val call = cartService.cartLogin(postCartLoginReq)
-        call.enqueue(object : Callback<JwtToken> {
-            override fun onResponse(call: Call<JwtToken>, response: Response<JwtToken>) {
-                if (response.isSuccessful) {
-                    response.body()?.let {
-                        onSuccess(it)
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                onResult(Result.failure(Throwable("Fetching FCM registration token failed")))
+                return@addOnCompleteListener
+            }
+            // 새로운 FCM Token 발급
+            val fcmToken = task.result
+            val call = cartService.cartLogin(fcmToken, postCartLoginReq)
+            call.enqueue(object : Callback<JwtToken> {
+                override fun onResponse(call: Call<JwtToken>, response: Response<JwtToken>) {
+                    if (response.isSuccessful) {
+                        response.body()?.let {
+                            onResult(Result.success(it))
+                        }
+                    } else {
+                        val errorBodyString = response.errorBody()?.string()
+                        val errorRes = Gson().fromJson(errorBodyString, ErrorRes::class.java)
+                        onResult(Result.failure(Throwable(errorRes.message)))
                     }
-                } else {
-                    val errorBodyString = response.errorBody()?.string()
-                    val errorRes = Gson().fromJson(errorBodyString, ErrorRes::class.java)
-                    onFailure(errorRes)
                 }
-            }
 
-            override fun onFailure(call: Call<JwtToken>, t: Throwable) {
-                t.printStackTrace()
-                val networkError = ErrorRes(
-                    status = 0,
-                    errorCode = "NETWORK_ERROR",
-                    message = t.localizedMessage ?: "Unknown network error"
-                )
-                onFailure(networkError)
-            }
-        })
+                override fun onFailure(call: Call<JwtToken>, t: Throwable) {
+                    onResult(Result.failure(t))
+                }
+            })
+        }
     }
 
     /**
