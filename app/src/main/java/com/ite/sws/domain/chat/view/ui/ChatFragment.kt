@@ -144,7 +144,7 @@ class ChatFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        WebSocketClient.disconnect()
+//        WebSocketClient.disconnect()
         _binding = null
     }
 }

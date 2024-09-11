@@ -21,7 +21,7 @@
         android:id="@+id/textName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="#000000"
+        android:textColor="@color/black"
         android:layout_marginStart="5dp"
         android:fontFamily="@font/happiness_sans_bold"
         app:layout_constraintStart_toEndOf="@id/imageProfile"
