@@ -26,8 +26,6 @@ class MyReviewRecyclerViewAdapter(
     inner class ReviewViewHolder(private val binding: ItemReviewBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(review: GetMemberReviewRes) {
-
-            // 이미지 로드
             Glide.with(binding.root.context)
                 .load(review.thumbnailImage)
                 .into(binding.imgReview)

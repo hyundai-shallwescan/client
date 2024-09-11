@@ -4,6 +4,7 @@ import android.media.Image
 import com.google.gson.Gson
 import com.ite.sws.common.RetrofitClient
 import com.ite.sws.domain.review.api.service.ReviewService
+import com.ite.sws.domain.review.data.GetReviewRes
 import com.ite.sws.domain.review.data.PostCreateReviewReq
 import okhttp3.MultipartBody
 import retrofit2.Call
@@ -52,6 +53,28 @@ class ReviewRepository {
             }
 
             override fun onFailure(call: Call<Void>, t: Throwable) {
+                onFailure(t)
+            }
+        })
+    }
+    fun getReviews(
+        page: Int,
+        size: Int,
+        onSuccess: (List<GetReviewRes>) -> Unit,
+        onFailure: (Throwable) -> Unit
+    ) {
+        reviewService.getReviews(page, size).enqueue(object : Callback<List<GetReviewRes>> {
+            override fun onResponse(call: Call<List<GetReviewRes>>, response: Response<List<GetReviewRes>>) {
+                if (response.isSuccessful) {
+                    response.body()?.let {
+                        onSuccess(it)
+                    }
+                } else {
+                    onFailure(Exception("응답에 실패했습니다."))
+                }
+            }
+
+            override fun onFailure(call: Call<List<GetReviewRes>>, t: Throwable) {
                 onFailure(t)
             }
         })

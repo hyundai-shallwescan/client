@@ -106,4 +106,8 @@ dependencies {
     implementation 'com.github.xabaras:RecyclerViewSwipeDecorator:1.4'
     //gson
     implementation 'com.google.code.gson:gson:2.8.9'
+
+    //비디오 압축
+    implementation 'com.arthenica:mobile-ffmpeg-full:4.4.LTS'
+
 }
