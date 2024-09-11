@@ -131,7 +131,7 @@ class ChatAdapter(private val messages: List<ChatMessageDTO>, private val curren
                 else -> "장바구니에 변동사항이 있습니다."
             }
             productName.text = cartPayload.productName
-            quantityText.text = cartPayload.quantity?.toString() ?: ""
+            quantityText.text = if (cartPayload.quantity != null) "수량: ${cartPayload.quantity}개" else ""
 
             // Glide를 사용하여 이미지 로드
             Glide.with(itemView.context)
@@ -162,7 +162,7 @@ class ChatAdapter(private val messages: List<ChatMessageDTO>, private val curren
                 else -> "장바군니에 변동사항이 있습니다."
             }
             productName.text = cartPayload.productName
-            quantityText.text = cartPayload.quantity?.toString() ?: ""
+            quantityText.text = if (cartPayload.quantity != null) "수량: ${cartPayload.quantity}개" else ""
             // Glide를 사용하여 이미지 로드
             Glide.with(itemView.context)
                 .load(cartPayload.productThumbnail)
@@ -190,7 +190,7 @@ class ChatAdapter(private val messages: List<ChatMessageDTO>, private val curren
                 else -> "요청리스트에 변동사항이 있습니다."
             }
             productName.text = checkPayload.productName
-            quantityText.text = checkPayload.quantity?.toString() ?: ""
+            quantityText.text = if (checkPayload.quantity != null) "수량: ${checkPayload.quantity}개" else ""
 
             // Glide를 사용하여 이미지 로드
             Glide.with(itemView.context)
@@ -221,7 +221,7 @@ class ChatAdapter(private val messages: List<ChatMessageDTO>, private val curren
                 else -> "요청리스트에 변동사항이 있습니다."
             }
             productName.text = checkPayload.productName
-            quantityText.text = checkPayload.quantity?.toString() ?: ""
+            quantityText.text = if (checkPayload.quantity != null) "수량: ${checkPayload.quantity}개" else ""
 
             // Glide를 사용하여 이미지 로드
             Glide.with(itemView.context)
