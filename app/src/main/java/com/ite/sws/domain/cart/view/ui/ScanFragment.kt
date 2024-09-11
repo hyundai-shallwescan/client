@@ -335,6 +335,9 @@ class ScanFragment : Fragment() {
             )
         } else {
             // 비회원이라면, 결제 완료 화면으로 이동
+            // 소켓 연결 해제
+            WebSocketClient.unsubscribe("/sub/cart/${SharedPreferencesUtil.getCartId()}")
+
             replaceFragmentWithAnimation(
                 R.id.container_main,
                 ExternalPaymentDoneFragment(),
@@ -344,6 +347,9 @@ class ScanFragment : Fragment() {
         }
     }
 
+    /**
+     * 웹소켓 재구독
+     */
     private fun observeNewCartWebSocket(newCartId: Long) {
         val subscriptionPath = "/sub/cart/$newCartId"
 

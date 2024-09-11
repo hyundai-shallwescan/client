@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import com.ite.sws.MainActivity
 import com.ite.sws.R
 import com.ite.sws.databinding.FragmentPaymentCardBinding
-import com.ite.sws.util.NumberFormatterUtil.formatCurrencyWithCommas
+import com.ite.sws.util.NumberFormatterUtil.formatWithComma
 import com.ite.sws.util.hideBottomNavigation
 import com.ite.sws.util.replaceFragmentWithAnimation
 import setupToolbar
@@ -68,7 +68,7 @@ class PaymentCardFragment : Fragment() {
     private fun setupProductInfo() {
         binding.apply {
             tvTotalPrice.text = arguments?.getInt("totalPrice")
-                ?.let { formatCurrencyWithCommas(it) }
+                ?.let { formatWithComma(it) }
         }
     }
 
