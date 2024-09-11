@@ -111,9 +111,10 @@ class PaymentFragment : Fragment() {
             if (recommendationResponse.remainingParkingFee != null
                 && recommendationResponse.remainingParkingFee != 0) {
                 val bottomSheetFragment = ProductRecommendBottomSheet(
+                    recommendationResponse.remainingParkingFee,
                     recommendationResponse.thumbnailImage,
                     recommendationResponse.productName,
-                    formatCurrencyWithCommas(recommendationResponse.productPrice)
+                    recommendationResponse.productPrice
                 ) {
                     // 결제 버튼 클릭 시 처리
                     navigateToPaymentCardFragment()
@@ -171,7 +172,7 @@ class PaymentFragment : Fragment() {
         val fragment = PaymentCardFragment()
         val bundle = Bundle()
 
-        // 여기서 productId와 quantity 정보를 번들에 추가할 수 있음
+        // productId와 quantity 정보를 번들에 추가
         viewModel.cartItems.value?.let { cartItemsResponse ->
             val productIdArray = cartItemsResponse.items.map { it.productId }.toLongArray()
             val quantityArray = cartItemsResponse.items.map { it.quantity }.toIntArray()
@@ -181,6 +182,9 @@ class PaymentFragment : Fragment() {
             bundle.putIntArray("quantities", quantityArray)
             bundle.putInt("totalPrice", totalPrice)
         }
+
+        // 결제 수단 번들에 추가
+        bundle.putString("paymentType", binding.spinnerPaymentMethod.selectedItem.toString())
 
         fragment.arguments = bundle
 

@@ -8,6 +8,8 @@ import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.ite.sws.R
 import com.ite.sws.databinding.BottomSheetProductRecommendBinding
+import com.ite.sws.util.NumberFormatterUtil.formatCurrencyWithCommas
+import com.ite.sws.util.NumberFormatterUtil.formatWithComma
 
 /**
  * 추가 결제 상품 추천 바텀 시트
@@ -24,9 +26,10 @@ import com.ite.sws.databinding.BottomSheetProductRecommendBinding
  * </pre>
  */
 class ProductRecommendBottomSheet(
+    private val ramainParkingPrice: Int?,
     private val productThumbnail: String?,
     private val productName: String?,
-    private val productPrice: String?,
+    private val productPrice: Int?,
     private val onPayClickListener: () -> Unit
 ) : BottomSheetDialogFragment() {
 
@@ -66,8 +69,9 @@ class ProductRecommendBottomSheet(
             Glide.with(binding.root.context)
                 .load(productThumbnail)
                 .into(binding.imgProductThumbnail)
+            tvAmount.text = (ramainParkingPrice?.let { formatWithComma(it) } ?: "0").toString()
             tvProductName.text = productName ?: "상품 이름 없음"
-            tvProductPrice.text = productPrice ?: "0원"
+            tvProductPrice.text = productPrice?.let { formatCurrencyWithCommas(it) } ?: "0원"
         }
     }
 

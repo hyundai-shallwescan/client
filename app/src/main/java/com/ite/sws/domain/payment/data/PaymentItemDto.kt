@@ -14,5 +14,5 @@ package com.ite.sws.domain.payment.data
  */
 data class PaymentItemDto(
     val productId: Long,
-    val quantity: Long
+    val quantity: Int
 )

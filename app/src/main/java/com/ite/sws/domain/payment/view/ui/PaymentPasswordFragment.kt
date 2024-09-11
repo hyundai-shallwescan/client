@@ -6,12 +6,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.ite.sws.MainActivity
 import com.ite.sws.databinding.FragmentPaymentPasswordBinding
 import com.ite.sws.domain.payment.data.PaymentItemDto
 import com.ite.sws.domain.payment.data.PostPaymentReq
+import com.ite.sws.util.SharedPreferencesUtil
 import com.ite.sws.util.hideBottomNavigation
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import setupToolbar
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 /**
  * 결제 비밀번호 입력 프래그먼트
@@ -59,6 +67,12 @@ class PaymentPasswordFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // ViewModel 초기화
+        viewModel = ViewModelProvider(this).get(PaymentViewModel::class.java)
+
+        // ViewModel에서 발생한 이벤트를 관찰
+        observeViewModel()
+
         // 버튼 설정
         btnSettings()
     }
@@ -69,51 +83,71 @@ class PaymentPasswordFragment : Fragment() {
     private fun btnSettings() {
         // 결제하기
         binding.btnPay.setOnClickListener {
-//            makePaymentRequest()
+            makePaymentRequest()
         }
     }
 
     /**
      * 결제 요청 처리
      */
-//    private fun makePaymentRequest() {
-//        // Bundle로부터 결제 정보 가져오기
-//        val cartId = arguments?.getLong("cartId") ?: return
-//        val totalPrice = arguments?.getInt("totalPrice") ?: return
-//        val productIds = arguments?.getLongArray("productIds") ?: return
-//        val quantities = arguments?.getIntArray("quantities") ?: return
-//
-//        // 현재 시간 가져오기
-//        val paymentTime = getCurrentTime()
-//
-//        // 결제 아이템 리스트 생성
-//        val items = productIds.zip(quantities).map { (productId, quantity) ->
-//            PaymentItemDto(productId, quantity)
-//        }
-//
-//        // 결제 요청 DTO 생성
-//        val paymentRequestDto = PostPaymentReq(
-//            cartId = cartId,
-//            totalPrice = totalPrice,
-//            card = "hyundai",  // 카드 정보는 하드코딩 예시
-//            paymentKey = "aaaalalalal",  // 결제 키 정보
-//            paymentTime = paymentTime,
-//            items = items
-//        )
-//
-//        // ViewModel을 통해 결제 요청
-//        viewModel.savePayment(paymentRequestDto, onSuccess = {
-//            Toast.makeText(requireContext(), "결제가 완료되었습니다.", Toast.LENGTH_SHORT).show()
-//        }, onFailure = { errorMessage ->
-//            Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
-//        })
-//    }
-//
-//    /**
-//     * 현재 시간을 "yyyy-MM-dd HH:mm:ss" 형식으로 반환
-//     */
-//    private fun getCurrentTime(): String {
-//        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-//        return dateFormat.format(Date())
-//    }
+    private fun makePaymentRequest() {
+        // Bundle로부터 결제 정보 가져오기
+        val cartId = SharedPreferencesUtil.getCartId()
+        val paymentType = arguments?.getString("paymentType") ?: return
+        val totalPrice = arguments?.getInt("totalPrice") ?: return
+        val productIds = arguments?.getLongArray("productIds") ?: return
+        val quantities = arguments?.getIntArray("quantities") ?: return
+
+        // 현재 시간 가져오기
+        val paymentTime = getCurrentTime()
+
+        // 결제 아이템 리스트 생성
+        val items = productIds.zip(quantities.map { it.toLong() }).map { (productId, quantity) ->
+            PaymentItemDto(productId, quantity.toInt())
+        }
+
+        // 결제 요청 DTO 생성
+        val paymentRequestDto = PostPaymentReq(
+            cartId = cartId,
+            totalPrice = totalPrice,
+            card = paymentType,  // 카드 정보는 하드코딩 예시
+            paymentKey = "heendyheendy",  // 결제 키 정보
+            paymentTime = paymentTime,
+            items = items
+        )
+
+        // ViewModel을 통해 결제 요청
+        viewModel.savePayment(paymentRequestDto, onSuccess = {
+            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
+                Toast.makeText(requireContext(), "결제가 완료되었습니다.", Toast.LENGTH_SHORT).show()
+            }
+        }, onFailure = { errorMessage ->
+            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
+                println("=================")
+                println(errorMessage)
+                println("=================")
+                Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
+    /**
+     * 현재 시간을 "yyyy-MM-dd HH:mm:ss" 형식으로 반환
+     */
+    private fun getCurrentTime(): String {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+        return dateFormat.format(Date())
+    }
+
+    /**
+     * ViewModel의 LiveData 관찰
+     */
+    private fun observeViewModel() {
+        // 에러 상태 관찰
+        viewModel.error.observe(viewLifecycleOwner) { errorMessage ->
+            errorMessage?.let {
+                Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 }

@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import com.ite.sws.MainActivity
 import com.ite.sws.R
 import com.ite.sws.databinding.FragmentPaymentCardBinding
+import com.ite.sws.util.NumberFormatterUtil.formatCurrencyWithCommas
 import com.ite.sws.util.hideBottomNavigation
 import com.ite.sws.util.replaceFragmentWithAnimation
 import setupToolbar
@@ -54,8 +55,21 @@ class PaymentCardFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // 추천된 상품 정보 표시
+        setupProductInfo()
+
         // 버튼 설정
         btnSettings()
+    }
+
+    /**
+     * 결제 총 금액을 View에 설정
+     */
+    private fun setupProductInfo() {
+        binding.apply {
+            tvTotalPrice.text = arguments?.getInt("totalPrice")
+                ?.let { formatCurrencyWithCommas(it) }
+        }
     }
 
     /**
@@ -64,22 +78,22 @@ class PaymentCardFragment : Fragment() {
     private fun btnSettings() {
         // 각 레이아웃에 클릭 이벤트 설정
         binding.layoutAppCardPayment.setOnClickListener {
-            navigateToPaymentPasswordFragment("AppCard")
+            navigateToPaymentPasswordFragment()
         }
 
         binding.layoutEasyPayment.setOnClickListener {
-            navigateToPaymentPasswordFragment("Easy")
+            navigateToPaymentPasswordFragment()
         }
 
         binding.layoutGeneralPayment.setOnClickListener {
-            navigateToPaymentPasswordFragment("General")
+            navigateToPaymentPasswordFragment()
         }
     }
 
     /**
      * 결제 비밀번호 프래그먼트로 이동 및 데이터 전달
      */
-    private fun navigateToPaymentPasswordFragment(paymentType: String) {
+    private fun navigateToPaymentPasswordFragment() {
         val fragment = PaymentPasswordFragment()
         val bundle = Bundle()
 
@@ -87,9 +101,6 @@ class PaymentCardFragment : Fragment() {
         arguments?.let {
             bundle.putAll(it)
         }
-
-        // 결제 타입 추가
-        bundle.putString("paymentType", paymentType)
 
         fragment.arguments = bundle
 
