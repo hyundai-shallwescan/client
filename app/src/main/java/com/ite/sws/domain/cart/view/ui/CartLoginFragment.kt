@@ -60,17 +60,19 @@ class CartLoginFragment : Fragment() {
 
             if (loginId.isNotEmpty() && password.isNotEmpty()) {
                 // 로그인 요청
-                cartRepository.login(postCartLoginReq,
-                    onSuccess = { jwtToken ->
-                        saveAccessToken(jwtToken.accessToken)
-                        saveName(loginId)
-                        binding.nicknameTitle.text = "로그인 성공 AccessToken: ${jwtToken.accessToken}"
-                        navigateToNextScreen()
-                    },
-                    onFailure = { errorRes ->
-                        binding.passwordTitle.text = "로그인 실패: ${errorRes.message}"
-                    }
-                )
+                cartRepository.login(postCartLoginReq) { result ->
+                    result.fold(
+                        onSuccess = { jwtToken ->
+                            saveAccessToken(jwtToken.accessToken)
+                            saveName(loginId)
+                            binding.nicknameTitle.text = "로그인 성공 AccessToken: ${jwtToken.accessToken}"
+                            navigateToNextScreen()
+                        },
+                        onFailure = { throwable ->
+                            binding.passwordTitle.text = "로그인 실패: ${throwable.message}"
+                        }
+                    )
+                }
             } else {
                 Toast.makeText(requireContext(), "Please enter both ID and Password", Toast.LENGTH_SHORT).show()
             }

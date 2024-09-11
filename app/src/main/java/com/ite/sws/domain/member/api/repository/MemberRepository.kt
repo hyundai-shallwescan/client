@@ -10,6 +10,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import android.util.Log
+import com.google.firebase.messaging.FirebaseMessaging
 import com.ite.sws.domain.member.data.GetMemberPaymentRes
 import com.ite.sws.domain.member.data.GetMemberRes
 import com.ite.sws.domain.member.data.GetMemberReviewRes
@@ -35,6 +36,7 @@ import com.ite.sws.domain.member.data.PostMemberReq
  * 2024.09.04   정은지        회원 정보 수정 추가
  * 2024.09.05   정은지        구매 내역 조회 추가
  * 2024.09.06   정은지        작성 리뷰 조회 추가
+ * 2024.09.10   남진수        FCM 토큰 발급 추가
  * </pre>
  */
 class MemberRepository {
@@ -49,41 +51,53 @@ class MemberRepository {
         onSuccess: () -> Unit,
         onFailure: (ErrorRes) -> Unit
     ) {
-        val call = memberService.login(postLoginReq)
-        call.enqueue(object : Callback<PostLoginRes> {
-            override fun onResponse(call: Call<PostLoginRes>, response: Response<PostLoginRes>) {
-                if (response.isSuccessful) {
-                    // 액세스 토큰 SharedPreferences에 저장
-                    response.headers()["Authorization"]?.let { tokenHeader ->
-                        val token = tokenHeader.removePrefix("Bearer ")
-                        SharedPreferencesUtil.setAccessToken(token)
-                    }
-                    // 장바구니 아이디 SharedPreferences에 저장
-                    response.body()?.cartId?.let { cartId ->
-                        SharedPreferencesUtil.setCartId(cartId)
-                        Log.d("MemberRepository", "장바구니 아이디: $cartId")
-                    }
-                    // 이름 SharedPreferences에 저장
-                    getMyInfo(
-                        onSuccess = { memberRes ->
-                            SharedPreferencesUtil.setCartMemberName(memberRes.name)
-                            onSuccess()
-                            Log.d("MemberRepository", "이름: ${memberRes.name}")
-                        },
-                        onFailure = { errorRes ->
-                            onFailure(errorRes)
-                        }
-                    )
-                } else {
-                    val errorRes = Gson().fromJson(response.errorBody()?.string(), ErrorRes::class.java)
-                    onFailure(errorRes)
-                }
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                onFailure(ErrorRes(0, "FCM_TOKEN_ERROR", "FCM 토큰 발급 실패"))
+                return@addOnCompleteListener
             }
 
-            override fun onFailure(call: Call<PostLoginRes>, t: Throwable) {
-                handleFailure(call, t, onFailure)
-            }
-        })
+            // 새로운 FCM Token 발급
+            val fcmToken = task.result
+            val call = memberService.login(fcmToken, postLoginReq)
+            call.enqueue(object : Callback<PostLoginRes> {
+                override fun onResponse(
+                    call: Call<PostLoginRes>,
+                    response: Response<PostLoginRes>
+                ) {
+                    if (response.isSuccessful) {
+                        // 액세스 토큰 SharedPreferences에 저장
+                        response.headers()["Authorization"]?.let { tokenHeader ->
+                            val token = tokenHeader.removePrefix("Bearer ")
+                            SharedPreferencesUtil.setAccessToken(token)
+                        }
+                        // 장바구니 아이디 SharedPreferences에 저장
+                        response.body()?.cartId?.let { cartId ->
+                            SharedPreferencesUtil.setCartId(cartId)
+                            Log.d("MemberRepository", "장바구니 아이디: $cartId")
+                        }
+                        // 이름 SharedPreferences에 저장
+                        getMyInfo(
+                            onSuccess = { memberRes ->
+                                SharedPreferencesUtil.setCartMemberName(memberRes.name)
+                                onSuccess()
+                                Log.d("MemberRepository", "이름: ${memberRes.name}")
+                            },
+                            onFailure = { errorRes ->
+                                onFailure(errorRes)
+                            }
+                        )
+                    } else {
+                        val errorRes = Gson().fromJson(response.errorBody()?.string(), ErrorRes::class.java)
+                        onFailure(errorRes)
+                    }
+                }
+
+                override fun onFailure(call: Call<PostLoginRes>, t: Throwable) {
+                    handleFailure(call, t, onFailure)
+                }
+            })
+        }
     }
 
     /**
