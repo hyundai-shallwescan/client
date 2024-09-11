@@ -102,6 +102,10 @@
     <string name="fragment_payment_card_easy_body">간편 결제 서비스 등록 후 카드 비밀번호로 결제하기</string>
     <string name="fragment_payment_card_general_title">일반 결제</string>
     <string name="fragment_payment_card_general_body">카드정보를 입력하여 결제하기</string>
+    <string name="fragment_qr_title">스캔앤고 결제 완료</string>
+    <string name="fragment_qr_body">전용 출구에서 QR코드를 스캔해주세요.</string>
+    <string name="fragment_qr_button">결제 내역 확인하기</string>
+    <string name="fragment_payment_done">결제가 완료되었습니다.</string>
 
     <!-- 챗봇 -->
     <string name="fragment_chatbot_comment">젤뽀가 안내하는 상품의 추가 버튼을 클릭하면 체크리스트에 추가돼요!</string>

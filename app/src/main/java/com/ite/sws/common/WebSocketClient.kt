@@ -23,12 +23,17 @@ import ua.naiksoftware.stomp.dto.StompMessage
  * 2024.08.31  	남진수       최초 생성
  * 2024.09.01  	남진수       JWT 토큰 포함하여 WebSocket 연결 설정
  * 2024.09.03  	남진수       구독 기능 추가
+ * 2024.09.11  	김민정       구독 정보 저장
+ * 2024.09.11  	김민정       구독 해지 기능 추가
  * </pre>
  */
 object WebSocketClient {
     private const val URL = "ws://10.0.2.2:8080/ws"
     private lateinit var stompClient: StompClient
     private var jwtToken: String? = null
+
+    // 구독을 관리하기 위한 Map (구독 ID -> 구독 객체)
+    private val subscriptions = mutableMapOf<String, io.reactivex.disposables.Disposable>()
 
     /**
      * JWT 토큰을 포함하여 WebSocket 연결 설정
@@ -62,12 +67,15 @@ object WebSocketClient {
      */
     @SuppressLint("CheckResult")
     fun subscribe(destination: String, messageHandler: (String) -> Unit) {
-        stompClient.topic(destination)
+        val disposable = stompClient.topic(destination)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe { message ->
                 messageHandler(message.payload)
             }
+
+        // 구독 정보를 저장 (destination을 구독 ID로 사용)
+        subscriptions[destination] = disposable
     }
 
     /**
@@ -98,5 +106,13 @@ object WebSocketClient {
             }, { error ->
                 errorHandler(error)
             })
+    }
+
+    /**
+     * 구독 해지 기능
+     */
+    fun unsubscribe(destination: String) {
+        subscriptions[destination]?.dispose() // 구독 해지
+        subscriptions.remove(destination)     // 구독 정보 삭제
     }
 }

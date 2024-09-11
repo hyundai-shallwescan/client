@@ -55,7 +55,7 @@ class PaymentCardFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // 추천된 상품 정보 표시
+        // 결제 총 금액 설정
         setupProductInfo()
 
         // 버튼 설정
@@ -107,7 +107,7 @@ class PaymentCardFragment : Fragment() {
         replaceFragmentWithAnimation(
             R.id.container_main,
             fragment,
-            true,
+            false,
             false
         )
     }

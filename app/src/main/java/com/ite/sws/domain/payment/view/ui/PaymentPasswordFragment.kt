@@ -31,6 +31,7 @@ import java.util.Locale
  * 수정일        수정자        수정내용
  * ----------  --------    ---------------------------
  * 2024.09.10   김민정       최초 생성
+ * 2024.09.10   김민정       결제 요청
  * </pre>
  */
 class PaymentPasswordFragment : Fragment() {
@@ -44,7 +45,6 @@ class PaymentPasswordFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
     }
 
     override fun onCreateView(
@@ -110,7 +110,7 @@ class PaymentPasswordFragment : Fragment() {
         val paymentRequestDto = PostPaymentReq(
             cartId = cartId,
             totalPrice = totalPrice,
-            card = paymentType,  // 카드 정보는 하드코딩 예시
+            card = paymentType,
             paymentKey = "heendyheendy",  // 결제 키 정보
             paymentTime = paymentTime,
             items = items
@@ -123,9 +123,6 @@ class PaymentPasswordFragment : Fragment() {
             }
         }, onFailure = { errorMessage ->
             viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
-                println("=================")
-                println(errorMessage)
-                println("=================")
                 Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
             }
         })
