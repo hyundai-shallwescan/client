@@ -9,6 +9,7 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.PUT
@@ -29,12 +30,17 @@ import retrofit2.http.Query
  * 2024.09.02  김민정       장바구니 아이템 조회 API 호출
  * 2024.09.03  김민정       장바구니 아이템 수량 변경 API 호출
  * 2024.09.03  김민정       장바구니 아이템 삭제 API 호출
+ * 2024.09.10  남진수       FCM 토큰 발급 추가
  * </pre>
  */
 interface CartService {
 
+    /**
+     * 장바구니 로그인 API
+     */
     @POST("carts/login")
-    fun cartLogin(@Body request: PostCartLoginReq
+    fun cartLogin(
+        @Header("FCM-TOKEN") fcmToken: String, @Body request: PostCartLoginReq
     ): Call<JwtToken>
 
     /**
