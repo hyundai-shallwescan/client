@@ -39,6 +39,9 @@ class MyReviewRecyclerViewAdapter :
         : androidx.recyclerview.widget.RecyclerView.ViewHolder(binding.root) {
 
         fun bind(review: GetMemberReviewRes) {
+            Glide.with(binding.root.context)
+                .load(review.thumbnailImage)
+                .into(binding.imgReview)
             // 이미지와 데이터를 바인딩
             Glide.with(binding.root.context).load(review.thumbnailImage).into(binding.imgReviewThumbnail)
         }

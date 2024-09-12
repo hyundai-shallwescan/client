@@ -1,7 +1,10 @@
 package com.ite.sws.domain.review.api.repository
 
+import android.media.Image
+import com.google.gson.Gson
 import com.ite.sws.common.RetrofitClient
 import com.ite.sws.domain.review.api.service.ReviewService
+import com.ite.sws.domain.review.data.GetReviewRes
 import com.ite.sws.domain.review.data.PostCreateReviewReq
 import okhttp3.MultipartBody
 import retrofit2.Call
@@ -31,13 +34,16 @@ class ReviewRepository {
     fun createReview(
         postCreateReviewReq: PostCreateReviewReq,
         shortFormFile: File,
+        image: File,
         onSuccess: () -> Unit,
         onFailure: (Throwable) -> Unit
     ) {
-        val postCreateReviewReqBody = createRequestBody(postCreateReviewReq.toString(), "text/plain")
-        val shortFormPart = createMultipartBodyPart("shortForm", shortFormFile, "video/*")
-
-        reviewService.uploadReview(postCreateReviewReqBody, shortFormPart).enqueue(object : Callback<Void> {
+        val gson = Gson()
+        val postCreateReviewReqJson = gson.toJson(postCreateReviewReq)
+        val postCreateReviewReqBody = createRequestBody(postCreateReviewReqJson, "application/json")
+        val shortFormPart = createMultipartBodyPart("shortForm", shortFormFile, "File")
+        val imagePart = createMultipartBodyPart("image", image, "File")
+        reviewService.uploadReview(postCreateReviewReqBody,imagePart, shortFormPart).enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 if (response.isSuccessful) {
                     onSuccess()
@@ -51,8 +57,31 @@ class ReviewRepository {
             }
         })
     }
+    fun getReviews(
+        page: Int,
+        size: Int,
+        onSuccess: (List<GetReviewRes>) -> Unit,
+        onFailure: (Throwable) -> Unit
+    ) {
+        reviewService.getReviews(page, size).enqueue(object : Callback<List<GetReviewRes>> {
+            override fun onResponse(call: Call<List<GetReviewRes>>, response: Response<List<GetReviewRes>>) {
+                if (response.isSuccessful) {
+                    response.body()?.let {
+                        onSuccess(it)
+                    }
+                } else {
+                    onFailure(Exception("응답에 실패했습니다."))
+                }
+            }
 
-    private fun createRequestBody(content: String, mediaType: String) =
+            override fun onFailure(call: Call<List<GetReviewRes>>, t: Throwable) {
+                onFailure(t)
+            }
+        })
+    }
+
+
+    private fun createRequestBody(content: String, mediaType: String)=
         content.toRequestBody(mediaType.toMediaTypeOrNull())
 
     private fun createMultipartBodyPart(partName: String, file: File, mediaType: String): MultipartBody.Part {

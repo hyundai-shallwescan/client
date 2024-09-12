@@ -1,5 +1,6 @@
 package com.ite.sws.domain.review.api.service
 
+import com.ite.sws.domain.review.data.GetReviewRes
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
@@ -7,6 +8,7 @@ import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
+import retrofit2.http.Query
 
 
 /**
@@ -28,9 +30,13 @@ interface ReviewService {
     @POST("/reviews")
     fun uploadReview(
         @Part("postCreateReviewReq") postCreateReviewReq: RequestBody,
+        @Part image: MultipartBody.Part,
         @Part shortForm: MultipartBody.Part): Call<Void>
 
 
-
-
+    @GET("/reviews")
+    fun getReviews(
+        @Query("page") page: Int,
+        @Query("size") size: Int
+    ): Call<List<GetReviewRes>>
 }

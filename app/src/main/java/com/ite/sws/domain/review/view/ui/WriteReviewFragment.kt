@@ -8,14 +8,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ite.sws.databinding.FragmentMyReviewListBinding
 import com.ite.sws.domain.member.data.GetMemberPaymentRes
-import com.ite.sws.domain.member.view.ui.MyReviewFragment
-import com.ite.sws.domain.member.view.ui.WrittenReviewFragment
 import com.ite.sws.domain.review.view.adapter.WriteReviewRecyclerViewAdapter
+import com.ite.sws.util.replaceFragmentWithAnimation
 
 /**
  * 리뷰 작성 프래그먼트
@@ -74,15 +72,16 @@ class WriteReviewFragment : Fragment() {
 
         val adapter = WriteReviewRecyclerViewAdapter(items) { paymentItem ->
             val bundle = Bundle().apply {
-                putParcelable("paymentItem", paymentItem)
+                putLong("paymentItemId",paymentItem.paymentItemId)
+                putLong("productId",paymentItem.productId)
+                putString("productName",paymentItem.name)
             }
             val fragment = ReviewUploadFragment().apply {
                 arguments = bundle
             }
 
-            val transaction = parentFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container_review_write, fragment)
-            transaction.commit()
+            replaceFragmentWithAnimation(R.id.container_main,fragment)
+
         }
         binding.rvPayment.adapter = adapter
     }
@@ -97,20 +96,3 @@ class WriteReviewFragment : Fragment() {
     }
 }
 
-
-//create the button and ic,  apply the recyclable view in here
-//MyPaymentRecyclerViewAdapter 적용
-
-//when this fragment is executed. the getMyReviewList method will be executed from the ReviewRepository(this is the rest api)
-/*
-    data class GetMemberReviewRes(
-    val createdAt: LocalDateTime,
-    val paymentItemId : Long,
-    val name: String,
-    val thumbnailImage: String,
-    val isReviewWritten: Char
-)
- */
-//There is the Recyclable view in the WriteReviewFragment which is at the fragment_my_review_list.xml
-//If the isReviewWritten is 'N' show the icon which is at drawable/fragment_my_review_already_created_review_img.xml otherwise show the drawable/fragment_my_review_create_btn
-//When click the input button which name is the drawable/fragment_my_review_create_btn go to the new Fragment which name is the ReviewUploadFragment
