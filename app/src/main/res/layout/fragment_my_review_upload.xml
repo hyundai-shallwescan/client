@@ -6,8 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".domain.review.view.ui.ReviewUploadFragment">
 
-
-
     <!-- 툴바 -->
     <include
         android:id="@+id/toolbar"

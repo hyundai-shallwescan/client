@@ -11,16 +11,21 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.ite.sws.domain.review.data.GetReviewRes
 import com.ite.sws.R
+import com.ite.sws.util.hideBottomNavigation
+
 
 
 class ReviewAdapter(
     private val reviews: List<GetReviewRes>,
     private val onThumbnailClick: (GetReviewRes) -> Unit
+
 ) : RecyclerView.Adapter<ReviewAdapter.ReviewViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReviewViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_review_detail, parent, false)
+
         return ReviewViewHolder(view)
+
     }
 
     override fun onBindViewHolder(holder: ReviewViewHolder, position: Int) {

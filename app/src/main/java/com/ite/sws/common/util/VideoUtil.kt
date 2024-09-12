@@ -35,17 +35,20 @@ object VideoUtil {
             extractor.selectTrack(trackIndex)
             val inputFormat = extractor.getTrackFormat(trackIndex)
 
-            val codec = MediaCodec.createDecoderByType(inputFormat.getString(MediaFormat.KEY_MIME)!!)
-            codec.configure(inputFormat, null, null, 0)
-            codec.start()
-
-            val muxer = MediaMuxer(outputFilePath, MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4)
+            // Configure encoder
             val outputFormat = MediaFormat.createVideoFormat(
-                inputFormat.getString(MediaFormat.KEY_MIME)!!,
+                MediaFormat.MIMETYPE_VIDEO_AVC,
                 inputFormat.getInteger(MediaFormat.KEY_WIDTH),
                 inputFormat.getInteger(MediaFormat.KEY_HEIGHT)
             )
+            outputFormat.setInteger(MediaFormat.KEY_BIT_RATE, 1000000)
+            outputFormat.setInteger(MediaFormat.KEY_FRAME_RATE, 30)
 
+            val encoder = MediaCodec.createEncoderByType(MediaFormat.MIMETYPE_VIDEO_AVC)
+            encoder.configure(outputFormat, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE)
+            encoder.start()
+
+            val muxer = MediaMuxer(outputFilePath, MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4)
             val muxerTrackIndex = muxer.addTrack(outputFormat)
             muxer.start()
 
@@ -66,8 +69,8 @@ object VideoUtil {
                 }
             }
 
-            codec.stop()
-            codec.release()
+            encoder.stop()
+            encoder.release()
             muxer.stop()
             muxer.release()
             extractor.release()
@@ -79,6 +82,7 @@ object VideoUtil {
             onFailure(e)
         }
     }
+
 
     private fun selectTrack(extractor: MediaExtractor): Int {
         for (i in 0 until extractor.trackCount) {
