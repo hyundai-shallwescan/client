@@ -9,10 +9,8 @@ import android.widget.VideoView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.ite.sws.domain.review.data.GetReviewRes
 import com.ite.sws.R
-import com.ite.sws.util.hideBottomNavigation
-
+import com.ite.sws.domain.review.data.GetReviewRes
 
 
 class ReviewAdapter(
