@@ -81,7 +81,7 @@ class ReviewAdapter(
     }
 
     private fun getToolbarHeight(view: View): Int {
-        val toolbar = (view.context as? Activity)?.findViewById<View>(R.id.tool_bar)
+        val toolbar = (view.context as? Activity)?.findViewById<View>(R.id.toolbar)
         return toolbar?.height ?: 0
     }
 
