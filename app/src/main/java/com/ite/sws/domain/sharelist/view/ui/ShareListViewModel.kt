@@ -53,13 +53,32 @@ class ShareListViewModel : BaseShareListViewModel() {
      * 공유체크리스트 아이템 체크 상태 변경
      */
     override fun modifyShareListCheck(cartId: Long, productId: Long) {
-        TODO("Not yet implemented")
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                shareListRepository.modifyshareListItem(cartId, productId)
+            } catch (e: Exception) {
+                _error.postValue(e.message)
+            }
+        }
     }
 
     /**
      * 공유체크리스트 아이템 삭제
      */
     override fun removeShareListItem(cartId: Long, productId: Long) {
-        TODO("Not yet implemented")
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                shareListRepository.removeShareListItem(cartId, productId)
+            } catch (e: Exception) {
+                _error.postValue(e.message)
+            }
+        }
+    }
+
+    /**
+     * 공유 체크리스트 아이템 업데이트
+     */
+    override fun updateShareListItems(newItems: List<ShareListItem>) {
+        _shareListItems.value = newItems
     }
 }
