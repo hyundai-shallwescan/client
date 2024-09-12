@@ -1,5 +1,6 @@
 package com.ite.sws.domain.member.api.repository
 
+import android.content.Context
 import com.google.gson.Gson
 import com.ite.sws.common.RetrofitClient
 import com.ite.sws.common.data.ErrorRes
@@ -17,6 +18,7 @@ import com.ite.sws.domain.member.data.GetMemberReviewRes
 import com.ite.sws.domain.member.data.PatchMemberReq
 import com.ite.sws.domain.member.data.PostLoginRes
 import com.ite.sws.domain.member.data.PostMemberReq
+import com.google.android.gms.wearable.Wearable
 
 /**
  * 회원 Repository
@@ -37,6 +39,7 @@ import com.ite.sws.domain.member.data.PostMemberReq
  * 2024.09.05   정은지        구매 내역 조회 추가
  * 2024.09.06   정은지        작성 리뷰 조회 추가
  * 2024.09.10   남진수        FCM 토큰 발급 추가
+ * 2024.09.12   남진수        FCM 토큰을 워치로 전송 추가
  * </pre>
  */
 class MemberRepository {
@@ -47,6 +50,7 @@ class MemberRepository {
      * 로그인
      */
     fun login(
+        context: Context,
         postLoginReq: PostLoginReq,
         onSuccess: () -> Unit,
         onFailure: (ErrorRes) -> Unit
@@ -70,6 +74,7 @@ class MemberRepository {
                         response.headers()["Authorization"]?.let { tokenHeader ->
                             val token = tokenHeader.removePrefix("Bearer ")
                             SharedPreferencesUtil.setAccessToken(token)
+                            sendLoginTokenToWear(context, token)
                         }
                         // 장바구니 아이디 SharedPreferences에 저장
                         response.body()?.cartId?.let { cartId ->
@@ -297,4 +302,32 @@ class MemberRepository {
         )
         onFailure(networkError)
     }
+
+    /**
+     * FCM 토큰을 워치로 전송
+     */
+    private fun sendLoginTokenToWear(context: Context, token: String) {
+        val message = token.toByteArray()
+
+        Wearable.getNodeClient(context).connectedNodes
+            .addOnSuccessListener { nodes ->
+                if (nodes.isEmpty()) {
+                    Log.e("WearableMessageClient", "연결된 기기가 없습니다.")
+                } else {
+                    for (node in nodes) {
+                        Wearable.getMessageClient(context).sendMessage(node.id, "/login_token", message)
+                            .addOnSuccessListener {
+                                Log.d("WearableMessageClient", "Message successfully sent to ${node.displayName} (${node.id})")
+                            }
+                            .addOnFailureListener { exception ->
+                                Log.e("WearableMessageClient", "Failed to send message to ${node.displayName} (${node.id}): $exception")
+                            }
+                    }
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.e("WearableMessageClient", "Failed to get connected nodes: $exception")
+            }
+    }
+
 }

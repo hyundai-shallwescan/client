@@ -66,8 +66,8 @@ class ParkingFragment : Fragment() {
                         // 추가 결제를 해야 무료 주차 가능한 경우
                         if (parkingInfo.feeForFreeParking > 0) {
                             binding.parkingPaymentMessage.text = createSpannableString(
-                                parkingInfo.feeForFreeParking.toString() + "원만 추가하면\n주차 정산이 무료예요!",
-                                parkingInfo.feeForFreeParking.toString()
+                                "${NumberFormatterUtil.formatCurrencyWithCommas(parkingInfo.feeForFreeParking.toInt())}만 추가하면\n주차 정산이 무료예요!",
+                                NumberFormatterUtil.formatCurrencyWithCommas(parkingInfo.feeForFreeParking.toInt())
                             )
                           // 장바구니에 담긴 금액으로 무료 주차가 가능한 경우
                         } else if (parkingInfo.freeParkingTime.matches(Regex("^(?:[01]?\\d|2[0-3]):[0-5]\\d$"))) {
@@ -86,8 +86,8 @@ class ParkingFragment : Fragment() {
                         // 추가 결제를 해야 무료 주차 가능한 경우
                         if (parkingInfo.feeForFreeParking > 0) {
                             binding.parkingPaymentMessage.text = createSpannableString(
-                                parkingInfo.feeForFreeParking.toString() + "원만 추가하면\n주차 정산이 무료예요!",
-                                parkingInfo.feeForFreeParking.toString()
+                                "${NumberFormatterUtil.formatCurrencyWithCommas(parkingInfo.feeForFreeParking.toInt())}만 추가하면\n주차 정산이 무료예요!",
+                                NumberFormatterUtil.formatCurrencyWithCommas(parkingInfo.feeForFreeParking.toInt())
                             )
                           // 결제 완료된 금액으로 무료 주차가 가능한 경우
                         } else if (parkingInfo.freeParkingTime.matches(Regex("^(?:[01]?\\d|2[0-3]):[0-5]\\d$"))) {

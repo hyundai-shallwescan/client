@@ -118,4 +118,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging-ktx:22.0.0'
     implementation 'com.google.firebase:firebase-analytics-ktx:20.2.0'
 
+    // watch
+    implementation 'com.google.android.gms:play-services-wearable:18.0.0'
+
 }
