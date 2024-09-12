@@ -30,12 +30,11 @@ object VideoUtil {
             extractor.setDataSource(context, inputUri, null)
             val trackIndex = selectTrack(extractor)
             if (trackIndex < 0) {
-                throw IllegalArgumentException("No video track found in the file")
+                throw IllegalArgumentException("선택된 비디오가 존재하지 않습니다.")
             }
             extractor.selectTrack(trackIndex)
             val inputFormat = extractor.getTrackFormat(trackIndex)
 
-            // Configure encoder
             val outputFormat = MediaFormat.createVideoFormat(
                 MediaFormat.MIMETYPE_VIDEO_AVC,
                 inputFormat.getInteger(MediaFormat.KEY_WIDTH),
@@ -119,16 +118,6 @@ object VideoUtil {
         return Pair(width, height)
     }
 
-    fun uriToFilePath(context: Context, uri: Uri): String {
-        var filePath = ""
-        val cursor = context.contentResolver.query(uri, null, null, null, null)
-        cursor?.use {
-            if (it.moveToFirst()) {
-                filePath = it.getString(it.getColumnIndexOrThrow(MediaStore.Video.Media.DATA))
-            }
-        }
-        return filePath
-    }
 
     fun removeVideo(videoView: VideoView, callback: () -> Unit) {
         videoView.stopPlayback()

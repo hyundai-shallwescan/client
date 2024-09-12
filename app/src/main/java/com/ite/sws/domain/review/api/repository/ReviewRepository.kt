@@ -1,6 +1,7 @@
 package com.ite.sws.domain.review.api.repository
 
 import android.media.Image
+import android.util.Log
 import com.google.gson.Gson
 import com.ite.sws.common.RetrofitClient
 import com.ite.sws.domain.review.api.service.ReviewService
@@ -58,12 +59,15 @@ class ReviewRepository {
         })
     }
     fun getReviews(
-        page: Int,
-        size: Int,
+        page: Int?=null,
+        size: Int?=null,
         onSuccess: (List<GetReviewRes>) -> Unit,
         onFailure: (Throwable) -> Unit
     ) {
-        reviewService.getReviews(page, size).enqueue(object : Callback<List<GetReviewRes>> {
+        val actualPage = page ?: 0
+        val actualSize = size ?: 10
+
+        reviewService.getReviews(actualPage, actualSize).enqueue(object : Callback<List<GetReviewRes>> {
             override fun onResponse(call: Call<List<GetReviewRes>>, response: Response<List<GetReviewRes>>) {
                 if (response.isSuccessful) {
                     response.body()?.let {

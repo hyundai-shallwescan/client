@@ -79,6 +79,7 @@
     <string name="fragment_review_upload_select">업로드 영상 선택</string>
     <string name="fragment_my_review_upload">업로드</string>
     <string name="fragment_my_review_upload_delete">삭제</string>
+    <string name="fragment_review_image">리뷰 이미지</string>
 
     <!-- 체크리스트 -->
     <string name="fragment_checklist_add">추가</string>
