@@ -18,6 +18,7 @@ import com.ite.sws.domain.cart.data.CartItemDetail
 import com.ite.sws.domain.cart.view.adapter.ExternalCartRecyclerAdapter
 import com.ite.sws.domain.payment.data.PaymentDoneDTO
 import com.ite.sws.domain.payment.view.ui.ExternalPaymentDoneFragment
+import com.ite.sws.domain.payment.view.ui.PaymentQRFragment
 import com.ite.sws.util.SharedPreferencesUtil
 import com.ite.sws.util.SwipeHelperCallback
 import com.ite.sws.util.replaceFragmentWithAnimation
@@ -178,15 +179,49 @@ class ExternalCartFragment : Fragment() {
      * 결제 완료 화면 이동 처리
      */
     private fun handlePaymentDone(paymentDoneDto: PaymentDoneDTO) {
-        // 비회원이라면, 결제 완료 화면으로 이동
-        // 소켓 연결 해제
-        WebSocketClient.unsubscribe("/sub/cart/${SharedPreferencesUtil.getCartId()}")
+        // 회원이라면, QR(결제 인증) 화면으로 이동
+        if (paymentDoneDto.cartOwnerName == SharedPreferencesUtil.getCartMemberName()) {
+            // 소켓 연결 해제
+            WebSocketClient.unsubscribe("/sub/cart/${SharedPreferencesUtil.getCartId()}")
 
-        replaceFragmentWithAnimation(
-            R.id.container_main,
-            ExternalPaymentDoneFragment(),
-            false,
-            false
-        )
+            // 새로운 장바구니 ID로 변경
+            SharedPreferencesUtil.setCartId(paymentDoneDto.newCartId)
+            observeNewCartWebSocket(SharedPreferencesUtil.getCartId())  // 새로운 장바구니 ID로 소켓 재구독
+
+            // QR URL 번들에 추가
+            val fragment = PaymentQRFragment()
+            val bundle = Bundle()
+            bundle.putString("qrUrl", paymentDoneDto.qrUrl)
+            fragment.arguments = bundle
+
+            replaceFragmentWithAnimation(
+                R.id.container_main,
+                fragment,
+                false,
+                false
+            )
+        } else {
+            // 비회원이라면, 결제 완료 화면으로 이동
+            // 소켓 연결 해제
+            WebSocketClient.unsubscribe("/sub/cart/${SharedPreferencesUtil.getCartId()}")
+
+            replaceFragmentWithAnimation(
+                R.id.container_main,
+                ExternalPaymentDoneFragment(),
+                false,
+                false
+            )
+        }
+    }
+
+    /**
+     * 웹소켓 재구독
+     */
+    private fun observeNewCartWebSocket(newCartId: Long) {
+        val subscriptionPath = "/sub/cart/$newCartId"
+
+        WebSocketClient.subscribe(subscriptionPath) { message ->
+            Log.d("STOMP CART", "New cart subscription: $message")
+        }
     }
 }

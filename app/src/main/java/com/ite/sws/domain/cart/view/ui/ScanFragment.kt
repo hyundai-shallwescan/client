@@ -26,7 +26,6 @@ import com.ite.sws.domain.cart.data.CartItemDetail
 import com.ite.sws.domain.cart.view.adapter.CartRecyclerAdapter
 import com.ite.sws.domain.payment.data.PaymentDoneDTO
 import com.ite.sws.domain.payment.view.ui.ExternalPaymentDoneFragment
-import com.ite.sws.domain.payment.view.ui.PaymentCardFragment
 import com.ite.sws.domain.payment.view.ui.PaymentFragment
 import com.ite.sws.domain.payment.view.ui.PaymentQRFragment
 import com.ite.sws.util.CustomDialog

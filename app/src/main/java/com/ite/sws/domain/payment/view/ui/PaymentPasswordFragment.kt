@@ -1,21 +1,19 @@
 package com.ite.sws.domain.payment.view.ui
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import com.ite.sws.MainActivity
 import com.ite.sws.databinding.FragmentPaymentPasswordBinding
 import com.ite.sws.domain.payment.data.PaymentItemDto
 import com.ite.sws.domain.payment.data.PostPaymentReq
 import com.ite.sws.util.SharedPreferencesUtil
 import com.ite.sws.util.hideBottomNavigation
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import setupToolbar
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -118,13 +116,9 @@ class PaymentPasswordFragment : Fragment() {
 
         // ViewModel을 통해 결제 요청
         viewModel.savePayment(paymentRequestDto, onSuccess = {
-            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
-                Toast.makeText(requireContext(), "결제가 완료되었습니다.", Toast.LENGTH_SHORT).show()
-            }
+            Log.d("PAYMENT", "Payment Success")
         }, onFailure = { errorMessage ->
-            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
-                Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
-            }
+            Log.d("PAYMENT", "Payment Fail")
         })
     }
 

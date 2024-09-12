@@ -14,7 +14,7 @@ import com.ite.sws.util.replaceFragmentWithAnimation
 import setupToolbar
 
 /**
- * 카드 선택 프래그먼트
+ * 결제 방법 선택 프래그먼트
  * @author 김민정
  * @since 2024.09.10
  * @version 1.0
