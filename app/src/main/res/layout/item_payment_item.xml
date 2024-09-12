@@ -5,9 +5,7 @@
     android:layout_height="wrap_content"
     android:layout_marginVertical="12dp">
 
-    <!-- 상품 이미지 -->
-
-    <!-- 상품명&수량 -->
+    <!-- 상품이미지 -->
     <ImageView
         android:id="@+id/img_product_thumbnail"
         android:layout_width="80dp"
@@ -39,6 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:text="친환경 애호박"
+            android:maxLength="50"
             android:textColor="@color/black"
             android:textFontWeight="1000"
             android:textSize="14sp" />

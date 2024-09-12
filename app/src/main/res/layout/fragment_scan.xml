@@ -41,7 +41,8 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginHorizontal="@dimen/common_horizontal_margin"
-            android:layout_marginVertical="@dimen/common_vertical_margin">
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="10dp">
             <ImageView
                 android:layout_width="25dp"
                 android:layout_height="25dp"
@@ -60,7 +61,8 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerview_cart"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:scrollbars="vertical"
             android:paddingHorizontal="10dp"/>
 
@@ -98,6 +100,38 @@
                 android:layout_gravity="center_horizontal"
                 android:textSize="18sp" />
         </LinearLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_btn_pay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/common_horizontal_margin"
+            android:layout_marginBottom="20dp"
+            android:layout_gravity="center">
+
+            <ImageButton
+                android:id="@+id/btn_pay"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:adjustViewBounds="true"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                android:src="@drawable/btn_rounded_14_main"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/text_pay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/happiness_sans_title"
+                android:text="@string/fragment_payment_pay"
+                android:textColor="@color/white"
+                android:textSize="15sp"
+                app:layout_constraintBottom_toBottomOf="@+id/btn_pay"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/btn_pay" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
 
 </com.sothree.slidinguppanel.SlidingUpPanelLayout>

@@ -6,11 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.ite.sws.MainActivity
 import com.ite.sws.R
 import com.ite.sws.util.SharedPreferencesUtil
 import com.ite.sws.databinding.FragmentCartLoginBinding
 import com.ite.sws.domain.cart.api.repository.CartRepository
 import com.ite.sws.domain.cart.data.PostCartLoginReq
+import com.ite.sws.util.hideBottomNavigation
 import com.ite.sws.util.replaceFragmentWithAnimation
 
 /**
@@ -36,6 +38,10 @@ class CartLoginFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentCartLoginBinding.inflate(inflater, container, false)
+
+        (activity as? MainActivity)?.let { mainActivity ->
+            hideBottomNavigation(mainActivity.binding, true)
+        }
         return binding.root
     }
 
@@ -48,22 +54,25 @@ class CartLoginFragment : Fragment() {
         binding.cartLoginBtn.setOnClickListener {
             val loginId = binding.tvNicknameInput.text.toString().trim()
             val password = binding.tvPasswordInput.text.toString().trim()
+            val cartId = SharedPreferencesUtil.getCartId()
 
-            val postCartLoginReq = PostCartLoginReq(loginId, password)
+            val postCartLoginReq = PostCartLoginReq(loginId, password, cartId)
 
             if (loginId.isNotEmpty() && password.isNotEmpty()) {
                 // 로그인 요청
-                cartRepository.login(postCartLoginReq,
-                    onSuccess = { jwtToken ->
-                        saveAccessToken(jwtToken.accessToken)
-                        saveName(loginId)
-                        binding.nicknameTitle.text = "로그인 성공 AccessToken: ${jwtToken.accessToken}"
-                        navigateToNextScreen()
-                    },
-                    onFailure = { errorRes ->
-                        binding.passwordTitle.text = "로그인 실패: ${errorRes.message}"
-                    }
-                )
+                cartRepository.login(postCartLoginReq) { result ->
+                    result.fold(
+                        onSuccess = { jwtToken ->
+                            saveAccessToken(jwtToken.accessToken)
+                            saveName(loginId)
+                            binding.nicknameTitle.text = "로그인 성공 AccessToken: ${jwtToken.accessToken}"
+                            navigateToNextScreen()
+                        },
+                        onFailure = { throwable ->
+                            binding.passwordTitle.text = "로그인 실패: ${throwable.message}"
+                        }
+                    )
+                }
             } else {
                 Toast.makeText(requireContext(), "Please enter both ID and Password", Toast.LENGTH_SHORT).show()
             }

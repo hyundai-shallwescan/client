@@ -31,7 +31,7 @@ class MyPaymentFragment : Fragment() {
 
     private var _binding: FragmentMyPaymentBinding? = null
     private val binding get() = _binding!!
-    private val viewModel: MyPaymentViewModel by viewModels()
+    private val viewModel: MemberViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

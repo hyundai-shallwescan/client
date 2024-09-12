@@ -4,23 +4,22 @@ import com.google.gson.Gson
 import com.ite.sws.common.RetrofitClient
 import com.ite.sws.common.data.ErrorRes
 import com.ite.sws.domain.member.api.service.MemberService
-import com.ite.sws.domain.member.data.JwtToken
 import com.ite.sws.domain.member.data.PostLoginReq
 import com.ite.sws.util.SharedPreferencesUtil
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import android.content.Context
 import android.util.Log
+import com.google.firebase.messaging.FirebaseMessaging
 import com.ite.sws.domain.member.data.GetMemberPaymentRes
 import com.ite.sws.domain.member.data.GetMemberRes
+import com.ite.sws.domain.member.data.GetMemberReviewRes
 import com.ite.sws.domain.member.data.PatchMemberReq
 import com.ite.sws.domain.member.data.PostLoginRes
 import com.ite.sws.domain.member.data.PostMemberReq
 
-
 /**
- * 회원 Repository class
+ * 회원 Repository
  * @author 정은지
  * @since 2024.08.31
  * @version 1.0
@@ -35,6 +34,9 @@ import com.ite.sws.domain.member.data.PostMemberReq
  * 2024.09.03   정은지        회원 탈퇴 추가
  * 2024.09.04   정은지        회원가입 추가
  * 2024.09.04   정은지        회원 정보 수정 추가
+ * 2024.09.05   정은지        구매 내역 조회 추가
+ * 2024.09.06   정은지        작성 리뷰 조회 추가
+ * 2024.09.10   남진수        FCM 토큰 발급 추가
  * </pre>
  */
 class MemberRepository {
@@ -49,31 +51,53 @@ class MemberRepository {
         onSuccess: () -> Unit,
         onFailure: (ErrorRes) -> Unit
     ) {
-        val call = memberService.login(postLoginReq)
-        call.enqueue(object : Callback<PostLoginRes> {
-            override fun onResponse(call: Call<PostLoginRes>, response: Response<PostLoginRes>) {
-                if (response.isSuccessful) {
-                    response.headers()["Authorization"]?.let { tokenHeader ->
-                        val token = tokenHeader.removePrefix("Bearer ")
-                        SharedPreferencesUtil.setAccessToken(token)
-                    }
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                onFailure(ErrorRes(0, "FCM_TOKEN_ERROR", "FCM 토큰 발급 실패"))
+                return@addOnCompleteListener
+            }
 
-                    // 장바구니 아이디 SharedPreferences에 저장
-                    response.body()?.cartId?.let { cartId ->
-                        SharedPreferencesUtil.setCartId(cartId)
-                        Log.d("MemberRepository", "장바구니 아이디: $cartId")
+            // 새로운 FCM Token 발급
+            val fcmToken = task.result
+            val call = memberService.login(fcmToken, postLoginReq)
+            call.enqueue(object : Callback<PostLoginRes> {
+                override fun onResponse(
+                    call: Call<PostLoginRes>,
+                    response: Response<PostLoginRes>
+                ) {
+                    if (response.isSuccessful) {
+                        // 액세스 토큰 SharedPreferences에 저장
+                        response.headers()["Authorization"]?.let { tokenHeader ->
+                            val token = tokenHeader.removePrefix("Bearer ")
+                            SharedPreferencesUtil.setAccessToken(token)
+                        }
+                        // 장바구니 아이디 SharedPreferences에 저장
+                        response.body()?.cartId?.let { cartId ->
+                            SharedPreferencesUtil.setCartId(cartId)
+                            Log.d("MemberRepository", "장바구니 아이디: $cartId")
+                        }
+                        // 이름 SharedPreferences에 저장
+                        getMyInfo(
+                            onSuccess = { memberRes ->
+                                SharedPreferencesUtil.setCartMemberName(memberRes.name)
+                                onSuccess()
+                                Log.d("MemberRepository", "이름: ${memberRes.name}")
+                            },
+                            onFailure = { errorRes ->
+                                onFailure(errorRes)
+                            }
+                        )
+                    } else {
+                        val errorRes = Gson().fromJson(response.errorBody()?.string(), ErrorRes::class.java)
+                        onFailure(errorRes)
                     }
-                    onSuccess()
-                } else {
-                    val errorRes = Gson().fromJson(response.errorBody()?.string(), ErrorRes::class.java)
-                    onFailure(errorRes)
                 }
-            }
 
-            override fun onFailure(call: Call<PostLoginRes>, t: Throwable) {
-                handleFailure(call, t, onFailure)
-            }
-        })
+                override fun onFailure(call: Call<PostLoginRes>, t: Throwable) {
+                    handleFailure(call, t, onFailure)
+                }
+            })
+        }
     }
 
     /**
@@ -99,9 +123,9 @@ class MemberRepository {
     }
 
     /**
-     * 마이페이지 정보 요청
+     * 내 정보 요청
      */
-    fun getMyPageInfo(
+    fun getMyInfo(
         onSuccess: (GetMemberRes) -> Unit,
         onFailure: (ErrorRes) -> Unit
     ) {
@@ -246,6 +270,23 @@ class MemberRepository {
     }
 
     /**
+     * 작성 리뷰 조회
+     */
+    suspend fun findReviewList(page: Int, size: Int): List<GetMemberReviewRes> {
+        return try {
+            val response = memberService.findReviewList(page, size)
+
+            if (response.isSuccessful) {
+                response.body() ?: emptyList()
+            } else {
+                throw Exception("${response.errorBody()?.string()}")
+            }
+        } catch (e: Exception) {
+            throw Exception("Network error: ${e.localizedMessage}")
+        }
+    }
+
+    /**
      * 공통 처리 함수
      */
     private fun <T> handleFailure(call: Call<T>, t: Throwable, onFailure: (ErrorRes) -> Unit) {
@@ -256,5 +297,4 @@ class MemberRepository {
         )
         onFailure(networkError)
     }
-
 }

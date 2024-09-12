@@ -1,0 +1,51 @@
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="8dp">
+
+    <!-- 젤뽀 이미지 -->
+    <ImageView
+        android:id="@+id/img_jellbbo"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/img_chatbot_jellbbo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="8dp"/>
+
+    <!-- 젤뽀 이름 텍스트 -->
+    <TextView
+        android:id="@+id/tv_jellbbo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:text="젤뽀"
+        android:textSize="15sp"
+        android:layout_marginStart="5dp"
+        android:fontFamily="@font/happiness_sans_bold"
+        app:layout_constraintStart_toEndOf="@id/img_jellbbo"
+        app:layout_constraintTop_toTopOf="@id/img_jellbbo"
+        app:layout_constraintBottom_toBottomOf="@id/img_jellbbo"/>
+
+    <!-- GPT 응답 메세지 -->
+    <TextView
+        android:id="@+id/tv_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ic_chat_recieved"
+        android:textColor="@color/black"
+        android:gravity="center_vertical|start"
+        android:layout_gravity="center_vertical"
+        android:layout_marginTop="10dp"
+        android:textSize="15sp"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:maxWidth="300dp"
+        app:layout_constraintStart_toEndOf="@id/img_jellbbo"
+        app:layout_constraintTop_toBottomOf="@id/tv_jellbbo"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -32,6 +32,9 @@
     <string name="modal_camera_message">바코드 스캔을 위해 카메라 권한이 필요합니다. 설정에서 권한을 허용해 주세요.</string>
     <string name="modal_cancel">취소</string>
     <string name="modal_check">확인</string>
+    <string name="modal_external_invite">일행 초대</string>
+    <string name="modal_btn_kakao">카카오톡</string>
+    <string name="modal_btn_url">URL</string>
 
     <!-- 로그인 -->
     <string name="fragment_login">Login</string>
@@ -64,6 +67,9 @@
     <!-- 회원 정보 수정 -->
     <string name="fragment_modify_member">수정하기</string>
 
+    <!-- 채팅 -->
+    <string name="fragment_chat_message">메시지를 입력하세요.</string>
+
     <!-- 구매 내역 -->
     <string name="fragment_payment_nodata">구매 내역이 없습니다.</string>
 
@@ -74,7 +80,33 @@
     <string name="fragment_my_review_upload">업로드</string>
     <string name="fragment_my_review_upload_delete">삭제</string>
 
+    <!-- 체크리스트 -->
+    <string name="fragment_checklist_add">추가</string>
+
+    <!-- 결제 -->
+    <string name="fragment_payment_pay">결제하기</string>
+    <string name="fragment_payment_method">결제 수단</string>
+    <string name="fragment_payment_product">상품</string>
+    <string name="fragment_payment_totalprice">총 결제 금액</string>
+    <string name="fragment_payment_agree">결제내역을 확인하였으며 구매에 동의합니다.</string>
+    <string name="fragment_payment_external">일행에게 결제 요청하기</string>
+  
+    <!-- 챗봇 -->
+    <string name="fragment_chatbot_comment">젤뽀가 안내하는 상품의 추가 버튼을 클릭하면 체크리스트에 추가돼요!</string>
+
     <!-- 버튼 -->
     <string name="btn_scanner_chat">채팅</string>
     <string name="btn_scanner_additional">일행초대</string>
+
+    <!-- 주차 정산 -->
+    <string name="fragment_parking_payment_message_empty">영수증 할인은 자동으로 이뤄집니다!</string>
+    <string name="fragment_parking_entrance_time">입차 시간</string>
+    <string name="fragment_parking_time">주차 시간</string>
+    <string name="fragment_parking_discount">영수증 할인</string>
+    <string name="fragment_parking_fee_time">정산 필요 시간</string>
+    <string name="fragment_parking_fee">정산 금액</string>
+    <string name="btn_parking_payment">정산하기</string>
+    <string name="btn_parking_payment_complete">무료 출차가 가능합니다!</string>
+    <string name="fragment_parking_cart_guide">영수증 할인 금액은 현재 장바구니에 담긴 금액으로 추정됩니다.</string>
+
 </resources>

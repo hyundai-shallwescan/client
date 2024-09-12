@@ -1,0 +1,88 @@
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardBackgroundColor="@android:color/transparent"
+    app:cardElevation="0dp">
+
+        <FrameLayout
+            android:id="@+id/bg_swipe"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_marginHorizontal="13dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/bg_checklist_trash"/>
+
+        <FrameLayout
+            android:id="@+id/layout_item_checklist"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:background="@drawable/bg_checklist"
+            android:padding="16dp">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp">
+
+                        <!-- 아이템 이름 -->
+                        <TextView
+                            android:id="@+id/tv_item_name"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text="이름"
+                            android:textColor="@color/black"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:layout_marginLeft="7dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@id/btn_update"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <!-- 아이템 이름 변경 -->
+                        <EditText
+                            android:id="@+id/edt_item_name"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:hint=""
+                            android:textColor="@color/black"
+                            android:textSize="16sp"
+                            android:layout_marginLeft="7dp"
+                            android:textStyle="bold"
+                            android:background="@android:color/transparent"
+                            android:visibility="gone"
+                            android:inputType="text"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toStartOf="@id/btn_update"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"/>
+
+                        <!-- 수정 버튼 -->
+                        <ImageButton
+                            android:id="@+id/btn_update"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:background="@android:color/transparent"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/ic_pencil"
+                            android:layout_marginRight="15dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@+id/checkbox_status"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <!-- 체크박스 -->
+                        <CheckBox
+                            android:id="@+id/checkbox_status"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_marginRight="12dp"
+                            android:button="@drawable/selector_check_status"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+        </FrameLayout>
+</androidx.cardview.widget.CardView>

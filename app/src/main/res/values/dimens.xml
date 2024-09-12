@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <dimen name="common_horizontal_margin">20dp</dimen>
     <dimen name="common_vertical_margin">20dp</dimen>
     <dimen name="common_bottom_navigation">55dp</dimen>
     <dimen name="common_recycler_bottom_padding">15dp</dimen>
+    <dimen name="design_fab_size_normal" tools:override="true">80dp</dimen>
+    <dimen name="design_fab_image_size" tools:override="true">70dp</dimen>
 </resources>
