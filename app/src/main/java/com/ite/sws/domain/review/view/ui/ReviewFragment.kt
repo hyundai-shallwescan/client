@@ -48,7 +48,7 @@ class ReviewFragment : Fragment() {
 
         recyclerView = view.findViewById(R.id.recyclerView_reviews)
         recyclerView.layoutManager = LinearLayoutManager(context)
-        setupToolbar(binding.toolBar, "리뷰", true)
+        setupToolbar(binding.toolbar.toolbar, "리뷰", true)
 
         ReviewRepository().getReviews(page = 0, size = 10, onSuccess = { fetchedReviews ->
             reviews = fetchedReviews
