@@ -2,6 +2,7 @@ package com.ite.sws.common
 
 import android.annotation.SuppressLint
 import android.util.Log
+import com.ite.sws.BuildConfig
 import ua.naiksoftware.stomp.Stomp
 import ua.naiksoftware.stomp.StompClient
 import io.reactivex.schedulers.Schedulers
@@ -26,7 +27,7 @@ import ua.naiksoftware.stomp.dto.StompMessage
  * </pre>
  */
 object WebSocketClient {
-    private const val URL = "ws://10.0.2.2:8080/ws"
+    private const val URL = BuildConfig.WS_BASE_URL
     private lateinit var stompClient: StompClient
     private var jwtToken: String? = null
 
