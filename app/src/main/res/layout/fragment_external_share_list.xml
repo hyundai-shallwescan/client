@@ -5,9 +5,39 @@
     android:layout_height="match_parent"
     tools:context=".domain.sharelist.view.ui.ExternalShareListFragment">
 
-    <TextView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerview_sharelist"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="ㅠㅠㅠㅠ" />
+        android:scrollbars="vertical"
+        android:paddingHorizontal="10dp" />
 
+    <LinearLayout
+        android:id="@+id/layout_sharelist_notfound"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:adjustViewBounds="true"
+            android:src="@drawable/img_wink_heendy"
+            android:layout_gravity="center"/>
+
+        <TextView
+            android:id="@+id/text_sharelist_notfound"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:fontFamily="@font/happiness_sans_title"
+            android:text="@string/fragment_sharelist_external_not_found"
+            android:textColor="@android:color/black"
+            android:layout_gravity="center_horizontal"
+            android:textSize="18sp" />
+    </LinearLayout>
 </FrameLayout>
