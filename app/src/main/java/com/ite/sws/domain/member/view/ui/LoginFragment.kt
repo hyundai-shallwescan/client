@@ -77,7 +77,9 @@ class LoginFragment : Fragment() {
 
         val postLoginReq = PostLoginReq(loginId, password)
 
-        memberRepository.login(postLoginReq,
+        memberRepository.login(
+            context = requireContext(),
+            postLoginReq,
             // 성공 시 메인 화면으로 이동
             onSuccess = {
                 // MainActivity 재시작
