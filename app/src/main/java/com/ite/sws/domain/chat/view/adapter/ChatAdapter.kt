@@ -125,9 +125,9 @@ class ChatAdapter(private val messages: List<ChatMessageDTO>, private val curren
         fun bind(message: ChatMessageDTO) {
             val cartPayload = Gson().fromJson(message.payload, CartMessagePayload::class.java)
             messageText.text = when (cartPayload.action) {
-                "create" -> "장바구니에 상품이 추가되었습니다.\n${cartPayload.productName}"
-                "delete" -> "장바구니의 상품이 삭제되었습니다.\n${cartPayload.productName}"
-                "increase", "decrease" -> "장바구니 상품의 수량이 변경되었습니다.\n${cartPayload.productName} (${cartPayload.quantity}개)"
+                "create" -> "장바구니에 상품이 추가되었습니다."
+                "delete" -> "장바구니의 상품이 삭제되었습니다."
+                "increase", "decrease" -> "장바구니 상품의 수량이 변경되었습니다."
                 else -> "장바구니에 변동사항이 있습니다."
             }
             productName.text = cartPayload.productName
@@ -184,9 +184,9 @@ class ChatAdapter(private val messages: List<ChatMessageDTO>, private val curren
         fun bind(message: ChatMessageDTO) {
             val checkPayload = Gson().fromJson(message.payload, CartMessagePayload::class.java)
             messageText.text = when (checkPayload.action) {
-                "create" -> "요청리스트에 상품이 추가되었습니다.\n${checkPayload.productName}"
-                "delete" -> "요청리스트의 상품이 삭제되었습니다.\n${checkPayload.productName}"
-                "increase", "decrease" -> "요청리스트 상품의 수량이 변경되었습니다.\n${checkPayload.productName} (${checkPayload.quantity}개)"
+                "create" -> "요청리스트에 상품이 추가되었습니다."
+                "delete" -> "요청리스트의 상품이 삭제되었습니다."
+                "increase", "decrease" -> "요청리스트 상품의 수량이 변경되었습니다."
                 else -> "요청리스트에 변동사항이 있습니다."
             }
             productName.text = checkPayload.productName
