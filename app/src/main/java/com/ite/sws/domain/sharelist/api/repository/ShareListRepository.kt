@@ -39,6 +39,30 @@ class ShareListRepository {
     }
 
     /**
+     * 공유체크리스트 아이템 삭제
+     */
+    suspend fun removeShareListItem(cartId: Long, productId: Long) {
+        try {
+            val response = shareListService.removeShareListItem(cartId, productId)
+            handleResponse(response)
+        } catch (e: Exception) {
+            throw handleNetworkException(e)
+        }
+    }
+
+    /**
+     * 공유체크리스트 아이템 수량 변경
+     */
+    suspend fun modifyshareListItem(cartId: Long, productId: Long) {
+        try {
+            val response = shareListService.modifyshareListItem(cartId, productId)
+            handleResponse(response)
+        } catch (e: Exception) {
+            throw handleNetworkException(e)
+        }
+    }
+
+    /**
      * 공통 응답 처리 함수
      */
     private fun <T> handleResponse(response: Response<T>): T? {

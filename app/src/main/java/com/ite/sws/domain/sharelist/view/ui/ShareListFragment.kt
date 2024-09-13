@@ -1,6 +1,7 @@
 package com.ite.sws.domain.sharelist.view.ui
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +10,10 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.gson.Gson
+import com.ite.sws.common.WebSocketClient
 import com.ite.sws.databinding.FragmentShareListBinding
+import com.ite.sws.domain.sharelist.data.ShareListMessageDTO
 import com.ite.sws.domain.sharelist.view.adapter.ShareListRecyclerAdapter
 import com.ite.sws.util.SharedPreferencesUtil
 import com.ite.sws.util.SwipeHelperCallbackShare
@@ -113,7 +117,34 @@ class ShareListFragment : Fragment() {
      * 웹소켓을 통해 실시간으로 공유 체크리스트 아이템 변경 사항 구독
      */
     private fun observeShareListUpdate() {
+        val cartId = SharedPreferencesUtil.getCartId()
+        val subscriptionPath = "/sub/cart/$cartId"
 
+        WebSocketClient.subscribe(subscriptionPath) { message ->
+            // JSON 메시지를 Map으로 파싱하여 type을 확인
+            val messageMap = Gson().fromJson(message, Map::class.java)
+            val messageType = messageMap["type"] as? String
+
+            // 메시지 타입에 따라 처리
+            when (messageType) {
+                "shareCheck" -> {
+                    val shareCheckMessage = Gson().fromJson(message, ShareListMessageDTO::class.java)
+                    activity?.runOnUiThread {
+                        updateShareListRecyclerView(shareCheckMessage)
+                    }
+                }
+                else -> Log.e("STOMP SHARE CHECK LIST", "Unknown message type: $messageType")
+            }
+        }
+    }
+
+    /**
+     * 수신된 메시지에 따라 공유체크리스트 리사이클러뷰 업데이트
+     */
+    private fun updateShareListRecyclerView(message: ShareListMessageDTO) {
+        when (message.action) {
+            "delete" -> recyclerAdapter.removeItem(message)
+        }
     }
 
     override fun onDestroyView() {

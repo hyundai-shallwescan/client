@@ -1,6 +1,7 @@
 package com.ite.sws.domain.sharelist.view.ui
 
 import androidx.lifecycle.ViewModel
+import com.ite.sws.domain.sharelist.data.ShareListItem
 
 /**
  * 공유 체크 리스트 ViewModel 추상 클래스
@@ -18,4 +19,5 @@ abstract class BaseShareListViewModel : ViewModel() {
     abstract fun findShareList(cartId: Long)
     abstract fun modifyShareListCheck(cartId: Long, productId: Long)
     abstract fun removeShareListItem(cartId: Long, productId: Long)
+    abstract fun updateShareListItems(newItems: List<ShareListItem>)
 }
