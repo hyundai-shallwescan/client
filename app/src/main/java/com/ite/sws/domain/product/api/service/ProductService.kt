@@ -31,7 +31,7 @@ interface ProductService {
      @GET("products/{productId}/reviews")
     suspend fun getProductReviews(
         @Path("productId") productId: Long,
-        @Query("page") page: Int = 0,
-        @Query("size") size: Int = 10
+        @Query("page") page: Int,
+        @Query("size") size: Int
     ): Response<List<GetProductReviewRes>>
 }

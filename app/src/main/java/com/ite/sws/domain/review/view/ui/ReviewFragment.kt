@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.ite.sws.MainActivity
 import com.ite.sws.R
 import com.ite.sws.domain.review.api.repository.ReviewRepository
 
@@ -16,6 +17,7 @@ import com.ite.sws.domain.review.data.GetReviewRes
 import com.ite.sws.domain.review.view.adapter.ReviewAdapter
 import com.ite.sws.databinding.FragmentReviewBinding
 import com.ite.sws.domain.product.view.ui.ProductFragment
+import com.ite.sws.util.hideBottomNavigation
 import com.ite.sws.util.replaceFragmentWithAnimation
 import setupToolbar
 
@@ -36,8 +38,12 @@ class ReviewFragment : Fragment() {
     private var _binding: FragmentReviewBinding? = null
     private val binding get() = _binding!!
     private lateinit var reviewAdapter: ReviewAdapter
-    private lateinit var reviews: List<GetReviewRes>
+    private lateinit var reviews: MutableList<GetReviewRes>
     private var currentPlayingViewHolder: ReviewAdapter.ReviewViewHolder? = null
+    private var currentPage = 0
+    private val pageSize = 10
+    private var isLoading = false
+    private var isLastPage = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,7 +54,12 @@ class ReviewFragment : Fragment() {
         setupToolbar(binding.toolbar.toolbar, "리뷰", true)
         setupRecyclerView()
 
-        loadReviews()
+        (activity as? MainActivity)?.let { mainActivity ->
+            hideBottomNavigation(mainActivity.binding, false)
+        }
+
+
+        loadReviews(currentPage)
 
         binding.productDetailBtn.setOnClickListener {
             navigateToProductDetail()
@@ -59,33 +70,53 @@ class ReviewFragment : Fragment() {
 
     private fun setupRecyclerView() {
         binding.recyclerViewReviews.layoutManager = LinearLayoutManager(context)
+        reviews = mutableListOf()
+        reviewAdapter = ReviewAdapter(reviews)
+        binding.recyclerViewReviews.adapter = reviewAdapter
 
         binding.recyclerViewReviews.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 handleAutoPlayVideo()
+
+                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                val totalItemCount = layoutManager.itemCount
+                val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
+
+                if (!isLoading && !isLastPage && lastVisibleItemPosition >= totalItemCount - 1) {
+                    currentPage++
+                    loadReviews(currentPage)
+                }
             }
 
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                     handleAutoPlayVideo()
-
                 }
             }
         })
     }
 
-    private fun loadReviews() {
-        val page: Int? = null
-        val size: Int? = null
+    private fun loadReviews(page: Int) {
+        isLoading = true
 
-        ReviewRepository().getReviews(page = page, size = size, onSuccess = { fetchedReviews ->
-            reviews = fetchedReviews
-            reviewAdapter = ReviewAdapter(reviews)
-            binding.recyclerViewReviews.adapter = reviewAdapter
+        ReviewRepository().getReviews(page = page, size = pageSize, onSuccess = { fetchedReviews ->
+            if (fetchedReviews.isNotEmpty()) {
+                reviews.addAll(fetchedReviews)
+                reviewAdapter.notifyDataSetChanged()
+
+
+                if (fetchedReviews.size < pageSize) {
+                    isLastPage = true
+                }
+            } else {
+                isLastPage = true
+            }
+            isLoading = false
         }, onFailure = { throwable ->
             Toast.makeText(requireContext(), "리뷰 영상 보기 실패: ${throwable.message}", Toast.LENGTH_SHORT).show()
+            isLoading = false
         })
     }
 
