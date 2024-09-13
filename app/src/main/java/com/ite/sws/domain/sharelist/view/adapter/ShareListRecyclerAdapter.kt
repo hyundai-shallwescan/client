@@ -9,6 +9,7 @@ import com.ite.sws.databinding.ItemSharelistBinding
 import com.ite.sws.domain.sharelist.data.ShareListItem
 import com.ite.sws.domain.sharelist.view.ui.ShareListViewModel
 import com.ite.sws.util.NumberFormatterUtil.formatCurrencyWithCommas
+import com.ite.sws.util.SharedPreferencesUtil
 
 /**
  * 공유체크리스트 아이템 목록 리사이클러 어댑터
@@ -42,12 +43,11 @@ class ShareListRecyclerAdapter(private val viewModel: ShareListViewModel) :
 
             // 체크 박스 클릭 리스너
             binding.checkboxStatus.setOnClickListener {
-                // 서버에 수량 증가 요청
-//                viewModel.modifyCartItemQuantity(
-//                    SharedPreferencesUtil.getCartId(),
-//                    item.productId,
-//                    1
-//                )
+                // 서버에 체크 상태 변경 요청
+                viewModel.modifyShareListCheck(
+                    SharedPreferencesUtil.getCartId(),
+                    item.productId
+                )
             }
         }
     }

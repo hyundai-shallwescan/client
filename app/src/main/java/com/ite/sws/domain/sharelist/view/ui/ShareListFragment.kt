@@ -28,6 +28,8 @@ import com.ite.sws.util.SwipeHelperCallbackShare
  * 수정일       수정자        수정내용
  * ----------  --------    ---------------------------
  * 2024.09.02  김민정       최초 생성
+ * 2024.09.12  김민정       웹소켓을 통해 실시간으로 공유 체크리스트 아이템 변경 사항 구독
+ * 2024.09.12  김민정       수신된 메시지에 따라 공유체크리스트 리사이클러뷰 업데이트
  * </pre>
  */
 class ShareListFragment : Fragment() {
@@ -143,6 +145,8 @@ class ShareListFragment : Fragment() {
      */
     private fun updateShareListRecyclerView(message: ShareListMessageDTO) {
         when (message.action) {
+            "create" -> recyclerAdapter.addNewItem(message)
+            "update" -> recyclerAdapter.modifyItemCheckStatus(message)
             "delete" -> recyclerAdapter.removeItem(message)
         }
     }
