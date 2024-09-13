@@ -7,33 +7,35 @@ import com.bumptech.glide.Glide
 import com.ite.sws.common.data.CheckStatus
 import com.ite.sws.databinding.ItemSharelistBinding
 import com.ite.sws.domain.sharelist.data.ShareListItem
-import com.ite.sws.domain.sharelist.view.ui.ShareListViewModel
+import com.ite.sws.domain.sharelist.view.ui.ExternalShareListViewModel
 import com.ite.sws.util.NumberFormatterUtil.formatCurrencyWithCommas
 import com.ite.sws.util.SharedPreferencesUtil
 
 /**
- * 공유체크리스트 아이템 목록 리사이클러 어댑터
+ * 외부일행 공유체크리스트 아이템 목록 리사이클러 어댑터
  * @author 김민정
- * @since 2024.09.12
+ * @since 2024.09.13
  * @version 1.0
  *
  * <pre>
  * 수정일       수정자        수정내용
  * ----------  --------    ---------------------------
- * 2024.09.12  김민정       최초 생성
- * 2024.09.12  김민정       공유체크리스트 아이템 조회
- * 2024.09.12  김민정       공유체크리스트 아이템 체크 상태 변경
- * 2024.09.12  김민정       공유체크리스트 아이템 삭제
+ * 2024.09.13  김민정       최초 생성
+ * 2024.09.13  김민정       공유체크리스트 아이템 조회
+ * 2024.09.13  김민정       공유체크리스트 아이템 체크 상태 변경
+ * 2024.09.13  김민정       공유체크리스트 아이템 삭제
  * </pre>
  */
-class ShareListRecyclerAdapter(private val viewModel: ShareListViewModel) :
-    BaseShareListAdapter<ShareListRecyclerAdapter.ShareListViewHolder, ShareListViewModel>(viewModel) {
+class ExternalShareListRecyclerAdapter(private val viewModel: ExternalShareListViewModel) :
+    BaseShareListAdapter<ExternalShareListRecyclerAdapter.ExternalShareListViewHolder, ExternalShareListViewModel>(viewModel) {
 
-    inner class ShareListViewHolder(val binding: ItemSharelistBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class ExternalShareListViewHolder(val binding: ItemSharelistBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: ShareListItem) {
             binding.textSharelistProductName.text = item.productName
-            binding.textSharelistProductPrice.text = "${formatCurrencyWithCommas(item.productPrice)}"
+            binding.textSharelistProductPrice.text =
+                "${formatCurrencyWithCommas(item.productPrice)}"
             binding.checkboxStatus.isChecked = item.status == CheckStatus.CHECKED
 
             // 썸네일 이미지 로드
@@ -55,15 +57,16 @@ class ShareListRecyclerAdapter(private val viewModel: ShareListViewModel) :
     /**
      *  ViewHolder 생성
      */
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShareListViewHolder {
-        val binding = ItemSharelistBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ShareListViewHolder(binding)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExternalShareListViewHolder {
+        val binding =
+            ItemSharelistBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ExternalShareListViewHolder(binding)
     }
 
     /**
      * ViewHolder에 데이터를 바인딩
      */
-    override fun onBindViewHolder(holder: ShareListViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ExternalShareListViewHolder, position: Int) {
         holder.bind(getItem(position))
     }
 }

@@ -1,5 +1,7 @@
 package com.ite.sws.domain.sharelist.data
 
+import com.ite.sws.common.data.CheckStatus
+
 /**
  * 공유체크리스트 메시지 DTO
  * @author 김민정
@@ -18,6 +20,6 @@ data class ShareListMessageDTO (
     val productName: String,
     val productPrice: Int,
     val productThumbnail: String,
-    val status: String,
+    val status: CheckStatus,
     val action: String
 )

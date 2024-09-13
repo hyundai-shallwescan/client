@@ -2,6 +2,7 @@ package com.ite.sws.domain.sharelist.api.repository
 
 import com.ite.sws.common.RetrofitClient
 import com.ite.sws.domain.sharelist.api.service.ShareListService
+import com.ite.sws.domain.sharelist.data.PostShareListItemReq
 import com.ite.sws.domain.sharelist.data.ShareListItem
 import retrofit2.Response
 
@@ -25,6 +26,18 @@ class ShareListRepository {
 
     private val shareListService =
         RetrofitClient.instance.create(ShareListService::class.java)
+
+    /**
+     * 공유체크리스트 아이템 추가
+     */
+    suspend fun saveShareListItem(request: PostShareListItemReq) {
+        try {
+            val response = shareListService.saveShareListItem(request)
+            handleResponse(response)
+        } catch (e: Exception) {
+            throw handleNetworkException(e)
+        }
+    }
 
     /**
      * 공유체크리스트 아이템 조회

@@ -158,6 +158,7 @@ class ContainerFragment : Fragment() {
                         val cartId = SharedPreferencesUtil.getCartId()
                         // 연결이 열리면 특정 장바구니에 구독
                         subscribeToCart(cartId)
+                        subscribeToChat(cartId)
                     }
                     LifecycleEvent.Type.CLOSED -> Log.d("STOMP", "WebSocket closed")
                     LifecycleEvent.Type.ERROR -> Log.e("STOMP", "WebSocket error", event.exception)
@@ -184,6 +185,23 @@ class ContainerFragment : Fragment() {
 
         WebSocketClient.subscribe(subscriptionPath) { message ->
             Log.i("STOMP cart", "Received message for cart $cartId: $message")
+        }
+    }
+
+    /**
+     * 장바구니 구독
+     */
+    private fun subscribeToChat(cartId: Long) {
+        if (cartId == 0L) {
+            Log.e("ExternalCartFragment", "Invalid cartId: $cartId")
+            return
+        }
+
+        val subscriptionPath = "/sub/chat/$cartId"
+        Log.d("ExternalCartFragment", "Subscribing to $subscriptionPath")
+
+        WebSocketClient.subscribe(subscriptionPath) { message ->
+            Log.i("STOMP CART CHAT", "Received message for cart $cartId: $message")
         }
     }
 }
