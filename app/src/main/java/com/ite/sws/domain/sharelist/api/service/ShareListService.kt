@@ -1,10 +1,13 @@
 package com.ite.sws.domain.sharelist.api.service
 
 import com.ite.sws.domain.sharelist.data.GetShareListRes
+import com.ite.sws.domain.sharelist.data.PostShareListItemReq
 import retrofit2.Response
+import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.PATCH
+import retrofit2.http.POST
 import retrofit2.http.Path
 
 /**
@@ -20,9 +23,16 @@ import retrofit2.http.Path
  * 2024.09.12  김민정       공유체크리스트 조회 API 호출
  * 2024.09.12  김민정       공유체크리스트 아이템 삭제 API 호출
  * 2024.09.12  김민정       공유체크리스트 아이템 체크 상태 변경 API 호출
+ * 2024.09.13  김민정       공유체크리스트 아이템 추가 API 호출
  * </pre>
  */
 interface ShareListService {
+
+    /**
+     * 공유체크리스트 아이템 추가 API 호출
+     */
+    @POST("share-checklist")
+    suspend fun saveShareListItem(@Body request: PostShareListItemReq): Response<Void>
 
     /**
      * 공유체크리스트 조회 API
