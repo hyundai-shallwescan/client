@@ -39,7 +39,7 @@ class ReviewFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var reviewAdapter: ReviewAdapter
     private lateinit var reviews: List<GetReviewRes>
-    private var currentPlayingViewHolder: ReviewAdapter.ReviewViewHolder? = null  
+    private var currentPlayingViewHolder: ReviewAdapter.ReviewViewHolder? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -62,17 +62,17 @@ class ReviewFragment : Fragment() {
     private fun setupRecyclerView() {
         binding.recyclerViewReviews.layoutManager = LinearLayoutManager(context)
 
-        // Add scroll listener to handle auto-playing and stopping videos
         binding.recyclerViewReviews.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                handleAutoPlayVideo()  // Handle video autoplay and stopping on scroll
+                handleAutoPlayVideo()
             }
 
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    handleAutoPlayVideo()  // Trigger play when scrolling stops
+                    handleAutoPlayVideo()
+
                 }
             }
         })
@@ -91,25 +91,23 @@ class ReviewFragment : Fragment() {
         })
     }
 
-    // Handle autoplay based on visible items
     private fun handleAutoPlayVideo() {
         val layoutManager = binding.recyclerViewReviews.layoutManager as LinearLayoutManager
         val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
         val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
 
-        // Iterate over visible items
         for (i in firstVisibleItemPosition..lastVisibleItemPosition) {
             val viewHolder = binding.recyclerViewReviews.findViewHolderForAdapterPosition(i) as? ReviewAdapter.ReviewViewHolder
             viewHolder?.let {
                 if (isFullyVisible(it.itemView)) {
-                    // If it's fully visible and not already playing, play it
                     if (currentPlayingViewHolder != viewHolder) {
-                        currentPlayingViewHolder?.stopVideo()  // Stop the previously playing video
+                        currentPlayingViewHolder?.stopVideo()
                         currentPlayingViewHolder = viewHolder
+                        currentProductId = reviews[i].productId
                         viewHolder.playVideo()
                     }
                 } else {
-                    viewHolder.stopVideo()  // Stop video for items that are not fully visible
+                    viewHolder.stopVideo()
                 }
             }
         }

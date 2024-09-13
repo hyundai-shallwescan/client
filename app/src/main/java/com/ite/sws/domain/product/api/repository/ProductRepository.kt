@@ -1,9 +1,13 @@
 package com.ite.sws.domain.product.api.repository
 
+import com.ite.sws.common.RetrofitClient
 import com.ite.sws.domain.product.api.service.ProductService
 import com.ite.sws.domain.product.data.GetProductReviewRes
 
-class ProductRepository(private val productService: ProductService) {
+class ProductRepository() {
+
+
+    private val productService = RetrofitClient.instance.create(ProductService::class.java)
 
     suspend fun getProductReviews(productId: Long, page: Int, size: Int): List<GetProductReviewRes>? {
         return try {
