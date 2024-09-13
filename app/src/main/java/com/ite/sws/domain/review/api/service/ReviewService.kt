@@ -4,10 +4,12 @@ import com.ite.sws.domain.review.data.GetReviewRes
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 
@@ -39,4 +41,15 @@ interface ReviewService {
         @Query("page") page: Int,
         @Query("size") size: Int
     ): Call<List<GetReviewRes>>
+
+
+    @DELETE("/reviews/{reviewId}")
+    fun deleteReview(
+        @Path("reviewId") reviewId: Long
+    ): Call<Void>
+
+    @GET("/reviews/{reviewId}")
+    fun getReviewDetail(
+        @Path("reviewId") reviewId: Long
+    ): Call<GetReviewRes>
 }

@@ -84,6 +84,48 @@ class ReviewRepository {
         })
     }
 
+    fun getReviewDetail(
+        reviewId: Long,
+        onSuccess: (GetReviewRes) -> Unit,
+        onFailure: (Throwable) -> Unit
+    ) {
+        reviewService.getReviewDetail(reviewId).enqueue(object : Callback<GetReviewRes> {
+            override fun onResponse(call: Call<GetReviewRes>, response: Response<GetReviewRes>) {
+                if (response.isSuccessful) {
+                    response.body()?.let {
+                        onSuccess(it)
+                    } ?: onFailure(Exception("No data received."))
+                } else {
+                    onFailure(Exception("Failed to receive a valid response."))
+                }
+            }
+
+            override fun onFailure(call: Call<GetReviewRes>, t: Throwable) {
+                onFailure(t)
+            }
+        })
+    }
+
+    fun deleteReview(
+        reviewId: Long,
+        onSuccess: () -> Unit,
+        onFailure: (Throwable) -> Unit
+    ) {
+        reviewService.deleteReview(reviewId).enqueue(object : Callback<Void> {
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                if (response.isSuccessful) {
+                    onSuccess()
+                } else {
+                    onFailure(Exception("Failed to delete the review."))
+                }
+            }
+
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                onFailure(t)
+            }
+        })
+    }
+
 
     private fun createRequestBody(content: String, mediaType: String)=
         content.toRequestBody(mediaType.toMediaTypeOrNull())
@@ -92,5 +134,7 @@ class ReviewRepository {
         val requestBody = file.asRequestBody(mediaType.toMediaTypeOrNull())
         return MultipartBody.Part.createFormData(partName, file.name, requestBody)
     }
+
+
 }
 
