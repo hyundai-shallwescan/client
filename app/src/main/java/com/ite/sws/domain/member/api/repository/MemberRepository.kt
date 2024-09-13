@@ -19,6 +19,7 @@ import com.ite.sws.domain.member.data.PatchMemberReq
 import com.ite.sws.domain.member.data.PostLoginRes
 import com.ite.sws.domain.member.data.PostMemberReq
 import com.google.android.gms.wearable.Wearable
+import com.ite.sws.domain.member.data.JwtToken
 
 /**
  * 회원 Repository
@@ -40,6 +41,8 @@ import com.google.android.gms.wearable.Wearable
  * 2024.09.06   정은지        작성 리뷰 조회 추가
  * 2024.09.10   남진수        FCM 토큰 발급 추가
  * 2024.09.12   남진수        FCM 토큰을 워치로 전송 추가
+ * 2024.09.12   정은지        로그인 시 리프레시 토큰 저장 추가
+ * 2024.09.12   정은지        액세스 토큰 재발급 추가
  * </pre>
  */
 class MemberRepository {
@@ -71,10 +74,16 @@ class MemberRepository {
                 ) {
                     if (response.isSuccessful) {
                         // 액세스 토큰 SharedPreferences에 저장
-                        response.headers()["Authorization"]?.let { tokenHeader ->
-                            val token = tokenHeader.removePrefix("Bearer ")
+                        response.headers()["Authorization"]?.let { accessToken ->
+                            val token = accessToken.removePrefix("Bearer ")
                             SharedPreferencesUtil.setAccessToken(token)
                             sendLoginTokenToWear(context, token)
+                        }
+                        // 리프레시 토큰 SharedPreferences에 저장
+                        response.headers()["X-Refresh-Token"]?.let { refreshToken ->
+                            val token = refreshToken.removePrefix("Bearer ")
+                            SharedPreferencesUtil.setRefreshToken(token)
+//                            Log.d("MemberRepository", "리프레시 토큰: $token")
                         }
                         // 장바구니 아이디 SharedPreferences에 저장
                         response.body()?.cartId?.let { cartId ->
@@ -109,7 +118,9 @@ class MemberRepository {
      * 로그아웃
      */
     fun logout(onSuccess: () -> Unit, onFailure: (ErrorRes) -> Unit) {
-        memberService.logout().enqueue(object : Callback<Void> {
+        val refreshToken = SharedPreferencesUtil.getRefreshToken()
+
+        memberService.logout("Bearer $refreshToken").enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 if (response.isSuccessful) {
                     // 데이터 삭제
@@ -161,7 +172,9 @@ class MemberRepository {
         onSuccess: () -> Unit,
         onFailure: (ErrorRes) -> Unit
     ) {
-        memberService.withdraw().enqueue(object : Callback<Void> {
+        val refreshToken = SharedPreferencesUtil.getRefreshToken()
+
+        memberService.withdraw("Bearer $refreshToken").enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 if (response.isSuccessful) {
                     // SharedPrefer 비우기
@@ -289,6 +302,34 @@ class MemberRepository {
         } catch (e: Exception) {
             throw Exception("Network error: ${e.localizedMessage}")
         }
+    }
+
+    /**
+     * 액세스 토큰 재발급
+     */
+    fun reissueAccessToken(
+        onSuccess: () -> Unit,
+        onFailure: (ErrorRes) -> Unit) {
+        val refreshToken = SharedPreferencesUtil.getRefreshToken()
+
+        memberService.reissueAccessToken("Bearer $refreshToken").enqueue(object : Callback<Void> {
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                if (response.isSuccessful) {
+                    response.headers()["Authorization"]?.let { accessToken ->
+                        val token = accessToken.removePrefix("Bearer ")
+                        SharedPreferencesUtil.setAccessToken(token)
+                        onSuccess()
+                    }
+                } else {
+                    val errorRes = Gson().fromJson(response.errorBody()?.string(), ErrorRes::class.java)
+                    onFailure(errorRes)
+                }
+            }
+
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                handleFailure(call, t, onFailure)
+            }
+        })
     }
 
     /**

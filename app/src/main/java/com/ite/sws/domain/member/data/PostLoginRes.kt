@@ -14,5 +14,6 @@ package com.ite.sws.domain.member.data
  */
 data class PostLoginRes (
     val cartId: Long,
-    val token: String? = null
+    val accessToken: String? = null,
+    val refreshToken: String? = null
 )

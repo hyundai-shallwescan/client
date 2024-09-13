@@ -15,12 +15,14 @@ import android.content.SharedPreferences
  * 2024.08.31  	남진수       최초 생성
  * 2024.09.03   정은지       액세스 토큰 관련 함수 추가
  * 2024.09.03   정은지       장바구니 아이디 관련 함수 추가
+ * 2024.09.12   정은지       리프레시 토큰 관련 함수 추가
  * </pre>
  */
 object SharedPreferencesUtil {
 
     private const val PREFS_NAME = "auth_prefs"
     private const val KEY_ACCESS_TOKEN = "ACCESS_TOKEN"
+    private const val KEY_REFRESH_TOKEN = "REFRESH_TOKEN"
     private const val KEY_CART_ID = "CART_ID"
     private const val KEY_CART_MEMBER_NAME = "NAME"
     private lateinit var sharedPreferences: SharedPreferences
@@ -139,5 +141,26 @@ object SharedPreferencesUtil {
      */
     fun getCartMemberName(): String? {
         return sharedPreferences.getString(KEY_CART_MEMBER_NAME, "")
+    }
+
+    /**
+     * 리프레시 토큰 저장
+     */
+    fun setRefreshToken(refreshToken: String) {
+        sharedPreferences.edit().putString(KEY_REFRESH_TOKEN, refreshToken).apply()
+    }
+
+    /**
+     * 리프레시 토큰 가져오기
+     */
+    fun getRefreshToken(): String? {
+        return sharedPreferences.getString(KEY_REFRESH_TOKEN, null)
+    }
+
+    /**
+     * 리프레시 토큰 삭제
+     */
+    fun removeRefreshToken() {
+        sharedPreferences.edit().remove(KEY_REFRESH_TOKEN).apply()
     }
 }

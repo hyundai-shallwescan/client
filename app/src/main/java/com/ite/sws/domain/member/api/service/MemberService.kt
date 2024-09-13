@@ -37,6 +37,7 @@ import retrofit2.http.Query
  * 2024.09.05   정은지        회원 구매 내역 조회 API 호출
  * 2024.09.06   정은지        작성 리뷰 조회 API 호출
  * 2024.09.10   남진수        FCM 토큰 발급 추가
+ * 2024.09.12   정은지        액세스 토큰 재발급 API 호출
  * </pre>
  */
 interface MemberService {
@@ -57,13 +58,13 @@ interface MemberService {
      * 로그아웃
      */
     @POST("/members/logout")
-    fun logout(): Call<Void>
+    fun logout(@Header("X-Refresh-Token") refreshToken: String): Call<Void>
 
     /**
      * 회원탈퇴
      */
     @DELETE("/members")
-    fun withdraw(): Call<Void>
+    fun withdraw(@Header("X-Refresh-Token") refreshToken: String): Call<Void>
 
     /**
      * 회원가입
@@ -98,4 +99,10 @@ interface MemberService {
         @Query("page") page: Int,
         @Query("size") size: Int
     ): Response<List<GetMemberReviewRes>>
+
+    /**
+     * 액세스 토큰 재발급
+     */
+    @POST("/members/reissue")
+    fun reissueAccessToken(@Header("X-Refresh-Token") refreshToken: String): Call<Void>
 }
