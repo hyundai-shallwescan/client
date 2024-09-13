@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewTreeObserver
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -33,7 +32,6 @@ import setupToolbar
  * </pre>
  */
 class ReviewFragment : Fragment() {
-
     private var currentProductId: Long? = null
     private var _binding: FragmentReviewBinding? = null
     private val binding get() = _binding!!
