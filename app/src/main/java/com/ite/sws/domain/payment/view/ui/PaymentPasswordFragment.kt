@@ -1,6 +1,8 @@
 package com.ite.sws.domain.payment.view.ui
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -12,6 +14,7 @@ import com.ite.sws.MainActivity
 import com.ite.sws.databinding.FragmentPaymentPasswordBinding
 import com.ite.sws.domain.payment.data.PaymentItemDto
 import com.ite.sws.domain.payment.data.PostPaymentReq
+import com.ite.sws.util.NumberFormatterUtil.formatCurrencyWithCommas
 import com.ite.sws.util.SharedPreferencesUtil
 import com.ite.sws.util.hideBottomNavigation
 import setupToolbar
@@ -30,6 +33,7 @@ import java.util.Locale
  * ----------  --------    ---------------------------
  * 2024.09.10   김민정       최초 생성
  * 2024.09.10   김민정       결제 요청
+ * 2024.09.13   남진수       비밀번호 입력 이벤트
  * </pre>
  */
 class PaymentPasswordFragment : Fragment() {
@@ -40,6 +44,9 @@ class PaymentPasswordFragment : Fragment() {
 
     // ViewModel 객체
     private lateinit var viewModel: PaymentViewModel
+
+    // 비밀번호 입력을 저장할 리스트
+    private val passwordInput = mutableListOf<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,6 +62,10 @@ class PaymentPasswordFragment : Fragment() {
         (activity as? MainActivity)?.let { mainActivity ->
             hideBottomNavigation(mainActivity.binding, true)
         }
+
+        // Bundle에서 totalPrice 값을 가져와서 표시
+        val totalPrice = arguments?.getInt("totalPrice") ?: 0
+        binding.tvTotalPrice.text = formatCurrencyWithCommas(totalPrice)
 
         // 툴바 타이틀 설정
         setupToolbar(binding.toolbar.toolbar, "결제하기", true)
@@ -72,17 +83,7 @@ class PaymentPasswordFragment : Fragment() {
         observeViewModel()
 
         // 버튼 설정
-        btnSettings()
-    }
-
-    /**
-     * 버튼 이벤트 설정
-     */
-    private fun btnSettings() {
-        // 결제하기
-        binding.btnPay.setOnClickListener {
-            makePaymentRequest()
-        }
+        setupKeyPad()
     }
 
     /**
@@ -139,6 +140,59 @@ class PaymentPasswordFragment : Fragment() {
             errorMessage?.let {
                 Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
             }
+        }
+    }
+
+    /**
+     * 키패드 이벤트 설정
+     */
+    private fun setupKeyPad() {
+        val keypadButtons = listOf(
+            binding.paymentKeypad0, binding.paymentKeypad1, binding.paymentKeypad2,
+            binding.paymentKeypad3, binding.paymentKeypad4, binding.paymentKeypad5,
+            binding.paymentKeypad6, binding.paymentKeypad7, binding.paymentKeypad8,
+            binding.paymentKeypad9
+        )
+
+        for ((index, button) in keypadButtons.withIndex()) {
+            button.setOnClickListener {
+                if (passwordInput.size < 6) {
+                    passwordInput.add(index.toString())
+                    updatePasswordFields()
+                }
+            }
+        }
+
+        binding.paymentKeypadDeleteAll.setOnClickListener {
+            passwordInput.clear()
+            updatePasswordFields()
+        }
+
+        binding.paymentKeypadBackspace.setOnClickListener {
+            if (passwordInput.isNotEmpty()) {
+                passwordInput.removeAt(passwordInput.size - 1)
+                updatePasswordFields()
+            }
+        }
+    }
+
+    /**
+     * 비밀번호 입력란 업데이트
+     */
+    private fun updatePasswordFields() {
+        val passwordFields = listOf(
+            binding.paymentPassword1, binding.paymentPassword2, binding.paymentPassword3,
+            binding.paymentPassword4, binding.paymentPassword5, binding.paymentPassword6
+        )
+
+        passwordFields.forEachIndexed { index, textView ->
+            textView.text = if (index < passwordInput.size) "*" else ""
+        }
+
+        if (passwordInput.size == 6) {
+            Handler(Looper.getMainLooper()).postDelayed({
+                makePaymentRequest()
+            }, 1000) // 1초 딜레이 후 결제 요청
         }
     }
 }
