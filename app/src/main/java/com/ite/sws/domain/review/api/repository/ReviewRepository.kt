@@ -1,6 +1,7 @@
 package com.ite.sws.domain.review.api.repository
 
 import android.media.Image
+import android.util.Log
 import com.google.gson.Gson
 import com.ite.sws.common.RetrofitClient
 import com.ite.sws.domain.review.api.service.ReviewService
@@ -58,12 +59,15 @@ class ReviewRepository {
         })
     }
     fun getReviews(
-        page: Int,
-        size: Int,
+        page: Int?=null,
+        size: Int?=null,
         onSuccess: (List<GetReviewRes>) -> Unit,
         onFailure: (Throwable) -> Unit
     ) {
-        reviewService.getReviews(page, size).enqueue(object : Callback<List<GetReviewRes>> {
+        val actualPage = page ?: 0
+        val actualSize = size ?: 10
+
+        reviewService.getReviews(actualPage, actualSize).enqueue(object : Callback<List<GetReviewRes>> {
             override fun onResponse(call: Call<List<GetReviewRes>>, response: Response<List<GetReviewRes>>) {
                 if (response.isSuccessful) {
                     response.body()?.let {
@@ -80,6 +84,48 @@ class ReviewRepository {
         })
     }
 
+    fun getReviewDetail(
+        reviewId: Long,
+        onSuccess: (GetReviewRes) -> Unit,
+        onFailure: (Throwable) -> Unit
+    ) {
+        reviewService.getReviewDetail(reviewId).enqueue(object : Callback<GetReviewRes> {
+            override fun onResponse(call: Call<GetReviewRes>, response: Response<GetReviewRes>) {
+                if (response.isSuccessful) {
+                    response.body()?.let {
+                        onSuccess(it)
+                    } ?: onFailure(Exception("No data received."))
+                } else {
+                    onFailure(Exception("Failed to receive a valid response."))
+                }
+            }
+
+            override fun onFailure(call: Call<GetReviewRes>, t: Throwable) {
+                onFailure(t)
+            }
+        })
+    }
+
+    fun deleteReview(
+        reviewId: Long,
+        onSuccess: () -> Unit,
+        onFailure: (Throwable) -> Unit
+    ) {
+        reviewService.deleteReview(reviewId).enqueue(object : Callback<Void> {
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                if (response.isSuccessful) {
+                    onSuccess()
+                } else {
+                    onFailure(Exception("Failed to delete the review."))
+                }
+            }
+
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                onFailure(t)
+            }
+        })
+    }
+
 
     private fun createRequestBody(content: String, mediaType: String)=
         content.toRequestBody(mediaType.toMediaTypeOrNull())
@@ -88,5 +134,7 @@ class ReviewRepository {
         val requestBody = file.asRequestBody(mediaType.toMediaTypeOrNull())
         return MultipartBody.Part.createFormData(partName, file.name, requestBody)
     }
+
+
 }
 

@@ -1,7 +1,7 @@
 package com.ite.sws.domain.product.api.repository
-
 import com.ite.sws.common.RetrofitClient
 import com.ite.sws.domain.product.api.service.ProductService
+import com.ite.sws.domain.product.data.GetProductReviewRes
 import com.ite.sws.domain.product.data.GetProductRes
 import retrofit2.Response
 
@@ -25,6 +25,21 @@ class ProductRepository {
     private val productService =
         RetrofitClient.instance.create(ProductService::class.java)
 
+
+  suspend fun getProductReviews(productId: Long, page: Int, size: Int): List<GetProductReviewRes>? {
+        return try {
+            val response = productService.getProductReviews(productId, page, size)
+            if (response.isSuccessful) {
+                response.body()
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
+        
     /**
      * 상품 이름으로 조회
      */
@@ -54,4 +69,6 @@ class ProductRepository {
     private fun handleNetworkException(e: Exception): Exception {
         return Exception("Network error: ${e.localizedMessage}")
     }
+    
+    
 }

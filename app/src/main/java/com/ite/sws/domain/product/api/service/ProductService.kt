@@ -1,8 +1,10 @@
 package com.ite.sws.domain.product.api.service
 
-import com.ite.sws.domain.product.data.GetProductRes
+import com.ite.sws.domain.product.data.GetProductReviewRes
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
+import com.ite.sws.domain.product.data.GetProductRes
 import retrofit2.Response
 
 /**
@@ -23,6 +25,13 @@ interface ProductService {
     /**
      * 상품 이름으로 조회 API
      */
-    @GET("prodcuts")
+    @GET("products")
     suspend fun findProductListByName(@Query("name") name: String): Response<List<GetProductRes>>
+  
+     @GET("products/{productId}/reviews")
+    suspend fun getProductReviews(
+        @Path("productId") productId: Long,
+        @Query("page") page: Int,
+        @Query("size") size: Int
+    ): Response<List<GetProductReviewRes>>
 }

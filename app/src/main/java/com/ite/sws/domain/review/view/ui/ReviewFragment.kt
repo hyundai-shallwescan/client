@@ -1,23 +1,24 @@
 package com.ite.sws.domain.review.view.ui
 
 import android.graphics.Rect
-import android.media.MediaPlayer
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import android.widget.VideoView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.ite.sws.MainActivity
 import com.ite.sws.R
 import com.ite.sws.domain.review.api.repository.ReviewRepository
 
 import com.ite.sws.domain.review.data.GetReviewRes
 import com.ite.sws.domain.review.view.adapter.ReviewAdapter
 import com.ite.sws.databinding.FragmentReviewBinding
+import com.ite.sws.domain.product.view.ui.ProductFragment
+import com.ite.sws.util.hideBottomNavigation
+import com.ite.sws.util.replaceFragmentWithAnimation
 import setupToolbar
 
 /**
@@ -33,80 +34,111 @@ import setupToolbar
  * </pre>
  */
 class ReviewFragment : Fragment() {
-
+    private var currentProductId: Long? = null
     private var _binding: FragmentReviewBinding? = null
     private val binding get() = _binding!!
     private lateinit var reviewAdapter: ReviewAdapter
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var reviews: List<GetReviewRes>
+    private lateinit var reviews: MutableList<GetReviewRes>
+    private var currentPlayingViewHolder: ReviewAdapter.ReviewViewHolder? = null
+    private var currentPage = 0
+    private val pageSize = 10
+    private var isLoading = false
+    private var isLastPage = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_review, container, false)
+        _binding = FragmentReviewBinding.inflate(inflater, container, false)
 
-        recyclerView = view.findViewById(R.id.recyclerView_reviews)
-        recyclerView.layoutManager = LinearLayoutManager(context)
         setupToolbar(binding.toolbar.toolbar, "리뷰", true)
+        setupRecyclerView()
 
-        ReviewRepository().getReviews(page = 0, size = 10, onSuccess = { fetchedReviews ->
-            reviews = fetchedReviews
-            reviewAdapter = ReviewAdapter(reviews) { review ->
-                playVideoAutomatically(view.findViewById(R.id.video_view), Uri.parse(review.shortFormUrl))
-            }
-            recyclerView.adapter = reviewAdapter
-        }, onFailure = { throwable ->
-            Toast.makeText(requireContext(), "리뷰 영상 보기 실패: ${throwable.message}", Toast.LENGTH_SHORT).show()
-        })
+        (activity as? MainActivity)?.let { mainActivity ->
+            hideBottomNavigation(mainActivity.binding, false)
+        }
 
-        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+
+        loadReviews(currentPage)
+
+        binding.productDetailBtn.setOnClickListener {
+            navigateToProductDetail()
+        }
+
+        return binding.root
+    }
+
+    private fun setupRecyclerView() {
+        binding.recyclerViewReviews.layoutManager = LinearLayoutManager(context)
+        reviews = mutableListOf()
+        reviewAdapter = ReviewAdapter(reviews)
+        binding.recyclerViewReviews.adapter = reviewAdapter
+
+        binding.recyclerViewReviews.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 handleAutoPlayVideo()
-            }
-        })
 
-        return view
-    }
+                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                val totalItemCount = layoutManager.itemCount
+                val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
 
-
-        private fun handleAutoPlayVideo() {
-            val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-            val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
-            val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
-
-            for (i in firstVisibleItemPosition..lastVisibleItemPosition) {
-                val viewHolder = recyclerView.findViewHolderForAdapterPosition(i) as? ReviewAdapter.ReviewViewHolder
-                viewHolder?.let {
-                    if (isFullyVisible(it.itemView)) {
-                        val videoUri = Uri.parse(reviews[i].shortFormUrl)
-                        playVideoAutomatically(it.itemView.findViewById(R.id.video_view), videoUri)
-                    } else {
-                        it.itemView.findViewById<VideoView>(R.id.video_view).stopPlayback()
-                    }
+                if (!isLoading && !isLastPage && lastVisibleItemPosition >= totalItemCount - 1) {
+                    currentPage++
+                    loadReviews(currentPage)
                 }
             }
-        }
 
-    private fun playVideoAutomatically(videoView: VideoView, videoUri: Uri) {
-
-        videoView.setVideoURI(Uri.parse("https://shall-we-scan-reviews.s3.ap-northeast-2.amazonaws.com/%E1%84%8C%E1%85%A5%E1%86%BC%E1%84%89%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%AE%E1%86%B7%E1%84%8D%E1%85%A1%E1%86%AF%E1%84%8B%E1%85%B1%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%A7%E1%86%BC%E1%84%89%E1%85%A1%E1%86%BC_1.mp4"))
-        videoView.setOnPreparedListener { mediaPlayer ->
-            mediaPlayer.start()
-        }
-        videoView.setOnErrorListener { mp, what, extra ->
-            val errorMessage = when (what) {
-                MediaPlayer.MEDIA_ERROR_UNKNOWN -> "Unknown media error"
-                MediaPlayer.MEDIA_ERROR_SERVER_DIED -> "Media server died"
-                MediaPlayer.MEDIA_ERROR_IO -> "I/O error"
-                MediaPlayer.MEDIA_ERROR_MALFORMED -> "Malformed media"
-                MediaPlayer.MEDIA_ERROR_UNSUPPORTED -> "Unsupported media"
-                MediaPlayer.MEDIA_ERROR_TIMED_OUT -> "Timed out"
-                else -> "Unknown error"
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    handleAutoPlayVideo()
+                }
             }
-            Toast.makeText(requireContext(), "Error: $errorMessage", Toast.LENGTH_LONG).show()
-            true
+        })
+    }
+
+    private fun loadReviews(page: Int) {
+        isLoading = true
+
+        ReviewRepository().getReviews(page = page, size = pageSize, onSuccess = { fetchedReviews ->
+            if (fetchedReviews.isNotEmpty()) {
+                reviews.addAll(fetchedReviews)
+                reviewAdapter.notifyDataSetChanged()
+
+
+                if (fetchedReviews.size < pageSize) {
+                    isLastPage = true
+                }
+            } else {
+                isLastPage = true
+            }
+            isLoading = false
+        }, onFailure = { throwable ->
+            Toast.makeText(requireContext(), "리뷰 영상 보기 실패: ${throwable.message}", Toast.LENGTH_SHORT).show()
+            isLoading = false
+        })
+    }
+
+    private fun handleAutoPlayVideo() {
+        val layoutManager = binding.recyclerViewReviews.layoutManager as LinearLayoutManager
+        val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
+        val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
+
+        for (i in firstVisibleItemPosition..lastVisibleItemPosition) {
+            val viewHolder = binding.recyclerViewReviews.findViewHolderForAdapterPosition(i) as? ReviewAdapter.ReviewViewHolder
+            viewHolder?.let {
+                if (isFullyVisible(it.itemView)) {
+                    if (currentPlayingViewHolder != viewHolder) {
+                        currentPlayingViewHolder?.stopVideo()
+                        currentPlayingViewHolder = viewHolder
+                        currentProductId = reviews[i].productId
+                        viewHolder.playVideo()
+                    }
+                } else {
+                    viewHolder.stopVideo()
+                }
+            }
         }
     }
 
@@ -115,5 +147,18 @@ class ReviewFragment : Fragment() {
         val isVisible = view.getGlobalVisibleRect(itemRect)
         return isVisible && itemRect.height() == view.height
     }
-}
 
+    private fun navigateToProductDetail() {
+        val productFragment = ProductFragment()
+        val bundle = Bundle().apply {
+            currentProductId?.let { value -> putLong("productId", value) }
+        }
+        productFragment.arguments = bundle
+        replaceFragmentWithAnimation(R.id.container_main, productFragment, true)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+}

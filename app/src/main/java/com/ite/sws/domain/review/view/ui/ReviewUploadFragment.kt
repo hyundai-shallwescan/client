@@ -3,8 +3,10 @@ package com.ite.sws.domain.review.view.ui
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
+import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -18,6 +20,7 @@ import android.widget.Toast
 import android.widget.VideoView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.fragment.app.Fragment
 import com.ite.sws.R
 import com.ite.sws.common.util.VideoUtil
 import com.ite.sws.databinding.FragmentMyReviewUploadBinding
@@ -28,6 +31,7 @@ import com.ite.sws.util.CustomDialog
 import com.ite.sws.util.replaceFragmentWithAnimation
 import setupToolbar
 import java.io.File
+import java.io.FileOutputStream
 
 
 /**
@@ -42,7 +46,7 @@ import java.io.File
  * 2024.09.06  	구지웅       최초 생성
  * </pre>
  */
-class ReviewUploadFragment : BaseVideoFragment() {
+class ReviewUploadFragment : Fragment() {
     private var _binding: FragmentMyReviewUploadBinding? = null
     private val binding get() = _binding!!
     private lateinit var imgUploadBackground: ImageView
@@ -61,6 +65,7 @@ class ReviewUploadFragment : BaseVideoFragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentMyReviewUploadBinding.inflate(inflater, container, false)
+
         imgUploadBackground = binding.imgUploadBackground
         btnReviewUpload = binding.btnReviewUpload
         videoView = binding.reviewVideoBackground
@@ -68,7 +73,10 @@ class ReviewUploadFragment : BaseVideoFragment() {
         btnDelete = binding.btnDelete
         btnUpload = binding.btnUpload
 
-        hideVideoUI()
+        videoView.visibility = View.GONE
+        btnVideoPlay.visibility = View.GONE
+        btnDelete.visibility = View.GONE
+        btnUpload.visibility = View.GONE
 
         productName = arguments?.getString("productName")
         paymentId = arguments?.getLong("paymentItemId")
@@ -86,7 +94,12 @@ class ReviewUploadFragment : BaseVideoFragment() {
         return binding.root
     }
 
-    override fun openVideoPicker() {
+    private fun openVideoPicker() {
+        videoView.visibility = View.VISIBLE
+        btnVideoPlay.visibility = View.VISIBLE
+        btnDelete.visibility = View.VISIBLE
+        btnUpload.visibility = View.VISIBLE
+
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Video.Media.EXTERNAL_CONTENT_URI)
         videoPickerLauncher.launch(intent)
     }
@@ -101,7 +114,7 @@ class ReviewUploadFragment : BaseVideoFragment() {
         }
     }
 
-    override fun toggleVideoPlayPause() {
+    private fun toggleVideoPlayPause() {
         if (videoView.isPlaying) {
             videoView.pause()
             btnVideoPlay.visibility = View.VISIBLE
@@ -113,38 +126,23 @@ class ReviewUploadFragment : BaseVideoFragment() {
                 videoView.setOnCompletionListener {
                     btnVideoPlay.visibility = View.VISIBLE
                     showVideoUI(uri)
-                    resizeVideoView()
                 }
             }
         }
     }
 
-    override fun showVideoUI(uri: Uri) {
-        resizeVideoView()
-
-        val thumbnailPath =
-            VideoUtil.captureThumbnail(requireContext(), uri, "${paymentId}_${productId}_video")
-        val thumbnailBitmap = BitmapFactory.decodeFile(thumbnailPath)
-
-        videoView.background = BitmapDrawable(resources, thumbnailBitmap)
-        videoView.visibility = View.VISIBLE
-        btnVideoPlay.visibility = View.VISIBLE
-        btnDelete.visibility = View.VISIBLE
-        btnUpload.visibility = View.VISIBLE
-        imgUploadBackground.visibility = View.GONE
-        btnReviewUpload.visibility = View.GONE
+    private fun removeVideo() {
+        videoView.stopPlayback()
+        videoUri = null
+        hideVideoUI()
     }
 
-    override fun hideVideoUI() {
-        videoView.visibility = View.GONE
-        btnVideoPlay.visibility = View.GONE
-        btnDelete.visibility = View.GONE
-        btnUpload.visibility = View.GONE
-        imgUploadBackground.visibility = View.VISIBLE
-        btnReviewUpload.visibility = View.VISIBLE
+    fun VideoView.setBackgroundBitmap(bitmap: Bitmap) {
+        val drawable = BitmapDrawable(resources, bitmap)
+        this.background = drawable
     }
 
-    override fun resizeVideoView() {
+     fun resizeVideoView() {
         val videoDimensions =
             videoUri?.let { VideoUtil.getVideoDimensions(requireContext(), it) } ?: return
         val (videoWidth, videoHeight) = videoDimensions
@@ -169,13 +167,71 @@ class ReviewUploadFragment : BaseVideoFragment() {
         binding.reviewVideoBackground.requestLayout()
     }
 
+    private fun showVideoUI(uri: Uri) {
+        val videoDimensions = getVideoDimensions(uri)
+        adjustVideoViewSize(videoDimensions)
+        val thumbnailPath = captureThumbnail(uri)
+        val thumbnailBitmap = BitmapFactory.decodeFile(thumbnailPath)
+
+        videoView.setBackgroundBitmap(thumbnailBitmap)
+        videoView.visibility = View.VISIBLE
+        btnVideoPlay.visibility = View.VISIBLE
+        btnDelete.visibility = View.VISIBLE
+        btnUpload.visibility = View.VISIBLE
+        imgUploadBackground.visibility = View.GONE
+        btnReviewUpload.visibility = View.GONE
+
+        resizeVideoView();
+    }
+
+    private fun getVideoDimensions(uri: Uri): Pair<Int, Int> {
+        val retriever = MediaMetadataRetriever()
+        retriever.setDataSource(requireContext(), uri)
+        val width = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH)?.toInt() ?: 0
+        val height = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT)?.toInt() ?: 0
+        retriever.release()
+        return Pair(width, height)
+    }
+
+    private fun adjustVideoViewSize(dimensions: Pair<Int, Int>) {
+        val (videoWidth, videoHeight) = dimensions
+        val videoViewParam = binding.reviewVideoBackground.layoutParams as ConstraintLayout.LayoutParams
+
+        val screenWidth = resources.displayMetrics.widthPixels
+        val screenHeight = resources.displayMetrics.heightPixels
+
+        val toolbarHeight = binding.toolbar.toolbar.height
+        val productNameHeight = binding.tvProductName.height + 10
+        val buttonHeight = binding.btnUpload.height + binding.btnDelete.height + 10
+
+        val availableHeight = screenHeight - toolbarHeight - productNameHeight - buttonHeight
+
+        val aspectRatio = videoWidth.toFloat() / videoHeight.toFloat()
+        val newHeight = (screenWidth / aspectRatio).toInt()
+
+        videoViewParam.width = screenWidth
+        videoViewParam.height = if (newHeight > availableHeight) availableHeight else newHeight
+
+        binding.reviewVideoBackground.layoutParams = videoViewParam
+        binding.reviewVideoBackground.requestLayout()
+    }
+
+    private fun hideVideoUI() {
+        videoView.visibility = View.GONE
+        btnVideoPlay.visibility = View.GONE
+        btnDelete.visibility = View.GONE
+        btnUpload.visibility = View.GONE
+        imgUploadBackground.visibility = View.VISIBLE
+        btnReviewUpload.visibility = View.VISIBLE
+    }
+
     private fun showDeleteDialog(title: String) {
         val dialog = CustomDialog(
             layoutId = R.layout.dialog_text2_btn2,
             title = title,
             confirmText = "확인",
             cancelText = "취소",
-            onConfirm = { VideoUtil.removeVideo(videoView, ::hideVideoUI) }
+            onConfirm = { removeVideo() }
         )
         dialog.show(parentFragmentManager, "DeleteDialog")
     }
@@ -190,62 +246,59 @@ class ReviewUploadFragment : BaseVideoFragment() {
         )
         dialog.show(parentFragmentManager, "UploadDialog")
     }
+
     private fun uploadReview() {
         videoUri?.let { uri ->
-            val compressedFilePath =
-                File(requireContext().cacheDir, "${paymentId}_${productId}_compressed.mp4").path
 
-            VideoUtil.compressVideo(
-                context = requireContext(),
-                inputUri = uri,
-                outputFilePath = compressedFilePath,
-                onSuccess = { compressedPath ->
-                    val thumbnailPath = VideoUtil.captureThumbnail(
-                        requireContext(),
-                        uri,
-                        "${paymentId}_${productId}"
-                    )
-                    val postCreateReviewReq = PostCreateReviewReq(paymentId, productId)
-                    val videoFile = File(compressedPath)
-                    val imageFile = File(thumbnailPath)
+            val thumbnail = captureThumbnail(uri)
 
-                    ReviewRepository().createReview(
-                        postCreateReviewReq = postCreateReviewReq,
-                        shortFormFile = videoFile,
-                        image = imageFile,
-                        onSuccess = {
-                            Toast.makeText(
-                                requireContext(),
-                                "영상이 압축되어 업로드되었습니다",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            replaceFragmentWithAnimation(
-                                R.id.container_main,
-                                MyReviewFragment(), true
-                            )
-                        },
-                        onFailure = { throwable ->
-                            Toast.makeText(
-                                requireContext(),
-                                "업로드 실패: ${throwable.message}",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
+            val postCreateReviewReq = PostCreateReviewReq(paymentId, productId)
+
+            val videoFile = File(uriToFilePath(uri))
+            val imageFile = File(thumbnail)
+
+            ReviewRepository().createReview(
+                postCreateReviewReq = postCreateReviewReq,
+                shortFormFile = videoFile,
+                image = imageFile,
+                onSuccess = {
+                    Toast.makeText(requireContext(), "영상이 업로드되었습니다", Toast.LENGTH_SHORT).show()
+                    replaceFragmentWithAnimation(
+                        R.id.container_main,
+                        MyReviewFragment(), true
                     )
                 },
                 onFailure = { throwable ->
-                    Toast.makeText(
-                        requireContext(),
-                        "비디오 압축 실패: ${throwable.message}",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    Toast.makeText(requireContext(), "업로드 실패", Toast.LENGTH_SHORT).show()
                 }
             )
-        } ?: run {
-            Toast.makeText(requireContext(), "비디오를 선택하세요.", Toast.LENGTH_SHORT).show()
         }
     }
 
+
+
+    private fun captureThumbnail(uri: Uri): String {
+        val retriever = MediaMetadataRetriever()
+        retriever.setDataSource(requireContext(), uri)
+        val bitmap = retriever.frameAtTime
+        val file = File(requireContext().cacheDir, " ${paymentId}_${productId}_thumbnail.jpg")
+        FileOutputStream(file).use {
+            bitmap?.compress(Bitmap.CompressFormat.JPEG, 100, it)
+        }
+        retriever.release()
+        return file.path
+    }
+
+    private fun uriToFilePath(uri: Uri): String {
+        var filePath = ""
+        val cursor = requireContext().contentResolver.query(uri, null, null, null, null)
+        cursor?.use {
+            if (it.moveToFirst()) {
+                filePath = it.getString(it.getColumnIndexOrThrow(MediaStore.Video.Media.DATA))
+            }
+        }
+        return filePath
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
