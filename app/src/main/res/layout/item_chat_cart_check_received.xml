@@ -45,10 +45,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/black"
-            android:gravity="center_vertical|start"
             android:textSize="14sp"
             android:fontFamily="@font/happiness_sans_bold"
-            android:paddingEnd="10dp"
             android:maxWidth="300dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
