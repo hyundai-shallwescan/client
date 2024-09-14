@@ -86,6 +86,7 @@
     <!-- 공유 체크리스트 -->
     <string name="fragment_sharelist_not_found">아직 일행이 상품을 요청하지 않았어요!</string>
     <string name="fragment_sharelist_external_not_found">요청 리스트를 추가해주세요!</string>
+    <string name="fragment_sharelist_external_search">상품을 검색해주세요.</string>
 
     <!-- 결제 -->
     <string name="fragment_payment_pay">결제하기</string>
