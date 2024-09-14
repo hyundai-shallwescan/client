@@ -8,8 +8,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
+import com.ite.sws.R
 import com.ite.sws.databinding.FragmentMyReviewWrittenBinding
+import com.ite.sws.domain.member.data.GetMemberReviewRes
 import com.ite.sws.domain.member.view.adapter.MyReviewRecyclerViewAdapter
+import com.ite.sws.domain.review.view.ui.ReviewDetailFragment
+import com.ite.sws.util.replaceFragmentWithAnimation
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -48,7 +52,9 @@ class WrittenReviewFragment : Fragment() {
      * 리사이클러뷰 설정
      */
     private fun setupRecyclerView() {
-        val adapter = MyReviewRecyclerViewAdapter()
+        val adapter = MyReviewRecyclerViewAdapter(viewModel) { selectedReview ->
+            navigateToReviewDetail(selectedReview)
+        }
         binding.rvWrittenReviews.layoutManager = GridLayoutManager(context, 2)  // 2열 그리드
         binding.rvWrittenReviews.adapter = adapter
     }
@@ -63,6 +69,20 @@ class WrittenReviewFragment : Fragment() {
             }
         }
     }
+
+    /**
+     * 리뷰 상세 화면으로 이동
+     */
+    private fun navigateToReviewDetail(review: GetMemberReviewRes) {
+        val fragment = ReviewDetailFragment()
+        val bundle = Bundle().apply {
+            putSerializable("shortFormId", review.shortFormId) 
+        }
+        fragment.arguments = bundle
+
+        replaceFragmentWithAnimation(R.id.container_main, fragment, true, true)
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

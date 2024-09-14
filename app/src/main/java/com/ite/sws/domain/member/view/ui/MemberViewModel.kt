@@ -10,7 +10,9 @@ import com.ite.sws.domain.member.api.repository.MemberRepository
 import com.ite.sws.domain.member.api.repository.ReviewPagingSource
 import com.ite.sws.domain.member.data.GetMemberPaymentRes
 import com.ite.sws.domain.member.data.GetMemberReviewRes
+import com.ite.sws.domain.review.api.repository.ReviewRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -31,6 +33,7 @@ import java.util.Locale
 class MemberViewModel : ViewModel() {
 
     private val memberRepository = MemberRepository()
+    private val reviewRepository = ReviewRepository()
 
     /**
      * 결제 내역 조회
@@ -65,6 +68,22 @@ class MemberViewModel : ViewModel() {
             ),
             pagingSourceFactory = { ReviewPagingSource(memberRepository) }
         ).flow.cachedIn(viewModelScope)  // ViewModel 범위 내에서 데이터 캐시
+    }
+
+    /**
+     * 리뷰 삭제
+     */
+    fun deleteReview(reviewId: Long, onSuccess: () -> Unit, onFailure: (Throwable) -> Unit
+    ) {
+        reviewRepository.deleteReview(
+            reviewId = reviewId,
+            onSuccess = {
+                onSuccess()
+            },
+            onFailure = { error ->
+                onFailure(error)
+            }
+        )
     }
 
     /**
