@@ -45,7 +45,7 @@ class MyReviewFragment : Fragment() {
 
         setupToolbar(binding.toolbar.toolbar, "리뷰 관리", true)
 
-        // 기본 프래그먼트 설정: 작성한 리뷰 프래그먼트를 기본으로 보여줌
+        // 기본 프래그먼트 설정
         replaceFragment(WrittenReviewFragment())
 
         btnSettings()
@@ -57,8 +57,6 @@ class MyReviewFragment : Fragment() {
         val transaction = parentFragmentManager.beginTransaction()
         transaction.replace(R.id.fragment_container_review, fragment)
         transaction.commit()
-
-
     }
 
     /**
