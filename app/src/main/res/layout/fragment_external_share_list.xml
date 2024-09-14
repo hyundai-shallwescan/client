@@ -3,41 +3,72 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".domain.sharelist.view.ui.ExternalShareListFragment">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerview_sharelist"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="vertical"
-        android:paddingHorizontal="10dp" />
+        android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/layout_sharelist_notfound"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:layout_gravity="center"
-        android:visibility="gone">
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/searchview_product"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginHorizontal="13dp"
+            app:queryBackground="@android:color/transparent"
+            android:paddingLeft="10dp"
+            android:paddingBottom="3dp"
+            android:background="@drawable/bg_search_bar"
+            app:iconifiedByDefault="false"
+            app:queryHint="@string/fragment_sharelist_external_search"/>
 
-        <ImageView
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:adjustViewBounds="true"
-            android:src="@drawable/img_wink_heendy"
-            android:layout_gravity="center"/>
+        <!-- 상품 검색 결과를 표시할 RecyclerView -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerview_product"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical"
+            android:paddingHorizontal="10dp"
+            android:visibility="gone"/>
 
-        <TextView
-            android:id="@+id/text_sharelist_notfound"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:fontFamily="@font/happiness_sans_title"
-            android:text="@string/fragment_sharelist_external_not_found"
-            android:textColor="@android:color/black"
-            android:layout_gravity="center_horizontal"
-            android:textSize="18sp" />
+        <!-- 공유 체크리스트를 표시할 RecyclerView -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerview_sharelist"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical"
+            android:paddingHorizontal="10dp" />
+
+        <!-- 아이템을 찾을 수 없을 때 표시되는 레이아웃 -->
+        <LinearLayout
+            android:id="@+id/layout_sharelist_notfound"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:adjustViewBounds="true"
+                android:src="@drawable/img_wink_heendy"
+                android:layout_gravity="center"/>
+
+            <TextView
+                android:id="@+id/text_sharelist_notfound"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:fontFamily="@font/happiness_sans_title"
+                android:text="@string/fragment_sharelist_external_not_found"
+                android:textColor="@android:color/black"
+                android:layout_gravity="center_horizontal"
+                android:textSize="18sp" />
+        </LinearLayout>
     </LinearLayout>
 </FrameLayout>
