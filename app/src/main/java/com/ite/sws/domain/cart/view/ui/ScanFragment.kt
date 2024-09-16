@@ -28,6 +28,7 @@ import com.ite.sws.domain.payment.data.PaymentDoneDTO
 import com.ite.sws.domain.payment.view.ui.ExternalPaymentDoneFragment
 import com.ite.sws.domain.payment.view.ui.PaymentFragment
 import com.ite.sws.domain.payment.view.ui.PaymentQRFragment
+import com.ite.sws.domain.product.view.ui.ProductFragment
 import com.ite.sws.util.CustomDialog
 import com.ite.sws.util.SharedPreferencesUtil
 import com.ite.sws.util.SwipeHelperCallback
@@ -54,7 +55,8 @@ import com.journeyapps.barcodescanner.DecoratedBarcodeView
  * 2024.09.03   김민정       장바구니 아이템 삭제
  * 2024.09.05   김민정       웹소켓을 통해 실시간으로 장바구니 아이템 변경 사항을 구독
  * 2024.09.09   김민정       결제 버튼 이벤트 설정
- * 2024.09.11   김민정       결제 완료 화면 이동 처리
+ * 2024.09.11   김민정       결제 완료 화면 이동
+ * 2024.09.17   김민정       상품 상세 페이지로 이동
  * </pre>
  */
 class ScanFragment : Fragment() {
@@ -114,6 +116,12 @@ class ScanFragment : Fragment() {
             layoutManager = LinearLayoutManager(requireContext()) // LayoutManager 설정
             adapter = recyclerAdapter
         }
+
+        // 리사이클러뷰 아이템 터치 시 ProductFragment로 이동
+        recyclerAdapter.onViewDetail = { cartItem ->
+            navigateToProductDetail(cartItem.productId)
+        }
+
         itemTouchHelperSetting()
     }
 
@@ -356,6 +364,19 @@ class ScanFragment : Fragment() {
                 false
             )
         }
+    }
+
+    /**
+     * ProductFragment로 이동하는 메소드
+     */
+    private fun navigateToProductDetail(productId: Long) {
+        val productFragment = ProductFragment()
+        val bundle = Bundle().apply {
+            putLong("productId", productId)
+        }
+        productFragment.arguments = bundle
+
+        replaceFragmentWithAnimation(R.id.container_main, productFragment, true, false)
     }
 
     /**
