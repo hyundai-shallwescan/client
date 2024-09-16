@@ -127,7 +127,7 @@ class CartRepository {
         return if (response.isSuccessful) {
             response.body()
         } else {
-            throw Exception("Error: ${response.errorBody()?.string()}")
+            throw Exception(response.errorBody()?.string())
         }
     }
 
@@ -135,6 +135,13 @@ class CartRepository {
      * 공통 네트워크 예외 처리 함수
      */
     private fun handleNetworkException(e: Exception): Exception {
-        return Exception("Network error: ${e.localizedMessage}")
+        return try {
+            // 에러 메시지가 JSON 형식일 경우 ErrorRes로 파싱
+            val errorRes = Gson().fromJson(e.message, ErrorRes::class.java)
+            Exception(errorRes.message)
+        } catch (jsonEx: Exception) {
+            // JSON 파싱 실패 시, 일반 네트워크 에러로 처리
+            Exception("Network error: ${e.localizedMessage}")
+        }
     }
 }

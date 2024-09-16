@@ -29,9 +29,13 @@ class ScanViewModel : BaseCartViewModel() {
 
     private val cartRepository = CartRepository()
 
-    // 서버 요청 결과를 저장하는 LiveData
-    private val _scanResult = MutableLiveData<Unit>()
-    val scanResult: LiveData<Unit> = _scanResult
+    // 바코드 스캔 성공을 처리
+    private val _barcodeScanSuccess = MutableLiveData<Boolean>()
+    val barcodeScanSuccess: LiveData<Boolean> = _barcodeScanSuccess
+
+    // 바코드 스캔 오류를 처리
+    private val _barcodeScanError = MutableLiveData<String?>()
+    val barcodeScanError: LiveData<String?> = _barcodeScanError
 
     // 장바구니 아이템 변화를 처리
     private val _cartItems = MutableLiveData<List<CartItem>>()
@@ -40,14 +44,6 @@ class ScanViewModel : BaseCartViewModel() {
     // 오류를 처리
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
-
-    // 바코드 스캔 오류를 처리
-    private val _barcodeScanError = MutableLiveData<String?>()
-    val barcodeScanError: LiveData<String?> = _barcodeScanError
-
-    // 바코드 스캔 성공을 처리
-    private val _barcodeScanSuccess = MutableLiveData<Boolean>()
-    val barcodeScanSuccess: LiveData<Boolean> = _barcodeScanSuccess
 
     /**
      * 장바구니 아이템 추가

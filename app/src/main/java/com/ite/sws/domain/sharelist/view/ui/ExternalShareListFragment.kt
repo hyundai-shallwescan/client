@@ -129,6 +129,16 @@ class ExternalShareListFragment : Fragment() {
      * ViewModel의 LiveData 관찰
      */
     private fun observeViewModel() {
+        // 아이템 추가 요청 결과 관찰
+        viewModel.saveItemResult.observe(viewLifecycleOwner) { success ->
+            success?.let {
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.fragment_sharelist_success),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }}
+
         // 공유체크리스트 아이템 조회 결과 관찰
         viewModel.shareListItems.observe(viewLifecycleOwner) { items ->
             if (items.isNotEmpty()) {
@@ -144,11 +154,6 @@ class ExternalShareListFragment : Fragment() {
         // 상품 검색 결과 관찰
         viewModel.productSearchResults.observe(viewLifecycleOwner) { products ->
             productSearchAdapter.updateProducts(products)
-            Toast.makeText(
-                requireContext(),
-                getString(R.string.fragment_sharelist_success),
-                Toast.LENGTH_SHORT
-            ).show()
         }
 
         // 에러 상태 관찰
