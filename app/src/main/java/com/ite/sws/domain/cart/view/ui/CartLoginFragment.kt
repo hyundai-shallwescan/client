@@ -12,6 +12,7 @@ import com.ite.sws.util.SharedPreferencesUtil
 import com.ite.sws.databinding.FragmentCartLoginBinding
 import com.ite.sws.domain.cart.api.repository.CartRepository
 import com.ite.sws.domain.cart.data.PostCartLoginReq
+import com.ite.sws.util.CustomDialog
 import com.ite.sws.util.hideBottomNavigation
 import com.ite.sws.util.replaceFragmentWithAnimation
 
@@ -65,16 +66,20 @@ class CartLoginFragment : Fragment() {
                         onSuccess = { jwtToken ->
                             saveAccessToken(jwtToken.accessToken)
                             saveName(loginId)
-                            binding.nicknameTitle.text = "로그인 성공 AccessToken: ${jwtToken.accessToken}"
                             navigateToNextScreen()
                         },
-                        onFailure = { throwable ->
-                            binding.passwordTitle.text = "로그인 실패: ${throwable.message}"
+                        onFailure = { errorRes ->
+                            CustomDialog(
+                                layoutId = R.layout.dialog_text1_btn1,
+                                title = "${errorRes.message}",
+                                confirmText = "확인",
+                                onConfirm = {}
+                            ).show(activity?.supportFragmentManager!!, "CustomDialog")
                         }
                     )
                 }
             } else {
-                Toast.makeText(requireContext(), "Please enter both ID and Password", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "닉네임과 비밀번호를 입력하세요.", Toast.LENGTH_SHORT).show()
             }
         }
     }
