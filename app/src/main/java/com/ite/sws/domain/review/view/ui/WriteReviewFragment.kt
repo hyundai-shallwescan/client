@@ -38,6 +38,7 @@ class WriteReviewFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentMyReviewListBinding.inflate(inflater, container, false)
+
         return binding.root
     }
 

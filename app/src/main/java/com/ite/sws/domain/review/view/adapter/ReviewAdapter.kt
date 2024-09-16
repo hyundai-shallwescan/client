@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.ite.sws.R
 import com.ite.sws.domain.review.data.GetReviewRes
+import com.ite.sws.domain.review.view.ui.ReviewFragment
 
 
 class ReviewAdapter(
@@ -51,5 +52,9 @@ class ReviewAdapter(
                 videoView.pause()
             }
         }
+        fun isPlaying(): Boolean{
+            return videoView.isPlaying;
+        }
+
     }
 }

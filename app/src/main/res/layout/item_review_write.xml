@@ -5,7 +5,6 @@
     android:layout_height="wrap_content"
     android:layout_marginVertical="12dp">
 
-
     <ImageView
         android:id="@+id/img_review_thumbnail"
         android:layout_width="80dp"

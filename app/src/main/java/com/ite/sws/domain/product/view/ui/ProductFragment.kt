@@ -13,10 +13,10 @@ import com.ite.sws.MainActivity
 import com.ite.sws.databinding.FragmentProductDetailBinding
 import com.ite.sws.domain.product.api.repository.ProductRepository
 import com.ite.sws.domain.product.view.adatper.ProductImageAdapter
+import com.ite.sws.util.NumberFormatterUtil.formatCurrencyWithCommas
 import com.ite.sws.util.hideBottomNavigation
 import kotlinx.coroutines.launch
 import setupToolbar
-import java.text.NumberFormat
 
 class ProductFragment : Fragment() {
 
@@ -84,8 +84,15 @@ class ProductFragment : Fragment() {
 
                     if (page == 0) {
                         binding.productName.text = firstReview.name
-                        binding.productPrice.text = formatPrice(firstReview.price)
+                        binding.productPrice.text = formatCurrencyWithCommas(firstReview.price.toInt())
 
+                        Glide.with(this@ProductFragment)
+                            .load(firstReview.productThumbnailImage)
+                            .into(binding.productThumbnail)
+
+                        Glide.with(this@ProductFragment)
+                            .load(firstReview.descriptionImage)
+                            .into(binding.productInfoImage)
                         Glide.with(this@ProductFragment)
                             .load(firstReview.productThumbnailImage)
                             .into(binding.productThumbnail)
@@ -106,11 +113,6 @@ class ProductFragment : Fragment() {
             }
             isLoading = false // Reset loading state
         }
-    }
-
-    private fun formatPrice(price: Long): String {
-        val numberFormat = NumberFormat.getCurrencyInstance()
-        return numberFormat.format(price)
     }
 
     override fun onDestroyView() {

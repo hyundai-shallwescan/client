@@ -6,7 +6,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
+    android:layout_marginRight="10dp"
     tools:context=".domain.review.view.ui.WriteReviewFragment">
+
+
 
     <!-- 구매 내역 리사이클러 뷰 -->
     <androidx.recyclerview.widget.RecyclerView
@@ -17,7 +20,9 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginHorizontal="8dp"
         tools:listitem="@layout/item_payment" />
+
 
     <!-- 구매 내역이 없을 경우 -->
     <LinearLayout

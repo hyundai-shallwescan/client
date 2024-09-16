@@ -27,6 +27,8 @@
 
 
 
+
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView_reviews"
         android:layout_width="0dp"
@@ -38,15 +40,16 @@
         android:clipToPadding="false"
         android:scrollbars="vertical" />
 
+
     <ImageButton
         android:id="@+id/product_detail_btn"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:src="@drawable/btn_product_detail"
         android:background="?attr/selectableItemBackgroundBorderless"/>
-xe
 
 
 
