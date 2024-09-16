@@ -101,7 +101,7 @@ class ParkingFragment : Fragment() {
                         }
                     }
                 }
-                binding.parkingEntryTime.text = parkingInfo.entranceAt.dropLast(3)
+                binding.parkingEntryTime.text = parkingInfo.entranceAt.replace("-", ".").dropLast(3)
                 binding.parkingCarNumber.text = parkingInfo.carNumber
                 binding.parkingTimeHour.text = "${parkingInfo.parkingHour}시간"
                 binding.parkingTimeMinute.text = "${parkingInfo.parkingMinute}분"
