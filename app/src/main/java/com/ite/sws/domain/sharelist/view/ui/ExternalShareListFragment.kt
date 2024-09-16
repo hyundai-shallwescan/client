@@ -144,6 +144,11 @@ class ExternalShareListFragment : Fragment() {
         // 상품 검색 결과 관찰
         viewModel.productSearchResults.observe(viewLifecycleOwner) { products ->
             productSearchAdapter.updateProducts(products)
+            Toast.makeText(
+                requireContext(),
+                getString(R.string.fragment_sharelist_success),
+                Toast.LENGTH_SHORT
+            ).show()
         }
 
         // 에러 상태 관찰

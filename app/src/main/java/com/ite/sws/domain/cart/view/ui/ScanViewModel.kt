@@ -33,11 +33,21 @@ class ScanViewModel : BaseCartViewModel() {
     private val _scanResult = MutableLiveData<Unit>()
     val scanResult: LiveData<Unit> = _scanResult
 
+    // 장바구니 아이템 변화를 처리
     private val _cartItems = MutableLiveData<List<CartItem>>()
     val cartItems: LiveData<List<CartItem>> = _cartItems
 
+    // 오류를 처리
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
+
+    // 바코드 스캔 오류를 처리
+    private val _barcodeScanError = MutableLiveData<String?>()
+    val barcodeScanError: LiveData<String?> = _barcodeScanError
+
+    // 바코드 스캔 성공을 처리
+    private val _barcodeScanSuccess = MutableLiveData<Boolean>()
+    val barcodeScanSuccess: LiveData<Boolean> = _barcodeScanSuccess
 
     /**
      * 장바구니 아이템 추가
@@ -47,9 +57,9 @@ class ScanViewModel : BaseCartViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 cartRepository.saveCartItem(PutCartItemReq(barcode))
-                _scanResult.postValue(Unit)
+                _barcodeScanSuccess.postValue(true)
             } catch (e: Exception) {
-                _error.postValue(e.message)
+                _barcodeScanError.postValue(e.message)
             }
         }
     }
@@ -75,7 +85,6 @@ class ScanViewModel : BaseCartViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 cartRepository.modifyCartItemQuantity(cartId, productId, delta)
-                _scanResult.postValue(Unit)
             } catch (e: Exception) {
                 _error.postValue(e.message)
             }

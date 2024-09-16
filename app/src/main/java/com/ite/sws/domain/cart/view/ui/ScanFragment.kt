@@ -161,9 +161,34 @@ class ScanFragment : Fragment() {
      * ViewModel의 LiveData 관찰
      */
     private fun observeViewModel() {
-        // 상품 스캔 결과 관찰
-        viewModel.scanResult.observe(viewLifecycleOwner) {
-            resumeScannerWithDelay()    // 요청 성공 또는 실패에 상관없이 재개
+//        // 상품 스캔 결과 관찰
+//        viewModel.scanResult.observe(viewLifecycleOwner) {
+//            Toast.makeText(
+//                requireContext(),
+//                getString(R.string.fragment_scan_success),
+//                Toast.LENGTH_SHORT
+//            ).show()
+//            resumeScannerWithDelay()    // 요청 성공 또는 실패에 상관없이 재개
+//        }
+
+        // 바코드 스캔 성공 상태 관찰
+        viewModel.barcodeScanSuccess.observe(viewLifecycleOwner) { success ->
+            success?.let {
+                // 성공 시 Toast 메시지 표시
+                Toast.makeText(requireContext(), getString(R.string.fragment_scan_success), Toast.LENGTH_SHORT).show()
+                // 스캐너 재개
+                resumeScannerWithDelay()
+            }
+        }
+
+        // 바코드 스캔 실패 상태 관찰
+        viewModel.barcodeScanError.observe(viewLifecycleOwner) { errorMessage ->
+            errorMessage?.let {
+                // 실패 시 Toast 메시지 표시
+                Toast.makeText(requireContext(), getString(R.string.fragment_scan_fail), Toast.LENGTH_SHORT).show()
+                // 스캐너 재개
+                resumeScannerWithDelay()
+            }
         }
 
         // 장바구니 아이템 조회 결과 관찰
