@@ -1,12 +1,10 @@
 package com.ite.sws.domain.sharelist.api.repository
 
-import com.google.gson.Gson
+import com.ite.sws.common.BaseRepository
 import com.ite.sws.common.RetrofitClient
-import com.ite.sws.common.data.ErrorRes
 import com.ite.sws.domain.sharelist.api.service.ShareListService
 import com.ite.sws.domain.sharelist.data.PostShareListItemReq
 import com.ite.sws.domain.sharelist.data.ShareListItem
-import retrofit2.Response
 
 /**
  * 공유 체크 리스트 Repository
@@ -22,11 +20,9 @@ import retrofit2.Response
  * 2024.09.12  김민정       공유체크리스트 아이템 추가
  * 2024.09.12  김민정       공유체크리스트 아이템 체크 상태 변경
  * 2024.09.12  김민정       공유체크리스트 아이템 체크 삭제
- * 2024.09.12  김민정       공통 응답 처리 함수
- * 2024.09.12  김민정       공통 네트워크 예외 처리 함수
 </pre> *
  */
-class ShareListRepository {
+class ShareListRepository : BaseRepository() {
 
     private val shareListService =
         RetrofitClient.instance.create(ShareListService::class.java)
@@ -76,31 +72,6 @@ class ShareListRepository {
             handleResponse(response)
         } catch (e: Exception) {
             throw handleNetworkException(e)
-        }
-    }
-
-    /**
-     * 공통 응답 처리 함수
-     */
-    private fun <T> handleResponse(response: Response<T>): T? {
-        return if (response.isSuccessful) {
-            response.body()
-        } else {
-            throw Exception(response.errorBody()?.string())
-        }
-    }
-
-    /**
-     * 공통 네트워크 예외 처리 함수
-     */
-    private fun handleNetworkException(e: Exception): Exception {
-        return try {
-            // 에러 메시지가 JSON 형식일 경우 ErrorRes로 파싱
-            val errorRes = Gson().fromJson(e.message, ErrorRes::class.java)
-            Exception(errorRes.message)
-        } catch (jsonEx: Exception) {
-            // JSON 파싱 실패 시, 일반 네트워크 에러로 처리
-            Exception("Network error: ${e.localizedMessage}")
         }
     }
 }
