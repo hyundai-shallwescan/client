@@ -65,7 +65,7 @@ class PaymentShareBottomSheet : BottomSheetDialogFragment() {
         // URL 버튼 리스너 설정
         binding.btnUrl.setOnClickListener {
             val cartId = SharedPreferencesUtil.getCartId()
-            val address = "scanandgo://deeplink?cartId=" + cartId
+            val address = "scanandgo://deeplink?cartId=" + cartId +"&payment=true"
 
             ClipboardUtil.copyTextToClipboard(
                 requireContext(),

@@ -189,7 +189,7 @@ class ContainerFragment : Fragment() {
     }
 
     /**
-     * 장바구니 구독
+     * 채팅 구독
      */
     private fun subscribeToChat(cartId: Long) {
         if (cartId == 0L) {

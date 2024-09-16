@@ -14,7 +14,6 @@ import com.ite.sws.domain.cart.api.repository.CartRepository
 import com.ite.sws.domain.cart.data.PostCartLoginReq
 import com.ite.sws.util.CustomDialog
 import com.ite.sws.util.hideBottomNavigation
-import com.ite.sws.util.replaceFragmentWithAnimation
 
 /**
  * 장바구니 로그인 프래그먼트
@@ -26,6 +25,7 @@ import com.ite.sws.util.replaceFragmentWithAnimation
  * 수정일        	수정자        수정내용
  * ----------  --------    ---------------------------
  * 2024.08.31  	남진수       최초 생성
+ * 2024.09.17  	김민정       로그인 후, 딥링크에 따른 프래그먼트 전환 처리
  * </pre>
  */
 class CartLoginFragment : Fragment() {
@@ -66,7 +66,7 @@ class CartLoginFragment : Fragment() {
                         onSuccess = { jwtToken ->
                             saveAccessToken(jwtToken.accessToken)
                             saveName(loginId)
-                            navigateToNextScreen()
+                            (activity as? MainActivity)?.navigateToNextScreenAfterLogin() // 로그인 후 딥링크 처리
                         },
                         onFailure = { errorRes ->
                             CustomDialog(
@@ -96,16 +96,6 @@ class CartLoginFragment : Fragment() {
      */
     private fun saveName(name: String) {
         SharedPreferencesUtil.setCartMemberName(name)
-    }
-
-    /**
-     * 로그인 이후 화면 전환
-     */
-    private fun navigateToNextScreen() {
-        replaceFragmentWithAnimation(
-            R.id.container_main,
-            ExternalContainerFragment()
-        )
     }
 
     override fun onDestroyView() {
