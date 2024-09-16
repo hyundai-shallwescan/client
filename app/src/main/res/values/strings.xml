@@ -100,8 +100,8 @@
     <string name="fragment_payment_agree">결제내역을 확인하였으며 구매에 동의합니다.</string>
     <string name="fragment_payment_external">일행에게 결제 요청하기</string>
     <string name="fragment_recommend">추가 상품 제안</string>
-    <string name="fragment_recommend_info1">원만 추가하면 주차 정산이 </string>
-    <string name="fragment_recommend_info2">무료</string>
+    <string name="fragment_recommend_info1">원만 추가하면 주차 정산이</string>
+    <string name="fragment_recommend_info2">&#160;무료</string>
     <string name="fragment_recommend_info3">예요!</string>
     <string name="fragment_recommend_button">그냥 결제할게요!</string>
     <string name="fragment_payment_card_thehundai">더현대 닷컴</string>
