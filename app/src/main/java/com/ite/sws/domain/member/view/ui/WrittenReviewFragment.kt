@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import com.ite.sws.R
 import com.ite.sws.databinding.FragmentMyReviewWrittenBinding
@@ -27,6 +28,8 @@ import kotlinx.coroutines.launch
  * 수정일        	수정자        수정내용
  * ----------  --------    ---------------------------
  * 2024.09.06  	정은지       최초 생성
+ * 2024.09.14   정은지       썸네일 이미지 클릭 시 리뷰 상세 화면으로 이동
+ * 2024.09.18   정은지       작성 리뷰가 존재하지 않을 경우 화면 처리
  * </pre>
  */
 class WrittenReviewFragment : Fragment() {
@@ -34,6 +37,7 @@ class WrittenReviewFragment : Fragment() {
     private var _binding: FragmentMyReviewWrittenBinding? = null
     private val binding get() = _binding!!
     private val viewModel: MemberViewModel by viewModels()
+    private lateinit var adapter: MyReviewRecyclerViewAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,7 +46,6 @@ class WrittenReviewFragment : Fragment() {
         _binding = FragmentMyReviewWrittenBinding.inflate(inflater, container, false)
 
         setupRecyclerView()
-
         loadMemberReviews()
 
         return binding.root
@@ -52,11 +55,20 @@ class WrittenReviewFragment : Fragment() {
      * 리사이클러뷰 설정
      */
     private fun setupRecyclerView() {
-        val adapter = MyReviewRecyclerViewAdapter(viewModel) { selectedReview ->
+        adapter = MyReviewRecyclerViewAdapter(viewModel) { selectedReview ->
             navigateToReviewDetail(selectedReview)
         }
         binding.rvWrittenReviews.layoutManager = GridLayoutManager(context, 2)  // 2열 그리드
         binding.rvWrittenReviews.adapter = adapter
+
+        adapter.addLoadStateListener { loadState ->
+            val isListEmpty = adapter.itemCount == 0
+            if (isListEmpty && loadState.refresh is LoadState.NotLoading) {
+                showEmptyView()
+            } else {
+                displayReviews()
+            }
+        }
     }
 
     /**
@@ -65,9 +77,25 @@ class WrittenReviewFragment : Fragment() {
     private fun loadMemberReviews() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.getPagedMemberReviews().collectLatest { pagingData ->
-                (binding.rvWrittenReviews.adapter as MyReviewRecyclerViewAdapter).submitData(pagingData)
+                adapter.submitData(pagingData)
             }
         }
+    }
+
+    /**
+     * 작성 리뷰가 존재할 경우
+     */
+    private fun displayReviews() {
+        binding.rvWrittenReviews.visibility = View.VISIBLE
+        binding.layoutEmpty.visibility = View.GONE
+    }
+
+    /**
+     * 작성 리뷰가 존재하지 않을 경우
+     */
+    private fun showEmptyView() {
+        binding.rvWrittenReviews.visibility = View.GONE
+        binding.layoutEmpty.visibility = View.VISIBLE
     }
 
     /**
@@ -82,7 +110,6 @@ class WrittenReviewFragment : Fragment() {
 
         replaceFragmentWithAnimation(R.id.container_main, fragment, true, true)
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()
