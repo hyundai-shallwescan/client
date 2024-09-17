@@ -32,6 +32,37 @@
         app:layout_constraintVertical_bias="0.0"
         tools:listitem="@layout/item_checklist" />
 
+    <!-- 항목이 없을 경우 -->
+    <LinearLayout
+        android:id="@+id/layout_empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <ImageView
+            android:id="@+id/img_empty"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:src="@drawable/img_wink_heendy" />
+
+        <TextView
+            android:id="@+id/tv_empty_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/fragment_checklist_nodata"
+            android:textFontWeight="1000"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:layout_marginTop="16dp" />
+    </LinearLayout>
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         app:fabSize="normal"
         android:id="@+id/btn_chatbot"
@@ -44,5 +75,5 @@
         app:backgroundTint="@color/white"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_margin="30dp" />
+        android:layout_margin="20dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
