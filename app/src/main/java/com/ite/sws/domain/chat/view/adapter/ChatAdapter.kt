@@ -136,8 +136,6 @@ class ChatAdapter(private val messages: List<ChatMessageDTO>, private val curren
             // Glide를 사용하여 이미지 로드
             Glide.with(itemView.context)
                 .load(cartPayload.productThumbnail)
-//                .placeholder(R.drawable.placeholder_image) // 이미지 로드 전 보여줄 플레이스홀더
-//                .error(R.drawable.error_image) // 이미지 로드 실패 시 보여줄 이미지
                 .into(productThumbnail)
         }
     }
@@ -166,8 +164,6 @@ class ChatAdapter(private val messages: List<ChatMessageDTO>, private val curren
             // Glide를 사용하여 이미지 로드
             Glide.with(itemView.context)
                 .load(cartPayload.productThumbnail)
-//                .placeholder(R.drawable.placeholder_image) // 이미지 로드 전 보여줄 플레이스홀더
-//                .error(R.drawable.error_image) // 이미지 로드 실패 시 보여줄 이미지
                 .into(productThumbnail)
         }
     }
@@ -195,8 +191,6 @@ class ChatAdapter(private val messages: List<ChatMessageDTO>, private val curren
             // Glide를 사용하여 이미지 로드
             Glide.with(itemView.context)
                 .load(checkPayload.productThumbnail)
-//                .placeholder(R.drawable.placeholder_image) // 이미지 로드 전 보여줄 플레이스홀더
-//                .error(R.drawable.error_image) // 이미지 로드 실패 시 보여줄 이미지
                 .into(productThumbnail)
         }
     }
@@ -226,8 +220,6 @@ class ChatAdapter(private val messages: List<ChatMessageDTO>, private val curren
             // Glide를 사용하여 이미지 로드
             Glide.with(itemView.context)
                 .load(checkPayload.productThumbnail)
-//                .placeholder(R.drawable.placeholder_image) // 이미지 로드 전 보여줄 플레이스홀더
-//                .error(R.drawable.error_image) // 이미지 로드 실패 시 보여줄 이미지
                 .into(productThumbnail)
         }
     }

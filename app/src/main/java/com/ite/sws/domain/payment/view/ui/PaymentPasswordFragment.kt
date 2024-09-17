@@ -4,19 +4,24 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.ite.sws.MainActivity
+import com.ite.sws.R
 import com.ite.sws.databinding.FragmentPaymentPasswordBinding
+import com.ite.sws.domain.cart.view.ui.ContainerFragment
+import com.ite.sws.domain.parking.api.repository.ParkingRepository
 import com.ite.sws.domain.payment.data.PaymentItemDto
+import com.ite.sws.domain.payment.data.PostParkingPaymentsReq
 import com.ite.sws.domain.payment.data.PostPaymentReq
 import com.ite.sws.util.NumberFormatterUtil.formatCurrencyWithCommas
 import com.ite.sws.util.SharedPreferencesUtil
 import com.ite.sws.util.hideBottomNavigation
+import com.ite.sws.util.replaceFragmentWithAnimation
 import setupToolbar
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -34,6 +39,7 @@ import java.util.Locale
  * 2024.09.10   김민정       최초 생성
  * 2024.09.10   김민정       결제 요청
  * 2024.09.13   남진수       비밀번호 입력 이벤트
+ * 2024.09.18   남진수       주차 정산 요청
  * </pre>
  */
 class PaymentPasswordFragment : Fragment() {
@@ -47,6 +53,8 @@ class PaymentPasswordFragment : Fragment() {
 
     // 비밀번호 입력을 저장할 리스트
     private val passwordInput = mutableListOf<String>()
+
+    private val parkingRepository = ParkingRepository()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -124,6 +132,38 @@ class PaymentPasswordFragment : Fragment() {
     }
 
     /**
+     * 주차 정산 요청 처리
+     */
+    private fun makeParkingPaymentRequest() {
+        // Bundle로부터 결제 정보 가져오기
+        val parkingHistoryId = arguments?.getLong("parkingHistoryId") ?: return
+        val paymentId = arguments?.getLong("paymentId") ?: return
+        val amount = arguments?.getInt("totalPrice") ?: return
+        val paymentType = arguments?.getString("paymentType") ?: return
+
+        // 주차 정산 요청 DTO 생성
+        val postParkingPaymentsReq = PostParkingPaymentsReq(
+            parkingHistoryId = parkingHistoryId,
+            paymentId = paymentId,
+            amount = amount.toLong(),
+            paymentKey = "heendyheendy",  // 결제 키 정보
+            paymentCard = paymentType
+        )
+
+        parkingRepository.postParkingPayments(postParkingPaymentsReq, onSuccess = {
+            Log.d("PAYMENT", "Parking Payment Success")
+            replaceFragmentWithAnimation(
+                R.id.container_main,
+                ContainerFragment(),
+                false,
+                false
+            )
+        }, onFailure = { errorMessage ->
+            Log.d("PAYMENT", "Parking Payment Fail")
+        })
+    }
+
+    /**
      * 현재 시간을 "yyyy-MM-dd HH:mm:ss" 형식으로 반환
      */
     private fun getCurrentTime(): String {
@@ -192,6 +232,7 @@ class PaymentPasswordFragment : Fragment() {
         if (passwordInput.size == 6) {
             Handler(Looper.getMainLooper()).postDelayed({
                 makePaymentRequest()
+                makeParkingPaymentRequest()
             }, 1000) // 1초 딜레이 후 결제 요청
         }
     }
