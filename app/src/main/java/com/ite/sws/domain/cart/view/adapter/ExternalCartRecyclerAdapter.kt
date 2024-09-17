@@ -23,6 +23,7 @@ import com.ite.sws.util.SharedPreferencesUtil
  * 2024.09.04  김민정       장바구니 아이템 조회
  * 2024.09.04  김민정       장바구니 아이템 수량 변경
  * 2024.09.04  김민정       장바구니 아이템 삭제
+ * 2024.09.17  김민정       상품 상세 페이지 이동
  * </pre>
  */
 class ExternalCartRecyclerAdapter(private val viewModel: ExternalCartViewModel) :
@@ -63,7 +64,8 @@ class ExternalCartRecyclerAdapter(private val viewModel: ExternalCartViewModel) 
                 }
             }
 
-            binding.btnCartDetail.setOnClickListener {
+            // 아이템 터치 리싀너
+            binding.root.setOnClickListener {
                 onViewDetail?.invoke(item)
             }
         }

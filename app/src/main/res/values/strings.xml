@@ -25,6 +25,8 @@
     <string name="fragment_scan_sharelist">일행 요청 리스트</string>
     <string name="fragment_scan_externalsharelist">요청 리스트</string>
     <string name="fragment_scan_cartlist_not_found">상품을 스캔해주세요!</string>
+    <string name="fragment_scan_success">상품이 장바구니에 추가되었습니다.</string>
+    <string name="fragment_scan_fail">현대식품관에 등록되지 않은 상품입니다.</string>
 
     <!-- 모달 -->
     <string name="modal_go_setting">설정으로 이동</string>
@@ -88,6 +90,7 @@
     <string name="fragment_sharelist_not_found">아직 일행이 상품을 요청하지 않았어요!</string>
     <string name="fragment_sharelist_external_not_found">요청 리스트를 추가해주세요!</string>
     <string name="fragment_sharelist_external_search">상품을 검색해주세요.</string>
+    <string name="fragment_sharelist_success">상품이 요청되었습니다.</string>
 
     <!-- 결제 -->
     <string name="fragment_payment_pay">결제하기</string>
@@ -97,8 +100,8 @@
     <string name="fragment_payment_agree">결제내역을 확인하였으며 구매에 동의합니다.</string>
     <string name="fragment_payment_external">일행에게 결제 요청하기</string>
     <string name="fragment_recommend">추가 상품 제안</string>
-    <string name="fragment_recommend_info1">원만 추가하면 주차 정산이 </string>
-    <string name="fragment_recommend_info2">무료</string>
+    <string name="fragment_recommend_info1">원만 추가하면 주차 정산이</string>
+    <string name="fragment_recommend_info2">&#160;무료</string>
     <string name="fragment_recommend_info3">예요!</string>
     <string name="fragment_recommend_button">그냥 결제할게요!</string>
     <string name="fragment_payment_card_thehundai">더현대 닷컴</string>

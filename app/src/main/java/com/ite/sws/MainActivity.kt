@@ -10,7 +10,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.ite.sws.databinding.ActivityMainBinding
 import com.ite.sws.domain.cart.view.ui.CartLoginFragment
+import com.ite.sws.domain.cart.view.ui.ExternalContainerFragment
 import com.ite.sws.domain.member.view.ui.LoginFragment
+import com.ite.sws.domain.payment.view.ui.ExteranlPaymentFragment
 import com.ite.sws.util.SharedPreferencesUtil
 
 /**
@@ -27,11 +29,13 @@ import com.ite.sws.util.SharedPreferencesUtil
  * 2024.09.01   김민정       ContainerFragment로 시작 프래그먼트
  * 2024.09.02   남진수       딥링크 연결 처리
  * 2024.09.03   정은지       로그인 여부에 따른 화면 이동 처리
+ * 2024.09.17   김민정       로그인 이후 다음 화면으로 이동 처리 (결제 or 장바구니)
  * </pre>
  */
 class MainActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityMainBinding
+    private var isPaymentDeepLink: Boolean = false  // 딥링크가 결제 화면으로 향하는지 여부를 저장
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -106,9 +110,16 @@ class MainActivity : AppCompatActivity() {
             val cartIdString = data?.getQueryParameter("cartId")
             val cartId: Long? = cartIdString?.toLongOrNull()
 
+            // 추가된 payment 파라미터 확인
+            val paymentParam = data?.getQueryParameter("payment")
+
             if (cartId != null) {
                 Log.d("DeepLink", "cartId: $cartId")
                 SharedPreferencesUtil.setCartId(cartId)
+
+                // payment 파라미터가 존재할 경우 플래그 설정
+                isPaymentDeepLink = !paymentParam.isNullOrEmpty()
+
                 navigateToCartLogin(cartId)
             } else {
                 Log.d("DeepLink", "잘못된 cartId")
@@ -134,6 +145,39 @@ class MainActivity : AppCompatActivity() {
                 R.anim.anim_fade_out  // 뒤로 갈 때 애니메이션
             )
             .replace(R.id.container_main, fragment)
+            .addToBackStack(null)
+            .commit()
+    }
+
+    /**
+     * 로그인 이후 다음 화면으로 이동 (결제 or 장바구니)
+     */
+    fun navigateToNextScreenAfterLogin() {
+        if (isPaymentDeepLink) {
+            // 딥링크가 payment를 포함한 경우 결제 화면으로 이동
+            navigateToPaymentFragment()
+        } else {
+            // 결제가 아닌 경우 기존 화면으로 이동
+            navigateToRegularNextScreen()
+        }
+    }
+
+    /**
+     * 외부일행 결제 화면으로 이동
+     */
+    private fun navigateToPaymentFragment() {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.container_main, ExteranlPaymentFragment())
+            .addToBackStack(null)
+            .commit()
+    }
+
+    /**
+     * 외부일행 장바구니로 이동
+     */
+    private fun navigateToRegularNextScreen() {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.container_main, ExternalContainerFragment())
             .addToBackStack(null)
             .commit()
     }

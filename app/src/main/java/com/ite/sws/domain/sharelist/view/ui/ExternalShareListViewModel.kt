@@ -1,11 +1,8 @@
 package com.ite.sws.domain.sharelist.view.ui
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.google.gson.Gson
-import com.ite.sws.common.data.ErrorRes
 import com.ite.sws.domain.product.api.repository.ProductRepository
 import com.ite.sws.domain.product.data.GetProductRes
 import com.ite.sws.domain.sharelist.api.repository.ShareListRepository
@@ -13,7 +10,6 @@ import com.ite.sws.domain.sharelist.data.PostShareListItemReq
 import com.ite.sws.domain.sharelist.data.ShareListItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import retrofit2.HttpException
 
 /**
  * 외부일행 공유 체크 리스트 ViewModel
@@ -44,6 +40,9 @@ class ExternalShareListViewModel : BaseShareListViewModel() {
     private val _productSearchResults = MutableLiveData<List<GetProductRes>>()
     val productSearchResults: LiveData<List<GetProductRes>> = _productSearchResults
 
+    private val _saveItemResult = MutableLiveData<Boolean>()
+    val saveItemResult: LiveData<Boolean> = _saveItemResult
+
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
 
@@ -54,17 +53,9 @@ class ExternalShareListViewModel : BaseShareListViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 shareListRepository.saveShareListItem(PostShareListItemReq(cartId, productId))
+                _saveItemResult.postValue(true)
             } catch (e: Exception) {
-                if (e is HttpException) {
-                    val errorJson = e.response()?.errorBody()?.string()
-                    val errorRes = Gson().fromJson(errorJson, ErrorRes::class.java)
-
-                    if (errorRes.status == 409) {
-                        _error.postValue(errorRes.message)
-                    }
-                } else {
-                    Log.e("ShareCheckList Error: ", e.message.toString())
-                }
+                _error.postValue(e.message)
             }
         }
     }

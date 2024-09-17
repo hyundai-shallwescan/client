@@ -1,9 +1,10 @@
 package com.ite.sws.domain.product.api.repository
+
+import com.ite.sws.common.BaseRepository
 import com.ite.sws.common.RetrofitClient
 import com.ite.sws.domain.product.api.service.ProductService
 import com.ite.sws.domain.product.data.GetProductReviewRes
 import com.ite.sws.domain.product.data.GetProductRes
-import retrofit2.Response
 
 /**
  * 상품 Repository
@@ -16,11 +17,9 @@ import retrofit2.Response
  * ----------  --------    ---------------------------
  * 2024.09.13  김민정       최초 생성
  * 2024.09.13  김민정       상품 이름으로 조회
- * 2024.09.13  김민정       공통 응답 처리 함수
- * 2024.09.13  김민정       공통 네트워크 예외 처리 함수
 </pre> *
  */
-class ProductRepository {
+class ProductRepository : BaseRepository() {
 
     private val productService =
         RetrofitClient.instance.create(ProductService::class.java)
@@ -51,24 +50,4 @@ class ProductRepository {
             throw handleNetworkException(e)
         }
     }
-
-    /**
-     * 공통 응답 처리 함수
-     */
-    private fun <T> handleResponse(response: Response<T>): T? {
-        return if (response.isSuccessful) {
-            response.body()
-        } else {
-            throw Exception("Error: ${response.errorBody()?.string()}")
-        }
-    }
-
-    /**
-     * 공통 네트워크 예외 처리 함수
-     */
-    private fun handleNetworkException(e: Exception): Exception {
-        return Exception("Network error: ${e.localizedMessage}")
-    }
-    
-    
 }

@@ -2,6 +2,7 @@ package com.ite.sws.domain.cart.api.repository
 
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.Gson
+import com.ite.sws.common.BaseRepository
 import com.ite.sws.common.RetrofitClient
 import com.ite.sws.common.data.ErrorRes
 import com.ite.sws.domain.cart.api.service.CartService
@@ -27,12 +28,10 @@ import retrofit2.Response
  * 2024.09.02  김민정       장바구니 아이템 조회
  * 2024.09.03  김민정       장바구니 아이템 수량 변경
  * 2024.09.03  김민정       장바구니 아이템 삭제
- * 2024.09.08  김민정       공통 응답 처리 함수
- * 2024.09.08  김민정       공통 네트워크 예외 처리 함수
  * 2024.09.10  남진수       FCM 토큰 발급 추가
  * </pre>
  */
-class CartRepository {
+class CartRepository : BaseRepository() {
 
     private val cartService =
         RetrofitClient.instance.create(CartService::class.java)
@@ -118,23 +117,5 @@ class CartRepository {
         } catch (e: Exception) {
             throw handleNetworkException(e)
         }
-    }
-
-    /**
-     * 공통 응답 처리 함수
-     */
-    private fun <T> handleResponse(response: Response<T>): T? {
-        return if (response.isSuccessful) {
-            response.body()
-        } else {
-            throw Exception("Error: ${response.errorBody()?.string()}")
-        }
-    }
-
-    /**
-     * 공통 네트워크 예외 처리 함수
-     */
-    private fun handleNetworkException(e: Exception): Exception {
-        return Exception("Network error: ${e.localizedMessage}")
     }
 }

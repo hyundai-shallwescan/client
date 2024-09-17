@@ -1,10 +1,10 @@
 package com.ite.sws.domain.sharelist.api.repository
 
+import com.ite.sws.common.BaseRepository
 import com.ite.sws.common.RetrofitClient
 import com.ite.sws.domain.sharelist.api.service.ShareListService
 import com.ite.sws.domain.sharelist.data.PostShareListItemReq
 import com.ite.sws.domain.sharelist.data.ShareListItem
-import retrofit2.Response
 
 /**
  * 공유 체크 리스트 Repository
@@ -22,7 +22,7 @@ import retrofit2.Response
  * 2024.09.12  김민정       공유체크리스트 아이템 체크 삭제
 </pre> *
  */
-class ShareListRepository {
+class ShareListRepository : BaseRepository() {
 
     private val shareListService =
         RetrofitClient.instance.create(ShareListService::class.java)
@@ -73,23 +73,5 @@ class ShareListRepository {
         } catch (e: Exception) {
             throw handleNetworkException(e)
         }
-    }
-
-    /**
-     * 공통 응답 처리 함수
-     */
-    private fun <T> handleResponse(response: Response<T>): T? {
-        return if (response.isSuccessful) {
-            response.body()
-        } else {
-            throw Exception("Error: ${response.errorBody()?.string()}")
-        }
-    }
-
-    /**
-     * 공통 네트워크 예외 처리 함수
-     */
-    private fun handleNetworkException(e: Exception): Exception {
-        return Exception("Network error: ${e.localizedMessage}")
     }
 }

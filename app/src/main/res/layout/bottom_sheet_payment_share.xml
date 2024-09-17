@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/modal_external_invite"
+        android:textSize="20sp"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/black"
+        android:fontFamily="@font/happiness_sans_title"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="70dp"
+        android:gravity="center">
+
+        <!-- 카카오톡 버튼 -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_btn_kakao"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginRight="70dp">
+
+            <ImageButton
+                android:id="@+id/btn_kakao"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:adjustViewBounds="true"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                android:src="@drawable/btn_kakao"/>
+
+            <TextView
+                android:id="@+id/text_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/happiness_sans_title"
+                android:text="@string/modal_btn_kakao"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/btn_kakao"
+                app:layout_constraintTop_toBottomOf="@+id/btn_kakao" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- URL 버튼 -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_btn_url"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+
+            <ImageButton
+                android:id="@+id/btn_url"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:adjustViewBounds="true"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                android:src="@drawable/btn_link"/>
+
+            <TextView
+                android:id="@+id/text_url"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/happiness_sans_title"
+                android:text="@string/modal_btn_url"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/btn_url"
+                app:layout_constraintTop_toBottomOf="@+id/btn_url" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
+</LinearLayout>

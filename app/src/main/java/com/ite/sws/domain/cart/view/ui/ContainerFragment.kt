@@ -108,7 +108,7 @@ class ContainerFragment : Fragment() {
 
         // 일행 초대 버튼
         binding.btnScannerAdditional.setOnClickListener{
-            val bottomSheetFragment = CustomBottomSheetFragment()
+            val bottomSheetFragment = CartShareBottomSheet()
             bottomSheetFragment.show(childFragmentManager, bottomSheetFragment.tag)
         }
     }
@@ -189,7 +189,7 @@ class ContainerFragment : Fragment() {
     }
 
     /**
-     * 장바구니 구독
+     * 채팅 구독
      */
     private fun subscribeToChat(cartId: Long) {
         if (cartId == 0L) {

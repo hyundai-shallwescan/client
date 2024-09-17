@@ -1,6 +1,7 @@
 package com.ite.sws.domain.payment.view.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,33 +12,34 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
 import com.ite.sws.MainActivity
 import com.ite.sws.R
+import com.ite.sws.common.WebSocketClient
 import com.ite.sws.databinding.FragmentPaymentBinding
+import com.ite.sws.domain.cart.view.ui.CartLoginFragment
+import com.ite.sws.domain.payment.data.PaymentDoneDTO
 import com.ite.sws.domain.payment.view.adapter.PaymentRecyclerAdapter
 import com.ite.sws.util.NumberFormatterUtil.formatCurrencyWithCommas
 import com.ite.sws.util.SharedPreferencesUtil
 import com.ite.sws.util.hideBottomNavigation
-import com.ite.sws.util.observeOnce
 import com.ite.sws.util.replaceFragmentWithAnimation
 import setupToolbar
+import ua.naiksoftware.stomp.dto.LifecycleEvent
 
 /**
- * 상품 결제 프래그먼트
+ * 외부일행 상품 결제 프래그먼트
  * @author 김민정
- * @since 2024.09.09
+ * @since 2024.09.17
  * @version 1.0
  *
  * <pre>
  * 수정일        수정자        수정내용
  * ----------  --------    ---------------------------
- * 2024.09.09   김민정       최초 생성
- * 2024.09.09   김민정       결제 수단 스피너 설정
- * 2024.09.09   김민정       결제를 위한 장바구니 아이템 조회
- * 2024.09.10   김민정       추가 결제 상품 추천
+ * 2024.09.17   김민정       최초 생성
  * </pre>
  */
-class PaymentFragment : Fragment() {
+class ExteranlPaymentFragment : Fragment() {
 
     // View Binding 객체
     private var _binding: FragmentPaymentBinding? = null
@@ -85,6 +87,9 @@ class PaymentFragment : Fragment() {
 
         // 버튼 설정
         btnSettings()
+
+        // WebSocket 연결
+        connectWebSocket()
     }
 
     /**
@@ -105,6 +110,25 @@ class PaymentFragment : Fragment() {
             recyclerView.adapter = recyclerAdapter
 
             binding.tvPaymentTotalPrice.text = "${formatCurrencyWithCommas(cartItemsResponse.totalPrice)}"
+        }
+
+        // 추가 상품 추천 조회 결과 관찰
+        viewModel.recommendation.observe(viewLifecycleOwner) { recommendationResponse ->
+            if (recommendationResponse.remainingParkingFee != null
+                && recommendationResponse.remainingParkingFee != 0) {
+                val bottomSheetFragment = ProductRecommendBottomSheet(
+                    recommendationResponse.remainingParkingFee,
+                    recommendationResponse.thumbnailImage,
+                    recommendationResponse.productName,
+                    recommendationResponse.productPrice
+                ) {
+                    // 결제 버튼 클릭 시 처리
+                    navigateToPaymentCardFragment()
+                }
+                bottomSheetFragment.show(childFragmentManager, bottomSheetFragment.tag)
+            } else {
+                navigateToPaymentCardFragment()
+            }
         }
 
         // 에러 상태 관찰
@@ -136,51 +160,18 @@ class PaymentFragment : Fragment() {
      * 버튼 이벤트 설정
      */
     private fun btnSettings() {
-        // 결제 버튼 (btnPay)
+        // 결제 버튼
         binding.btnPay.setOnClickListener {
             viewModel.cartItems.value?.let { cartItemsResponse ->
-                handleRecommendation(
-                    cartItemsResponse.totalPrice,
-                    onSuccess = { navigateToPaymentCardFragment() }
+                viewModel.findRecommendProduct(
+                    SharedPreferencesUtil.getCartId(),
+                    cartItemsResponse.totalPrice
                 )
             } ?: Toast.makeText(requireContext(), "장바구니 정보를 불러오지 못했습니다.", Toast.LENGTH_SHORT).show()
         }
 
-        // 일행 결제 요청 버튼 (btnPayExternal)
-        binding.btnPayExternal.setOnClickListener {
-            viewModel.cartItems.value?.let { cartItemsResponse ->
-                handleRecommendation(
-                    cartItemsResponse.totalPrice,
-                    onSuccess = { showPaymentShareBottomSheet() }
-                )
-            } ?: Toast.makeText(requireContext(), "장바구니 정보를 불러오지 못했습니다.", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    /**
-     * 추천 상품을 처리하고 후속 동작을 결정하는 함수
-     */
-    private fun handleRecommendation(totalPrice: Int, onSuccess: () -> Unit) {
-        // 추천 상품 로직 수행
-        viewModel.findRecommendProduct(SharedPreferencesUtil.getCartId(), totalPrice)
-
-        // 추천 상품 결과를 한 번만 관찰
-        viewModel.recommendation.observeOnce(viewLifecycleOwner) { recommendationResponse ->
-            if (recommendationResponse.remainingParkingFee != null
-                && recommendationResponse.remainingParkingFee != 0) {
-                val bottomSheetFragment = ProductRecommendBottomSheet(
-                    recommendationResponse.remainingParkingFee,
-                    recommendationResponse.thumbnailImage,
-                    recommendationResponse.productName,
-                    recommendationResponse.productPrice
-                ) {
-                    onSuccess.invoke()
-                }
-                bottomSheetFragment.show(childFragmentManager, bottomSheetFragment.tag)
-            } else {
-                onSuccess.invoke()
-            }
-        }
+        // 외부 일행 공유 버튼 숨기기
+        binding.layoutBtnPayExternal.visibility = View.GONE
     }
 
     /**
@@ -215,10 +206,76 @@ class PaymentFragment : Fragment() {
     }
 
     /**
-     * 결제 요청 바텀 시트 표시
+     * WebSocket 연결
      */
-    private fun showPaymentShareBottomSheet() {
-        val bottomSheetFragment = PaymentShareBottomSheet()
-        bottomSheetFragment.show(childFragmentManager, bottomSheetFragment.tag)
+    private fun connectWebSocket() {
+        val accessToken = SharedPreferencesUtil.getAccessToken()
+        if (accessToken != null) {
+            WebSocketClient.connect(accessToken) { event ->
+                when (event.type) {
+                    LifecycleEvent.Type.OPENED -> {
+                        val cartId = SharedPreferencesUtil.getCartId()
+                        subscribeToCart(cartId)
+                    }
+
+                    LifecycleEvent.Type.CLOSED -> {
+                        Log.d("STOMP", "WebSocket closed")
+                    }
+
+                    LifecycleEvent.Type.ERROR -> {
+                        Log.e("STOMP", "WebSocket error", event.exception)
+                    }
+
+                    else -> {
+                        Log.d("STOMP", "WebSocket event: ${event.message}")
+                    }
+                }
+            }
+        } else {
+            Log.e("STOMP", "accessToken is null")
+            replaceFragmentWithAnimation(R.id.container_main, CartLoginFragment(), true)
+        }
+    }
+
+
+    /**
+     * 웹소켓을 통해 실시간으로 장바구니 아이템 변경 사항을 구독
+     */
+    private fun subscribeToCart(cartId: Long) {
+        val subscriptionPath = "/sub/cart/$cartId"
+
+        WebSocketClient.subscribe(subscriptionPath) { message ->
+            // JSON 메시지를 Map으로 파싱하여 type을 확인
+            val messageMap = Gson().fromJson(message, Map::class.java)
+            val messageType = messageMap["type"] as? String
+
+            // 메시지 타입에 따라 처리
+            when (messageType) {
+                "paymentDone" -> {
+                    // 결제 완료 화면 이동 처리
+                    val paymentDoneDto = Gson().fromJson(message, PaymentDoneDTO::class.java)
+                    activity?.runOnUiThread {
+                        handlePaymentDone(paymentDoneDto)
+                    }
+                }
+                else -> Log.e("STOMP CART", "Unknown message type: $messageType")
+            }
+        }
+    }
+
+    /**
+     * 결제 완료 화면 이동 처리
+     */
+    private fun handlePaymentDone(paymentDoneDto: PaymentDoneDTO) {
+        // 소켓 연결 해제
+        WebSocketClient.unsubscribe("/sub/cart/${SharedPreferencesUtil.getCartId()}")
+
+        // 비회원 결제 완료 화면으로 이동
+        replaceFragmentWithAnimation(
+            R.id.container_main,
+            ExternalPaymentDoneFragment(),
+            false,
+            false
+        )
     }
 }
