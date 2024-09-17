@@ -83,7 +83,6 @@ class ReviewUploadFragment : Fragment() {
         productId = arguments?.getLong("productId")
 
         binding.tvProductName.text = productName
-
         btnReviewUpload.setOnClickListener { openVideoPicker() }
         btnVideoPlay.setOnClickListener { toggleVideoPlayPause() }
         btnDelete.setOnClickListener { showDeleteDialog("영상을 정말로 삭제하시겠습니까?") }
