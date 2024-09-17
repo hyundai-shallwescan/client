@@ -83,17 +83,16 @@ class CheckListViewModel() : ViewModel() {
     fun addCheckListItem(postCheckListReq: PostCheckListReq) {
         checkListRepository.addMyCheckListItem(postCheckListReq,
             onSuccess = {
-                // 새로운 아이템을 리스트 맨 상단에 추가
+                // 새로운 아이템을 리스트 최상단에 추가
                 val newItem = GetCheckListRes(
                     myCheckListItemId = it.myCheckListItemId,
                     itemName = postCheckListReq.item,
-                    status = CheckStatus.UNCHECKED // 기본 상태로 추가
+                    status = CheckStatus.UNCHECKED
                 )
-                // 기존 리스트를 MutableList로 변환
                 val updatedList = _checkListItems.value?.toMutableList() ?: mutableListOf()
 
-                updatedList.add(0, newItem) // 리스트 상단에 추가
-                _checkListItems.value = updatedList // LiveData 업데이트
+                updatedList.add(0, newItem)
+                _checkListItems.value = updatedList
             },
             onFailure = { errorRes ->
                 _errorMessage.value = errorRes.message
