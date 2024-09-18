@@ -198,20 +198,31 @@ class MemberRepository {
     fun signup(
         signupRequest: PostMemberReq,
         onSuccess: () -> Unit,
-        onFailure: (ErrorRes) -> Unit
+        onFailure: (ErrorRes?, Map<String, String>?) -> Unit
     ) {
         memberService.signup(signupRequest).enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 if (response.isSuccessful) {
                     onSuccess()
                 } else {
-                    val errorRes = Gson().fromJson(response.errorBody()?.string(), ErrorRes::class.java)
-                    onFailure(errorRes)
+                    val errorBody = response.errorBody()?.string()
+
+                    // 유효성 검사 실패일 경우, 유효성 검사 에러를 처리
+                    if (response.code() == 400 && errorBody != null) {
+                        val validationErrors = Gson().fromJson(errorBody, Map::class.java) as Map<String, String>
+                        onFailure(null, validationErrors)
+                    } else {
+                        // 다른 오류 처리
+                        val errorRes = Gson().fromJson(errorBody, ErrorRes::class.java)
+                        onFailure(errorRes, null)
+                    }
                 }
             }
 
             override fun onFailure(call: Call<Void>, t: Throwable) {
-                handleFailure(call, t, onFailure)
+                handleFailure(call, t) {
+                    onFailure(null, null)
+                }
             }
         })
     }

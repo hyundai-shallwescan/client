@@ -26,6 +26,7 @@ import com.ite.sws.util.replaceFragmentWithAnimation
  * 수정일        	수정자       수정내용
  * ----------  --------    ---------------------------
  * 2024.09.02   정은지       최초 생성
+ * 2024.09.17   정은지       유효성 검사 에러 처리
  * </pre>
  */
 class SignUpFragment : Fragment() {
@@ -145,12 +146,43 @@ class SignUpFragment : Fragment() {
                     }
                 ).show(activity?.supportFragmentManager!!, "CustomDialog")
             },
-            onFailure = { error ->
-                Toast.makeText(requireContext(), "회원가입 실패: ${error.message}", Toast.LENGTH_SHORT).show()
+            onFailure = { errorRes, validationErrors ->
+                if (validationErrors != null) {
+                    // 유효성 검사 에러 처리
+                    handleValidationErrors(validationErrors)
+                    CustomDialog(
+                        layoutId = R.layout.dialog_text1_btn1,
+                        title = "입력 양식을 다시 확인해주세요.",
+                        confirmText = "확인",
+                        onConfirm = {}
+                    ).show(activity?.supportFragmentManager!!, "CustomDialog")
+                } else if (errorRes != null) {
+                    // 일반적인 에러 처리
+                    Toast.makeText(context, "회원가입 실패: ${errorRes.message}", Toast.LENGTH_SHORT).show()
+                }
             }
         )
     }
 
+    /**
+     * 유효성 검사 에러 처리
+     */
+    private fun handleValidationErrors(errorRes: Map<String, String>) {
+        errorRes["loginId"]?.let {
+            binding.tvIdError.text = it
+            binding.tvIdError.visibility = View.VISIBLE
+        }
+
+        errorRes["password"]?.let {
+            binding.tvPasswordError.text = it
+            binding.tvPasswordError.visibility = View.VISIBLE
+        }
+
+        errorRes["carNumber"]?.let {
+            binding.tvCarError.text = it
+            binding.tvCarError.visibility = View.VISIBLE
+        }
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
