@@ -10,9 +10,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.ite.sws.R
 import com.ite.sws.databinding.FragmentParkingBinding
 import com.ite.sws.domain.parking.api.repository.ParkingRepository
+import com.ite.sws.domain.parking.data.GetParkingRes
+import com.ite.sws.domain.payment.view.ui.ParkingPaymentFragment
 import com.ite.sws.util.NumberFormatterUtil
+import com.ite.sws.util.replaceFragmentWithAnimation
 import setupToolbar
 
 /**
@@ -26,6 +30,7 @@ import setupToolbar
  * ----------  --------    ---------------------------
  * 2024.08.24  	남진수       최초 생성
  * 2024.09.08   남진수       주차 정산 정보 조회
+ * 2024.09.18   남진수       주차 정산 요청 추가
  * </pre>
  */
 class ParkingFragment : Fragment() {
@@ -33,6 +38,7 @@ class ParkingFragment : Fragment() {
     private var _binding: FragmentParkingBinding? = null
     private val binding get() = _binding!!
     private val parkingRepository = ParkingRepository()
+    private var parkingHistory: GetParkingRes? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,9 +53,13 @@ class ParkingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        btnSettings()
+
         // 주차 정보 가져오기
         parkingRepository.getParkingInfo(
             onSuccess = { parkingInfo ->
+
+                parkingHistory = parkingInfo
 
                 if (parkingInfo.paymentStatus == "ACTIVE") {
                     // 주차정산 완료된 경우
@@ -129,6 +139,45 @@ class ParkingFragment : Fragment() {
         spannableString.setSpan(RelativeSizeSpan(1.5f), startIndex, endIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         return spannableString
     }
+
+    /**
+     * 버튼 이벤트 설정
+     */
+    private fun btnSettings() {
+        // 결제 버튼
+        binding.parkingPaymentButton.setOnClickListener {
+            navigateToParkingPaymentFragment()
+        }
+    }
+
+    private fun navigateToParkingPaymentFragment() {
+        val fragment = ParkingPaymentFragment()
+        val bundle = Bundle()
+
+        val parkingHistoryId = parkingHistory?.parkingHistoryId
+        val paymentId = parkingHistory?.paymentId
+        val parkingFee = parkingHistory?.parkingFee
+
+        if (parkingHistoryId != null) {
+            bundle.putLong("parkingHistoryId", parkingHistoryId)
+        }
+        if (paymentId != null) {
+            bundle.putLong("paymentId", paymentId)
+        }
+        if (parkingFee != null) {
+            bundle.putInt("totalPrice", parkingFee.toInt())
+        }
+
+        fragment.arguments = bundle
+
+        replaceFragmentWithAnimation(
+            R.id.container_main,
+            fragment,
+            true,
+            false
+        )
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
