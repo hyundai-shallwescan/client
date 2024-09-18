@@ -13,6 +13,8 @@ package com.ite.sws.domain.parking.data
  * </pre>
  */
 data class GetParkingRes(
+    val parkingHistoryId: Long, // 주차 기록 ID
+    val paymentId: Long, // 결제 ID
     val paymentStatus: String?, // 주차 결제 상태 (null, ACTIVE, CANCEL)
     val freeParkingTime: String, // 무료 출차 가능 시간
     val feeForFreeParking: Long, // 무료로 출차하기 위한 금액

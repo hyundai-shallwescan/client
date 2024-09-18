@@ -31,6 +31,7 @@ import setupToolbar
  * 수정일        	수정자        수정내용
  * ----------  --------    ---------------------------
  * 2024.08.24  	정은지       최초 생성
+ * 2024.09.17   정은지       체크리스트가 존재하지 않을 경우 화면 처리
  * </pre>
  */
 class CheckListFragment : Fragment() {
@@ -74,7 +75,11 @@ class CheckListFragment : Fragment() {
 
         // ViewModel의 LiveData를 관찰하여 UI를 업데이트
         checkListViewModel.checkListItems.observe(viewLifecycleOwner) { items ->
-            updateRecyclerView(items)
+            if (items.isNotEmpty()) {
+                displayCheckListItems(items)
+            } else {
+                showEmptyView()
+            }
         }
 
         parentFragmentManager.setFragmentResultListener("requestKey", this) { requestKey, bundle ->
@@ -89,6 +94,9 @@ class CheckListFragment : Fragment() {
         }
     }
 
+    /**
+     * 리사이클러뷰 설정
+     */
     private fun setupRecyclerView() {
         binding.rvChecklist.layoutManager = LinearLayoutManager(requireContext())
         adapter = CheckListRecyclerViewAdapter(mutableListOf(), ::onItemChecked, ::onItemEdited, ::onItemRemoved)
@@ -99,8 +107,21 @@ class CheckListFragment : Fragment() {
         itemTouchHelper.attachToRecyclerView(binding.rvChecklist)
     }
 
-    private fun updateRecyclerView(items: MutableList<GetCheckListRes>) {
+    /**
+     * 체크리스트 항목이 존재할 경우
+     */
+    private fun displayCheckListItems(items: MutableList<GetCheckListRes>) {
+        binding.rvChecklist.visibility = View.VISIBLE
+        binding.layoutEmpty.visibility = View.GONE
         adapter.setItems(items)
+    }
+
+    /**
+     * 체크리스트 항목이 존재하지 않을 경우
+     */
+    private fun showEmptyView() {
+        binding.rvChecklist.visibility = View.GONE
+        binding.layoutEmpty.visibility = View.VISIBLE
     }
 
     /**

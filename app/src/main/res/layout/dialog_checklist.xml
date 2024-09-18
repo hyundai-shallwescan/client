@@ -33,8 +33,9 @@
             android:background="@android:color/transparent"
             android:hint="추가할 항목을 입력하세요."
             android:inputType="text"
+            android:fontFamily="@font/happiness_sans_bold"
             android:padding="12dp"
-            android:textColor="@color/black" />`
+            android:textColor="@color/black" />
     </FrameLayout>
 
     <!-- 항목 추가 버튼 -->
