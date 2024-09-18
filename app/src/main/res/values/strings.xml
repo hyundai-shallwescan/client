@@ -78,6 +78,7 @@
     <!-- 리뷰 관리 -->
     <string name="fragment_my_review_written">작성한 리뷰</string>
     <string name="fragment_my_review_write">리뷰 작성</string>
+    <string name="fragment_my_review_nodata">작성한 리뷰가 없습니다.</string>
     <string name="fragment_review_upload_select">업로드 영상 선택</string>
     <string name="fragment_my_review_upload">업로드</string>
     <string name="fragment_my_review_upload_delete">삭제</string>
@@ -85,6 +86,7 @@
 
     <!-- 체크리스트 -->
     <string name="fragment_checklist_add">추가</string>
+    <string name="fragment_checklist_nodata">체크 리스트 항목을 추가해주세요!</string>
 
     <!-- 공유 체크리스트 -->
     <string name="fragment_sharelist_not_found">아직 일행이 상품을 요청하지 않았어요!</string>

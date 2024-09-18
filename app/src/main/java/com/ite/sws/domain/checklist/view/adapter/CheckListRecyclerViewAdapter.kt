@@ -40,17 +40,29 @@ class CheckListRecyclerViewAdapter (
         holder.bind(items[position])
     }
 
+    /**
+     * 새로운 아이템 목록을 설정하고 리사이클러뷰 갱신
+     */
     fun setItems(newItems: MutableList<GetCheckListRes>) {
         items = newItems
-        notifyDataSetChanged() // 리스트가 변경되면 RecyclerView를 새로 고침
+        notifyDataSetChanged()
     }
 
+    /**
+     * 특정 위치에 있는 아이템의 ID를 반환
+     */
     fun getItemIdAt(position: Int): Long {
         return items[position].myCheckListItemId
     }
 
+    /**
+     * 아이템 개수를 반환
+     */
     override fun getItemCount(): Int = items.size
 
+    /**
+     * ViewHolder 클래스
+     */
     inner class CheckListViewHolder(private val binding: ItemChecklistBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
@@ -100,6 +112,9 @@ class CheckListRecyclerViewAdapter (
             }
         }
 
+        /**
+         * 항목 수정 완료시 호출되는 메서드
+         */
         private fun handleEditCompleted(item: GetCheckListRes) {
             val newText = binding.edtItemName.text.toString()
             binding.tvItemName.text = newText  // TextView 수정
@@ -114,20 +129,15 @@ class CheckListRecyclerViewAdapter (
         }
     }
 
+    /**
+     * 아이템 삭제
+     */
     fun removeItem(checkListId: Long) {
-        // 삭제할 ID 기반으로 해당 항목을 리스트에서 찾음
         val position = items.indexOfFirst { it.myCheckListItemId == checkListId }
         if (position != -1) {
             items.removeAt(position)
             notifyItemRemoved(position)
             onItemRemoved(checkListId) // 서버에 삭제 요청
         }
-    }
-
-    // 리스트 갱신
-    fun updateItems(newItems: MutableList<GetCheckListRes>) {
-        items.clear()
-        items.addAll(newItems)
-        notifyDataSetChanged()
     }
 }

@@ -49,7 +49,9 @@ interface CheckListService {
      * 체크리스트 아이템 추가
      */
     @POST("/my-checklist")
-    fun addMyCheckListItem(@Body postCheckListReq: PostCheckListReq): Call<PostCheckListRes>
+    fun addMyCheckListItem(
+        @Body postCheckListReq: PostCheckListReq
+    ): Call<PostCheckListRes>
 
     /**
      * 체크리스트 아이템 변경
