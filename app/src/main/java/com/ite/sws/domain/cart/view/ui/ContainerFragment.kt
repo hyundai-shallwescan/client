@@ -204,4 +204,18 @@ class ContainerFragment : Fragment() {
             Log.i("STOMP CART CHAT", "Received message for cart $cartId: $message")
         }
     }
+
+    /**
+     * 동시 접속자수 구독
+     */
+    private fun subscribeToCartMember(cartId: Long) {
+        if (cartId == 0L) {
+            return
+        }
+
+        val subscriptionPath = "/sub/cartmember/$cartId"
+        WebSocketClient.subscribe(subscriptionPath) { message ->
+            Log.i("STOMP CART MEMBER COUNT", "Current CartMember $message")
+        }
+    }
 }
