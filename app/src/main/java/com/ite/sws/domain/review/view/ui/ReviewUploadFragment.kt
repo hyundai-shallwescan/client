@@ -226,7 +226,7 @@ class ReviewUploadFragment : Fragment() {
 
     private fun showDeleteDialog(title: String) {
         val dialog = CustomDialog(
-            layoutId = R.layout.dialog_text2_btn2,
+            layoutId = R.layout.dialog_text1_btn2,
             title = title,
             confirmText = "확인",
             cancelText = "취소",
@@ -237,7 +237,7 @@ class ReviewUploadFragment : Fragment() {
 
     private fun showUploadDialog(title: String) {
         val dialog = CustomDialog(
-            layoutId = R.layout.dialog_text2_btn2,
+            layoutId = R.layout.dialog_text1_btn2,
             title = title,
             confirmText = "확인",
             cancelText = "취소",

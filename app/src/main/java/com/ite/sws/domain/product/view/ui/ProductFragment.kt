@@ -37,7 +37,7 @@ class ProductFragment : Fragment() {
         _binding = FragmentProductDetailBinding.inflate(inflater, container, false)
         val view = binding.root
 
-        setupToolbar(binding.toolbar.toolbar, "상품", true)
+        setupToolbar(binding.toolbar.toolbar, "상품 상세보기", true)
 
         productId = arguments?.getLong("productId") ?: 0
 
