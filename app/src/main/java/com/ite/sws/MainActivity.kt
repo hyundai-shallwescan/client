@@ -54,7 +54,12 @@ class MainActivity : AppCompatActivity() {
         // 딥링크 처리
         if (intent?.action == Intent.ACTION_VIEW && intent?.data != null) {
             // 딥링크로 접근한 경우에는 멤버 로그인 여부를 확인하지 않고 딥링크 처리
-            handleDeeplink(intent)
+            val accessToken = SharedPreferencesUtil.getAccessToken()
+            if (accessToken.isNullOrEmpty()) {
+                handleDeeplinkWithLogin(intent)
+            } else {
+                handleDeeplink(intent)
+            }
         } else {
             // 딥링크로 접근하지 않은 경우 멤버 로그인 여부를 확인
             val accessToken = SharedPreferencesUtil.getAccessToken()
@@ -96,13 +101,37 @@ class MainActivity : AppCompatActivity() {
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        intent?.let { handleDeeplink(it) }
+        intent?.let { handleDeeplinkWithLogin(it) }
     }
 
     /**
-     * 딥링크 처리
+     * 딥링크 처리 (+ 기존 로그인 기록 있음)
      */
     private fun handleDeeplink(intent: Intent) {
+        val action: String? = intent.action
+        val data: Uri? = intent.data
+
+        if (action == Intent.ACTION_VIEW) {
+            val cartIdString = data?.getQueryParameter("cartId")
+            val cartId: Long? = cartIdString?.toLongOrNull()
+
+            // 추가된 payment 파라미터 확인
+            val paymentParam = data?.getQueryParameter("payment")
+
+            if (cartId != null) {
+                SharedPreferencesUtil.setCartId(cartId)
+                isPaymentDeepLink = !paymentParam.isNullOrEmpty()
+                navigateToNextScreenAfterLogin()
+            } else {
+                Log.d("DeepLink", "잘못된 cartId")
+            }
+        }
+    }
+
+    /**
+     * 딥링크 처리 (+ 비회원 로그인)
+     */
+    private fun handleDeeplinkWithLogin(intent: Intent) {
         val action: String? = intent.action
         val data: Uri? = intent.data
 
