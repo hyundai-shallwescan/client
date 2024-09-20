@@ -1,5 +1,6 @@
 package com.ite.sws.domain.cart.api.repository
 
+import android.util.Log
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.Gson
 import com.ite.sws.common.BaseRepository
@@ -79,7 +80,8 @@ class CartRepository : BaseRepository() {
             val response = cartService.saveCartItem(request)
             handleResponse(response)
         } catch (e: Exception) {
-            throw handleNetworkException(e)
+            Log.d("CART ITEM", e.message.toString())
+            TODO("등록되지 않은 상품 토스트 메시지 처리 throw handleNetworkException(e)")
         }
     }
 
