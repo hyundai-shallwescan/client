@@ -1,22 +1,16 @@
 package com.ite.sws.domain.chatbot.view.adpater
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.ite.sws.R
 import com.ite.sws.databinding.ItemChatbotMessageBinding
 import com.ite.sws.databinding.ItemChatbotProductBinding
-import com.ite.sws.databinding.ItemChatbotProductItemBinding
 import com.ite.sws.databinding.ItemChatbotUserBinding
 import com.ite.sws.domain.chatbot.data.GetChatGptRes
-import com.ite.sws.domain.checklist.data.PostCheckListReq
 import com.ite.sws.domain.checklist.view.ui.CheckListViewModel
-import com.ite.sws.domain.member.view.ui.LoginFragment
-import com.ite.sws.util.CustomDialog
-import com.ite.sws.util.NumberFormatterUtil
-import com.ite.sws.util.replaceFragmentWithAnimation
 
 /**
  * 젤뽀 챗봇 채팅 리사이클러 어댑터
@@ -111,38 +105,12 @@ class ChatBotRecyclerViewAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(products: List<GetChatGptRes.Product>) {
-            binding.productLayout.removeAllViews()
+            binding.rvProduct.removeAllViews()
 
-            // 상품 바인딩
-            products.forEach { product ->
-                val productBinding = ItemChatbotProductItemBinding.inflate(LayoutInflater.from(binding.root.context), binding.productLayout, false)
+            binding.rvProduct.layoutManager = LinearLayoutManager(binding.root.context)
 
-                val productTitle = product.title;
-
-                productBinding.tvProductName.text = product.title
-                productBinding.tvProductPrice.text = NumberFormatterUtil.formatCurrencyWithCommas(product.price)
-                Glide.with(binding.root.context).load(product.thumbnailImage).into(productBinding.imgProductThumbnail)
-
-                productBinding.btnAddChecklist.setOnClickListener {
-                    CustomDialog(
-                        layoutId = R.layout.dialog_text1_btn2,
-                        title = "체크리스트에 추가하시겠어요?",
-                        confirmText = "확인",
-                        cancelText = "취소",
-                        onConfirm = {
-                            viewModel.addCheckListItem(PostCheckListReq(productTitle))
-
-                            CustomDialog(
-                                layoutId = R.layout.dialog_text1_btn1,
-                                title = "추가되었습니다.",
-                                confirmText = "확인",
-                                onConfirm = {}
-                            ).show(fragmentManager, "AddToCheckListDialog")
-                        }
-                    ).show(fragmentManager, "AddToChecklistDialog")
-                }
-                binding.productLayout.addView(productBinding.root) // 상품 레이아웃을 추가
-            }
+            val productAdapter = ChatBotProductRecyclerViewAdapter(products, fragmentManager, viewModel)
+            binding.rvProduct.adapter = productAdapter
         }
 
         // 메시지 바인딩
