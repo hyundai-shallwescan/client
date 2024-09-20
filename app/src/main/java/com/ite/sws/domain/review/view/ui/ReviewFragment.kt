@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ite.sws.MainActivity
 import com.ite.sws.R
 import com.ite.sws.domain.review.api.repository.ReviewRepository
-
 import com.ite.sws.domain.review.data.GetReviewRes
 import com.ite.sws.domain.review.view.adapter.ReviewAdapter
 import com.ite.sws.databinding.FragmentReviewBinding
@@ -21,18 +20,6 @@ import com.ite.sws.util.hideBottomNavigation
 import com.ite.sws.util.replaceFragmentWithAnimation
 import setupToolbar
 
-/**
- * 리뷰 프래그먼트
- * @author 정은지
- * @since 2024.08.24
- * @version 1.0
- *
- * <pre>
- * 수정일        	수정자        수정내용
- * ----------  --------    ---------------------------
- * 2024.08.24  	정은지       최초 생성
- * </pre>
- */
 class ReviewFragment : Fragment() {
     private var currentProductId: Long? = null
     private var _binding: FragmentReviewBinding? = null
@@ -58,7 +45,6 @@ class ReviewFragment : Fragment() {
             hideBottomNavigation(mainActivity.binding, false)
         }
 
-
         loadReviews(currentPage)
 
         binding.productDetailBtn.setOnClickListener {
@@ -78,15 +64,6 @@ class ReviewFragment : Fragment() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 handleAutoPlayVideo()
-
-                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-                val totalItemCount = layoutManager.itemCount
-                val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
-
-                if (!isLoading && !isLastPage && lastVisibleItemPosition >= totalItemCount - 1) {
-                    currentPage++
-                    loadReviews(currentPage)
-                }
             }
 
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
@@ -96,6 +73,7 @@ class ReviewFragment : Fragment() {
                 }
             }
         })
+
     }
 
     private fun loadReviews(page: Int) {
@@ -105,7 +83,6 @@ class ReviewFragment : Fragment() {
             if (fetchedReviews.isNotEmpty()) {
                 reviews.addAll(fetchedReviews)
                 reviewAdapter.notifyDataSetChanged()
-
 
                 if (fetchedReviews.size < pageSize) {
                     isLastPage = true
@@ -128,13 +105,11 @@ class ReviewFragment : Fragment() {
         for (i in firstVisibleItemPosition..lastVisibleItemPosition) {
             val viewHolder = binding.recyclerViewReviews.findViewHolderForAdapterPosition(i) as? ReviewAdapter.ReviewViewHolder
             viewHolder?.let {
-                if (isFullyVisible(it.itemView)) {
                     if (currentPlayingViewHolder != viewHolder) {
                         currentPlayingViewHolder?.stopVideo()
                         currentPlayingViewHolder = viewHolder
                         currentProductId = reviews[i].productId
                         viewHolder.playVideo()
-                    }
                 } else {
                     viewHolder.stopVideo()
                 }
@@ -142,11 +117,7 @@ class ReviewFragment : Fragment() {
         }
     }
 
-    private fun isFullyVisible(view: View): Boolean {
-        val itemRect = Rect()
-        val isVisible = view.getGlobalVisibleRect(itemRect)
-        return isVisible && itemRect.height() == view.height
-    }
+
 
     private fun navigateToProductDetail() {
         val productFragment = ProductFragment()
