@@ -18,6 +18,17 @@ import com.ite.sws.util.hideBottomNavigation
 import com.ite.sws.util.replaceFragmentWithAnimation
 import setupToolbar
 
+/**
+ * 리뷰 디테일 프래그먼트
+ * @author 구지웅
+ * @since 2024.09.06
+ * @version 1.0
+ * <pre>
+ * 수정일        	수정자        수정내용
+ * ----------  --------    ---------------------------
+ * 2024.09.06  	구지웅       최초 생성
+ * </pre>
+ */
 
 class ReviewDetailFragment : Fragment() {
     private var _binding: FragmentReviewBinding? = null
@@ -91,7 +102,7 @@ class ReviewDetailFragment : Fragment() {
                 }
 
                 setOnErrorListener { _, what, extra ->
-                    Toast.makeText(requireContext(), "Error playing video: $what", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "비디오 실행 실패: $what", Toast.LENGTH_SHORT).show()
                     true
                 }
 

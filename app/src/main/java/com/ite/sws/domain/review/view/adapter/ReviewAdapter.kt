@@ -11,7 +11,16 @@ import com.bumptech.glide.Glide
 import com.ite.sws.R
 import com.ite.sws.domain.review.data.GetReviewRes
 
-
+/**
+ * ReviewAdapter
+ * @author 구지웅
+ * @since 2024.09.06
+ * @version 1.0
+ * <pre>
+ * 수정일        수정자        수정내용
+ * ----------  --------    ---------------------------
+ * 2024.09.06   구지웅        최초 생성
+ */
 class ReviewAdapter(
     private val reviews: List<GetReviewRes>
 ) : RecyclerView.Adapter<ReviewAdapter.ReviewViewHolder>() {

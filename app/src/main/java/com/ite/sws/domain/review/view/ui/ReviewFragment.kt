@@ -1,6 +1,5 @@
 package com.ite.sws.domain.review.view.ui
 
-import android.graphics.Rect
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -20,6 +19,17 @@ import com.ite.sws.util.hideBottomNavigation
 import com.ite.sws.util.replaceFragmentWithAnimation
 import setupToolbar
 
+/**
+ * 리뷰 프래그먼트
+ * @author 구지웅
+ * @since 2024.09.06
+ * @version 1.0
+ * <pre>
+ * 수정일        	수정자        수정내용
+ * ----------  --------    ---------------------------
+ * 2024.09.06  	구지웅       최초 생성
+ * </pre>
+ */
 class ReviewFragment : Fragment() {
     private var currentProductId: Long? = null
     private var _binding: FragmentReviewBinding? = null

@@ -9,7 +9,17 @@ import com.ite.sws.databinding.ItemReviewWriteBinding
 import com.ite.sws.domain.member.data.GetMemberPaymentRes
 
 
-
+/**
+ * 리뷰 리스트 리사이클러뷰 어댑터
+ * @author 구지웅
+ * @since 2024.09.06
+ * @version 1.0
+ * <pre>
+ * 수정일        	수정자        수정내용
+ * ----------  --------    ---------------------------
+ * 2024.09.06  	구지웅       최초 생성
+ * </pre>
+ */
 class ReviewListItemRecyclerViewAdapter(
     private val items: List<GetMemberPaymentRes.GetMemberPaymentItemRes>,
     private val onCreateReviewClick: (GetMemberPaymentRes.GetMemberPaymentItemRes) -> Unit 
