@@ -321,7 +321,7 @@ class ScanFragment : Fragment() {
             replaceFragmentWithAnimation(
                 R.id.container_main,
                 PaymentFragment(),
-                false,
+                true,
                 false
             )
         }
