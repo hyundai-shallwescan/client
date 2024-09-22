@@ -26,6 +26,7 @@ import ua.naiksoftware.stomp.dto.StompMessage
  * 2024.09.03  	남진수       구독 기능 추가
  * 2024.09.11  	김민정       구독 정보 저장
  * 2024.09.11  	김민정       구독 해지 기능 추가
+ * 2024.09.22  	김민정       stompClient가 초기화되어 있는지 확인하는 로직 추가
  * </pre>
  */
 object WebSocketClient {

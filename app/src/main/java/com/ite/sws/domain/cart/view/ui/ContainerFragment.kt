@@ -178,8 +178,7 @@ class ContainerFragment : Fragment() {
                 }
             }
         } else {
-            Log.e("STOMP", "accessToken is null")
-            replaceFragmentWithAnimation(R.id.container_main, LoginFragment(), true)
+            Log.e("STOMP", "accessToken is null 1")
         }
     }
 
