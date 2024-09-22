@@ -41,12 +41,17 @@ class ReviewAdapter(
         private val videoView = itemView.findViewById<VideoView>(R.id.video_view)
         private val thumbnailImage = itemView.findViewById<ImageView>(R.id.thumbnail_image)
 
-
         fun bind(review: GetReviewRes) {
             Glide.with(itemView.context)
                 .load(review.thumbnailImage)
                 .into(thumbnailImage)
+
             videoView.setVideoURI(Uri.parse(review.shortFormUrl))
+
+            videoView.setOnPreparedListener { mediaPlayer ->
+                mediaPlayer.isLooping = true
+                thumbnailImage.visibility = View.GONE
+            }
         }
 
         fun playVideo() {
@@ -60,6 +65,5 @@ class ReviewAdapter(
                 videoView.pause()
             }
         }
-
     }
 }

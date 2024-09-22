@@ -30,7 +30,6 @@ import setupToolbar
  * 2024.09.13  구지웅       최초 생성
  * </pre>
  */
-
 class ProductFragment : Fragment() {
 
     private var _binding: FragmentProductDetailBinding? = null
