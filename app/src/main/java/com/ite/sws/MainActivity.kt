@@ -101,7 +101,12 @@ class MainActivity : AppCompatActivity() {
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        intent?.let { handleDeeplinkWithLogin(it) }
+        intent?.let {
+            // 딥링크로 접근한 경우에만 처리
+            if (it.action == Intent.ACTION_VIEW && it.data != null) {
+                handleDeeplinkWithLogin(it)
+            }
+        }
     }
 
     /**

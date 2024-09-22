@@ -100,6 +100,15 @@ class MyPaymentFragment : Fragment() {
 
     // 뒤로가기 버튼 커스텀 처리
     private fun settingBackPress(){
+//        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+//            val fragmentManager = requireActivity().supportFragmentManager
+//
+//            // 백스택을 모두 제거
+//            fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+//
+//            // MyPageFragment로 이동
+//            replaceFragmentWithAnimation(R.id.container_main, MypageFragment(), false)
+//        }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             // MainActivity로 이동
             val intent = Intent(requireContext(), MainActivity::class.java).apply {
