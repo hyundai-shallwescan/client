@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:fontFamily="@font/happiness_sans_title"
-            android:text="@string/fragment_scan_cartlist_not_found"
+            android:text="@string/fragment_scan_external_cartlist_not_found"
             android:textColor="@android:color/black"
             android:layout_gravity="center_horizontal"
             android:textSize="18sp" />
