@@ -14,7 +14,6 @@ import com.ite.sws.R
 import com.ite.sws.common.WebSocketClient
 import com.ite.sws.databinding.FragmentContainerBinding
 import com.ite.sws.domain.chat.view.ui.ChatFragment
-import com.ite.sws.domain.member.view.ui.LoginFragment
 import com.ite.sws.domain.sharelist.view.ui.ShareListFragment
 import com.ite.sws.util.SharedPreferencesUtil
 import com.ite.sws.util.hideBottomNavigation
@@ -84,7 +83,6 @@ class ContainerFragment : Fragment() {
         val transaction = childFragmentManager.beginTransaction()
         transaction.replace(R.id.fragment_container, fragment)
         transaction.commit()
-//        replaceFragmentWithAnimation(R.id.fragment_container, fragment, true, false)
     }
 
     /**
