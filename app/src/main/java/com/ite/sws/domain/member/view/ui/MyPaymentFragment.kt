@@ -1,10 +1,12 @@
 package com.ite.sws.domain.member.view.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,6 +27,7 @@ import setupToolbar
  * 수정일        	수정자       수정내용
  * ----------  --------    ---------------------------
  * 2024.09.05   정은지       최초 생성
+ * 2024.09.22   김민정       뒤로가기 버튼 커스텀 처리
  * </pre>
  */
 class MyPaymentFragment : Fragment() {
@@ -55,6 +58,9 @@ class MyPaymentFragment : Fragment() {
 
         // 데이터 불러오기
         loadPaymentItemList()
+
+        // 뒤로가기 버튼 커스텀 처리
+        settingBackPress()
     }
 
     private fun loadPaymentItemList() {
@@ -90,5 +96,17 @@ class MyPaymentFragment : Fragment() {
 
     private fun showError(message: String) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+    }
+
+    // 뒤로가기 버튼 커스텀 처리
+    private fun settingBackPress(){
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            // MainActivity로 이동
+            val intent = Intent(requireContext(), MainActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+            }
+            startActivity(intent)
+            requireActivity().finish() // 현재 액티비티 종료
+        }
     }
 }

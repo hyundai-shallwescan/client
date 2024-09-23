@@ -10,9 +10,17 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.ite.sws.R
 import com.ite.sws.domain.review.data.GetReviewRes
-import com.ite.sws.domain.review.view.ui.ReviewFragment
 
-
+/**
+ * ReviewAdapter
+ * @author 구지웅
+ * @since 2024.09.06
+ * @version 1.0
+ * <pre>
+ * 수정일        수정자        수정내용
+ * ----------  --------    ---------------------------
+ * 2024.09.06   구지웅        최초 생성
+ */
 class ReviewAdapter(
     private val reviews: List<GetReviewRes>
 ) : RecyclerView.Adapter<ReviewAdapter.ReviewViewHolder>() {
@@ -33,12 +41,17 @@ class ReviewAdapter(
         private val videoView = itemView.findViewById<VideoView>(R.id.video_view)
         private val thumbnailImage = itemView.findViewById<ImageView>(R.id.thumbnail_image)
 
-
         fun bind(review: GetReviewRes) {
             Glide.with(itemView.context)
                 .load(review.thumbnailImage)
                 .into(thumbnailImage)
+
             videoView.setVideoURI(Uri.parse(review.shortFormUrl))
+
+            videoView.setOnPreparedListener { mediaPlayer ->
+                mediaPlayer.isLooping = true
+                thumbnailImage.visibility = View.GONE
+            }
         }
 
         fun playVideo() {
@@ -52,9 +65,5 @@ class ReviewAdapter(
                 videoView.pause()
             }
         }
-        fun isPlaying(): Boolean{
-            return videoView.isPlaying;
-        }
-
     }
 }

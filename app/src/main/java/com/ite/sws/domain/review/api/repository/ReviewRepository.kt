@@ -49,7 +49,7 @@ class ReviewRepository {
                 if (response.isSuccessful) {
                     onSuccess()
                 } else {
-                    onFailure(Exception("Failed to receive a valid response."))
+                    onFailure(Exception("API 요청에 실패했습니다."))
                 }
             }
 
@@ -94,9 +94,9 @@ class ReviewRepository {
                 if (response.isSuccessful) {
                     response.body()?.let {
                         onSuccess(it)
-                    } ?: onFailure(Exception("No data received."))
+                    } ?: onFailure(Exception("데이터가 존재하지 않습니다."))
                 } else {
-                    onFailure(Exception("Failed to receive a valid response."))
+                    onFailure(Exception("API 호출에 실패했습니다."))
                 }
             }
 
@@ -116,7 +116,7 @@ class ReviewRepository {
                 if (response.isSuccessful) {
                     onSuccess()
                 } else {
-                    onFailure(Exception("Failed to delete the review."))
+                    onFailure(Exception("리뷰 삭제에 실패했습니다."))
                 }
             }
 

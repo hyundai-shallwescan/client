@@ -35,19 +35,19 @@ interface ReviewService {
         @Part image: MultipartBody.Part,
         @Part shortForm: MultipartBody.Part): Call<Void>
 
-
+    //리뷰 전체 조회
     @GET("/reviews")
     fun getReviews(
         @Query("page") page: Int,
         @Query("size") size: Int
     ): Call<List<GetReviewRes>>
 
-
+    //리뷰 삭제
     @DELETE("/reviews/{reviewId}")
     fun deleteReview(
         @Path("reviewId") reviewId: Long
     ): Call<Void>
-
+    //리뷰 단일 조회
     @GET("/reviews/{reviewId}")
     fun getReviewDetail(
         @Path("reviewId") reviewId: Long

@@ -10,7 +10,7 @@ import com.ite.sws.databinding.ItemPaymentBinding
 import com.ite.sws.domain.review.view.ui.ReviewListItemRecyclerViewAdapter
 
 /**
- * 리뷰 작성 프래그먼트
+ * 리뷰 작성 리사이클러뷰 Adapter
  * @author 구지웅
  * @since 2024.09.06
  * @version 1.0

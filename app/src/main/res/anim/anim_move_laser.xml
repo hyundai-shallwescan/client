@@ -5,14 +5,14 @@
 
     <!-- 위 -> 아래 -->
     <translate
-        android:duration="1500"
+        android:duration="500"
         android:fromYDelta="-2300%"
         android:toYDelta="2300%" />
 
     <!-- 아래 -> 위 -->
     <translate
-        android:duration="1500"
-        android:startOffset="1500"
+        android:duration="500"
+        android:startOffset="500"
         android:fromYDelta="2300%"
         android:toYDelta="-2300%" />
 </set>

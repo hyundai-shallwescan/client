@@ -59,14 +59,14 @@ class ContainerFragment : Fragment() {
             hideBottomNavigation(mainActivity.binding, false)
         }
 
-        // WebSocket 연결
-        connectWebSocket()
-
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // WebSocket 연결
+        connectWebSocket()
 
         // 초기 프래그먼트 설정
         loadFragment(ScanFragment())
@@ -80,7 +80,9 @@ class ContainerFragment : Fragment() {
      * @param fragment 로드할 프래그먼트
      */
     private fun loadFragment(fragment: Fragment) {
-        replaceFragmentWithAnimation(R.id.fragment_container, fragment, true, false)
+        val transaction = childFragmentManager.beginTransaction()
+        transaction.replace(R.id.fragment_container, fragment)
+        transaction.commit()
     }
 
     /**
@@ -146,28 +148,35 @@ class ContainerFragment : Fragment() {
     }
 
     /**
-     * WebSocket 연결
+     * WebSocket 연결 및 구독 관리
      */
     private fun connectWebSocket() {
         val accessToken = SharedPreferencesUtil.getAccessToken()
+        val cartId = SharedPreferencesUtil.getCartId()
+
         if (accessToken != null) {
             WebSocketClient.connect(accessToken) { event ->
                 when (event.type) {
                     LifecycleEvent.Type.OPENED -> {
                         Log.d("STOMP", "WebSocket opened")
-                        val cartId = SharedPreferencesUtil.getCartId()
-                        // 연결이 열리면 특정 장바구니에 구독
+                        // 연결이 열리면 구독
                         subscribeToCart(cartId)
+                        subscribeToCartMember(cartId)
                         subscribeToChat(cartId)
                     }
-                    LifecycleEvent.Type.CLOSED -> Log.d("STOMP", "WebSocket closed")
-                    LifecycleEvent.Type.ERROR -> Log.e("STOMP", "WebSocket error", event.exception)
-                    else -> Log.d("STOMP", "WebSocket event: ${event.message}")
+                    LifecycleEvent.Type.CLOSED -> {
+                        Log.d("STOMP", "WebSocket closed")
+                        WebSocketClient.disconnect() // 연결 해제 시 처리
+                    }
+                    LifecycleEvent.Type.ERROR -> {
+                        Log.e("STOMP", "WebSocket error", event.exception)
+                    }
+
+                    LifecycleEvent.Type.FAILED_SERVER_HEARTBEAT -> TODO()
                 }
             }
         } else {
-            Log.e("STOMP", "accessToken is null")
-            replaceFragmentWithAnimation(R.id.container_main, CartLoginFragment(), true)
+            Log.e("STOMP", "accessToken is null 1")
         }
     }
 

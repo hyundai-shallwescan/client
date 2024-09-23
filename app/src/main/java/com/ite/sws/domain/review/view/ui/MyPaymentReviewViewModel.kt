@@ -7,7 +7,7 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 /**
- * 리뷰 작성 프래그먼트
+ * 리뷰 작성 뷰 모델
  * @author 구지웅
  * @since 2024.09.06
  * @version 1.0

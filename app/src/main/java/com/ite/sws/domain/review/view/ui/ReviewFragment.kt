@@ -1,6 +1,5 @@
 package com.ite.sws.domain.review.view.ui
 
-import android.graphics.Rect
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,11 +7,11 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.ite.sws.MainActivity
 import com.ite.sws.R
 import com.ite.sws.domain.review.api.repository.ReviewRepository
-
 import com.ite.sws.domain.review.data.GetReviewRes
 import com.ite.sws.domain.review.view.adapter.ReviewAdapter
 import com.ite.sws.databinding.FragmentReviewBinding
@@ -22,17 +21,21 @@ import com.ite.sws.util.replaceFragmentWithAnimation
 import setupToolbar
 
 /**
- * 리뷰 프래그먼트
- * @author 정은지
- * @since 2024.08.24
+ * 리뷰 디테일 프래그먼트
+ * @author 구지웅
+ * @since 2024.09.06
  * @version 1.0
- *
  * <pre>
  * 수정일        	수정자        수정내용
  * ----------  --------    ---------------------------
- * 2024.08.24  	정은지       최초 생성
+ * 2024.09.06  	구지웅       최초 생성
+ * 2024.09.21  	구지웅       한 번에 한 개의 비디오 뷰가 보이게 수정
+ * 2024.09.21  	구지웅       snapHelper 적용
+ * 2024.09.22  	구지웅       auto-play로 수정
  * </pre>
  */
+
+
 class ReviewFragment : Fragment() {
     private var currentProductId: Long? = null
     private var _binding: FragmentReviewBinding? = null
@@ -58,8 +61,8 @@ class ReviewFragment : Fragment() {
             hideBottomNavigation(mainActivity.binding, false)
         }
 
-
         loadReviews(currentPage)
+        handleAutoPlayVideo()
 
         binding.productDetailBtn.setOnClickListener {
             navigateToProductDetail()
@@ -69,26 +72,16 @@ class ReviewFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        binding.recyclerViewReviews.layoutManager = LinearLayoutManager(context)
+        val layoutManager = LinearLayoutManager(context)
+        binding.recyclerViewReviews.layoutManager = layoutManager
         reviews = mutableListOf()
         reviewAdapter = ReviewAdapter(reviews)
         binding.recyclerViewReviews.adapter = reviewAdapter
 
+        val snapHelper = PagerSnapHelper()
+        snapHelper.attachToRecyclerView(binding.recyclerViewReviews)
+
         binding.recyclerViewReviews.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                handleAutoPlayVideo()
-
-                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-                val totalItemCount = layoutManager.itemCount
-                val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
-
-                if (!isLoading && !isLastPage && lastVisibleItemPosition >= totalItemCount - 1) {
-                    currentPage++
-                    loadReviews(currentPage)
-                }
-            }
-
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
@@ -106,10 +99,12 @@ class ReviewFragment : Fragment() {
                 reviews.addAll(fetchedReviews)
                 reviewAdapter.notifyDataSetChanged()
 
-
                 if (fetchedReviews.size < pageSize) {
                     isLastPage = true
                 }
+
+                autoPlayFirstVideo()
+
             } else {
                 isLastPage = true
             }
@@ -120,32 +115,34 @@ class ReviewFragment : Fragment() {
         })
     }
 
-    private fun handleAutoPlayVideo() {
-        val layoutManager = binding.recyclerViewReviews.layoutManager as LinearLayoutManager
-        val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
-        val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
+    private fun autoPlayFirstVideo() {
+        binding.recyclerViewReviews.post {
+            val layoutManager = binding.recyclerViewReviews.layoutManager as LinearLayoutManager
+            val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
 
-        for (i in firstVisibleItemPosition..lastVisibleItemPosition) {
-            val viewHolder = binding.recyclerViewReviews.findViewHolderForAdapterPosition(i) as? ReviewAdapter.ReviewViewHolder
-            viewHolder?.let {
-                if (isFullyVisible(it.itemView)) {
-                    if (currentPlayingViewHolder != viewHolder) {
-                        currentPlayingViewHolder?.stopVideo()
-                        currentPlayingViewHolder = viewHolder
-                        currentProductId = reviews[i].productId
-                        viewHolder.playVideo()
-                    }
-                } else {
-                    viewHolder.stopVideo()
+            if (firstVisibleItemPosition != RecyclerView.NO_POSITION) {
+                val viewHolder = binding.recyclerViewReviews.findViewHolderForAdapterPosition(firstVisibleItemPosition) as? ReviewAdapter.ReviewViewHolder
+                viewHolder?.let {
+                    currentPlayingViewHolder = viewHolder
+                    viewHolder.playVideo()
                 }
             }
         }
     }
 
-    private fun isFullyVisible(view: View): Boolean {
-        val itemRect = Rect()
-        val isVisible = view.getGlobalVisibleRect(itemRect)
-        return isVisible && itemRect.height() == view.height
+
+    private fun handleAutoPlayVideo() {
+        val layoutManager = binding.recyclerViewReviews.layoutManager as LinearLayoutManager
+        val visiblePosition = layoutManager.findFirstCompletelyVisibleItemPosition()
+
+        if (visiblePosition != RecyclerView.NO_POSITION) {
+            val viewHolder = binding.recyclerViewReviews.findViewHolderForAdapterPosition(visiblePosition) as? ReviewAdapter.ReviewViewHolder
+            viewHolder?.let {
+                currentPlayingViewHolder?.stopVideo()
+                currentPlayingViewHolder = viewHolder
+                viewHolder.playVideo()
+            }
+        }
     }
 
     private fun navigateToProductDetail() {

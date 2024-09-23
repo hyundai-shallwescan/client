@@ -12,6 +12,7 @@
         android:layout_marginLeft="@dimen/common_horizontal_margin"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone"
         android:gravity="center">
 
         <ImageView

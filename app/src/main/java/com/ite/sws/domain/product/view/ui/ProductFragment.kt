@@ -18,6 +18,18 @@ import com.ite.sws.util.hideBottomNavigation
 import kotlinx.coroutines.launch
 import setupToolbar
 
+/**
+ * 상품 프래그먼트
+ * @author 구지웅
+ * @since 2024.09.13
+ * @version 1.0
+ *
+ * <pre>
+ * 수정일       수정자        수정내용
+ * ----------  --------    ---------------------------
+ * 2024.09.13  구지웅       최초 생성
+ * </pre>
+ */
 class ProductFragment : Fragment() {
 
     private var _binding: FragmentProductDetailBinding? = null
@@ -63,7 +75,6 @@ class ProductFragment : Fragment() {
                 val totalItemCount = layoutManager.itemCount
                 val lastVisibleItem = layoutManager.findLastVisibleItemPosition()
 
-                // Check if we have reached the last loaded item and not already loading
                 if (!isLoading && !isLastPage && lastVisibleItem >= totalItemCount - 1) {
                     currentPage++
                     fetchProductDetailsAndReviews(currentPage, pageSize)
@@ -108,10 +119,10 @@ class ProductFragment : Fragment() {
                         isLastPage = true
                     }
                 } else {
-                    isLastPage = true // No more reviews to load
+                    isLastPage = true
                 }
             }
-            isLoading = false // Reset loading state
+            isLoading = false
         }
     }
 
