@@ -32,10 +32,10 @@ class SplashActivity : AppCompatActivity() {
         val animation = AnimationUtils.loadAnimation(this, R.anim.anim_move_laser)
         binding.lineLaser.startAnimation(animation)
 
-        // 3초 후에 메인 액티비티로 전환
+        // 1초 후에 메인 액티비티로 전환
         binding.lineLaser.postDelayed({
             startActivity(Intent(this, MainActivity::class.java))
             finish()
-        }, 3000)
+        }, 1000)
     }
 }
