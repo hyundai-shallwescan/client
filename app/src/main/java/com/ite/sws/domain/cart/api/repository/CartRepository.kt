@@ -1,6 +1,5 @@
 package com.ite.sws.domain.cart.api.repository
 
-import android.util.Log
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.Gson
 import com.ite.sws.common.BaseRepository

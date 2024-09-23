@@ -232,8 +232,7 @@ class ExteranlPaymentFragment : Fragment() {
                 }
             }
         } else {
-            Log.e("STOMP", "accessToken is null")
-            replaceFragmentWithAnimation(R.id.container_main, CartLoginFragment(), true)
+            Log.e("STOMP", "accessToken is null  3")
         }
     }
 

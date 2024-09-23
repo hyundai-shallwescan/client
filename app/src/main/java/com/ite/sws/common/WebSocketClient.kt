@@ -26,6 +26,7 @@ import ua.naiksoftware.stomp.dto.StompMessage
  * 2024.09.03  	남진수       구독 기능 추가
  * 2024.09.11  	김민정       구독 정보 저장
  * 2024.09.11  	김민정       구독 해지 기능 추가
+ * 2024.09.22  	김민정       stompClient가 초기화되어 있는지 확인하는 로직 추가
  * </pre>
  */
 object WebSocketClient {
@@ -52,9 +53,15 @@ object WebSocketClient {
         stompClient.lifecycle()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(lifecycleEventHandler)
+            .subscribe { event ->
+                lifecycleEventHandler(event)
+                if (event.type == LifecycleEvent.Type.OPENED) {
+                    // WebSocket이 연결되었을 때 구독을 처리하도록 보장
+                    Log.d("STOMP", "WebSocket 연결 완료")
+                }
+            }
 
-        stompClient.connect(headers)  // 연결 시점에 헤더 포함
+        stompClient.connect(headers)
     }
 
     fun disconnect() {
@@ -68,15 +75,18 @@ object WebSocketClient {
      */
     @SuppressLint("CheckResult")
     fun subscribe(destination: String, messageHandler: (String) -> Unit) {
-        val disposable = stompClient.topic(destination)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { message ->
-                messageHandler(message.payload)
-            }
+        if (::stompClient.isInitialized) { // stompClient가 초기화되어 있는지 확인
+            val disposable = stompClient.topic(destination)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { message ->
+                    messageHandler(message.payload)
+                }
 
-        // 구독 정보를 저장 (destination을 구독 ID로 사용)
-        subscriptions[destination] = disposable
+            subscriptions[destination] = disposable
+        } else {
+            Log.e("WebSocketClient", "stompClient가 초기화되지 않았습니다.")
+        }
     }
 
     /**
@@ -84,29 +94,26 @@ object WebSocketClient {
      */
     @SuppressLint("CheckResult")
     fun sendMessage(destination: String, data: String, successHandler: () -> Unit, errorHandler: (Throwable) -> Unit) {
-        val headers = mutableListOf<StompHeader>()
-        // 메시지 전송 시 헤더에 목적지 포함
-        headers.add(StompHeader(StompHeader.DESTINATION, destination))
-        jwtToken?.let {
-            // 토큰이 있을 경우 헤더에 포함
-            headers.add(StompHeader("Authorization", "Bearer $it"))
-            Log.d("WebSocketClient", "Sending message with token: Bearer $it")
+        if (::stompClient.isInitialized) { // stompClient가 초기화되어 있는지 확인
+            val headers = mutableListOf<StompHeader>()
+            headers.add(StompHeader(StompHeader.DESTINATION, destination))
+            jwtToken?.let {
+                headers.add(StompHeader("Authorization", "Bearer $it"))
+            }
+
+            val stompMessage = StompMessage(StompCommand.SEND, headers, data)
+
+            stompClient.send(stompMessage)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    successHandler()
+                }, { error ->
+                    errorHandler(error)
+                })
+        } else {
+            Log.e("WebSocketClient", "stompClient가 초기화되지 않았습니다.")
         }
-
-        val stompMessage = StompMessage(
-            StompCommand.SEND,
-            headers,
-            data
-        )
-
-        stompClient.send(stompMessage)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                successHandler()
-            }, { error ->
-                errorHandler(error)
-            })
     }
 
     /**
