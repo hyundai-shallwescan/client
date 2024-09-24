@@ -17,6 +17,7 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btn_chat_refresh"
+        android:stateListAnimator="@null"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:clickable="true"
