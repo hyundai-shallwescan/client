@@ -61,6 +61,8 @@ class ChatFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        onclickRefreshBtn()
+
         val currentUserName = SharedPreferencesUtil.getCartMemberName()
         chatAdapter = ChatAdapter(chatMessages, currentUserName)
 
@@ -139,6 +141,12 @@ class ChatFragment : Fragment() {
             } else {
                 Log.e("ChatFragment", "채팅 메시지 로드 실패", error)
             }
+        }
+    }
+
+    private fun onclickRefreshBtn(){
+        binding.btnChatRefresh.setOnClickListener{
+            loadChat()
         }
     }
 
