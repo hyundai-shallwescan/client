@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ite.sws.MainActivity
 import com.ite.sws.R
+import com.ite.sws.common.WebSocketClient
 import com.ite.sws.databinding.FragmentPaymentBinding
 import com.ite.sws.domain.payment.view.adapter.PaymentRecyclerAdapter
 import com.ite.sws.util.NumberFormatterUtil.formatCurrencyWithCommas
@@ -154,6 +155,25 @@ class PaymentFragment : Fragment() {
                     onSuccess = { showPaymentShareBottomSheet() }
                 )
             } ?: Toast.makeText(requireContext(), "장바구니 정보를 불러오지 못했습니다.", Toast.LENGTH_SHORT).show()
+        }
+
+        // 결제 완료 - QR 넘어가는 임시 버튼
+        binding.btnRefresh.setOnClickListener {
+            // 소켓 연결 해제
+            WebSocketClient.unsubscribe("/sub/cart/${SharedPreferencesUtil.getCartId()}")
+
+            // QR URL 번들에 추가
+            val fragment = PaymentQRFragment()
+            val bundle = Bundle()
+            bundle.putString("qrUrl", "https://shall-we-sacn-exitcredentials.s3.ap-northeast-2.amazonaws.com/qrcode-5192846902002360585541.png")
+            fragment.arguments = bundle
+
+            replaceFragmentWithAnimation(
+                R.id.container_main,
+                fragment,
+                false,
+                false
+            )
         }
     }
 

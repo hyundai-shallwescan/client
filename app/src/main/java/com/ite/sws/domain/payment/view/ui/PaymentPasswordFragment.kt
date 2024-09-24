@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.ite.sws.MainActivity
 import com.ite.sws.R
+import com.ite.sws.common.WebSocketClient
 import com.ite.sws.databinding.FragmentPaymentPasswordBinding
 import com.ite.sws.domain.cart.view.ui.ContainerFragment
 import com.ite.sws.domain.parking.api.repository.ParkingRepository
@@ -92,6 +93,9 @@ class PaymentPasswordFragment : Fragment() {
 
         // 버튼 설정
         setupKeyPad()
+
+        // 버튼 설정
+        setupBtn()
     }
 
     /**
@@ -234,6 +238,36 @@ class PaymentPasswordFragment : Fragment() {
                 makePaymentRequest()
                 makeParkingPaymentRequest()
             }, 1000) // 1초 딜레이 후 결제 요청
+        }
+    }
+
+    private fun setupBtn() {
+        // 회원 결제 완료 - QR 넘어가는 임시 버튼
+        binding.btnRefreshInner.setOnClickListener {
+            // QR URL 번들에 추가
+            val fragment = PaymentQRFragment()
+            val bundle = Bundle()
+            bundle.putString("qrUrl", "https://shall-we-sacn-exitcredentials.s3.ap-northeast-2.amazonaws.com/qrcode-5192846902002360585541.png")
+            fragment.arguments = bundle
+
+            replaceFragmentWithAnimation(
+                R.id.container_main,
+                fragment,
+                false,
+                false
+            )
+        }
+
+        // 비회원 결제 완료
+        binding.btnRefreshOuter.setOnClickListener {
+            WebSocketClient.unsubscribe("/sub/cart/${SharedPreferencesUtil.getCartId()}")
+
+            replaceFragmentWithAnimation(
+                R.id.container_main,
+                ExternalPaymentDoneFragment(),
+                false,
+                false
+            )
         }
     }
 }
